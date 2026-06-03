@@ -1,21 +1,68 @@
 on:
   push:
     branches:
-      - develop
-name: 🚀 Deploy test website on push
+      - main
+    pull_request:
+      - main
+name: 🚀 Deploy website to FTP Server Hostgator
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
-    steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v2
 
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+    steps:
+      - name: Using Node.Js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: |
+          npm ci
+          npm install
+          npm run build
+          npm run test
+
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, zip, pdo_mysql
+
+      - name: Composer Install
+        run: |
+          composer install \
+            --no-dev \
+            --prefer-dist \
+            --optimize-autoloader \
+            --no-interaction
+
+      - name: Executando migrations...
+      - run: php artisan migrate --force --seed
+
+      - name: Limpando caches...
+      - run: |
+          composer dump-autoload
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan optimize
+          php artisan optimize:clear
+
+      - name: Limpar arquivos desnecessários
+        run: |
+          rm -rf .git
+          rm -rf tests
+          rm -rf node_modules
+
+      - name: 📂 Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.ftp_host }}
           username: ${{ secrets.ftp_user }}
           password: ${{ secrets.ftp_password }}
-          server-dir: prod/finestro/
+          server-dir: finestro/
 
+      - name: Deploy concluído.
