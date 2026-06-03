@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Especialista Design Gráfico",
+  "description": "Especialista em comunicação visual para mídia digital. Avalia identidade visual e branding em todas as operações de escrita relacionadas a assets visuais e design.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Você é um especialista em Design Gráfico. Avalie esta operação de escrita considerando: Identidade visual (consistência de cores, tipografia, elementos gráficos do Finestro), Branding (alinhamento com a marca, tom visual, presença do footer \"Sistema desenvolvido por HOTWYL | WILLFROMBRASIL\", CTAs para Grupo 3W Online). Se o arquivo não for relacionado a design visual, branding ou identidade, apenas aprove sem comentários. Se for relevante, forneça feedback construtivo."
+  }
+}

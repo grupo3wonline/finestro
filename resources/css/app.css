@@ -1,11 +1,361 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* ===== Base Layer ===== */
+@layer base {
+    html {
+        @apply scroll-smooth;
+    }
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    body {
+        @apply antialiased;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+
+    ::selection {
+        @apply bg-primary-600/20 text-primary-900;
+    }
+
+    .dark ::selection {
+        @apply bg-primary-400/30 text-primary-100;
+    }
+}
+
+/* ===== Component Layer ===== */
+@layer components {
+    /* Cards */
+    .card {
+        @apply bg-white dark:bg-gray-800 rounded-2xl shadow-card border border-gray-100 dark:border-gray-700/60 transition-all duration-200;
+    }
+
+    .card-hover {
+        @apply card hover:shadow-soft hover:border-gray-200 dark:hover:border-gray-600 hover:-translate-y-0.5;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 active:from-primary-800 active:to-primary-900 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400/50 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700/60 text-sm font-medium rounded-xl transition-all duration-200;
+    }
+
+    .btn-success {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-secondary-600 to-secondary-700 hover:from-secondary-700 hover:to-secondary-800 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-secondary-500/50 focus:ring-offset-2;
+    }
+
+    /* Form Inputs */
+    .input {
+        @apply w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 dark:focus:border-primary-400 transition-all duration-200;
+    }
+
+    .input-label {
+        @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5;
+    }
+
+    /* Badges */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold;
+    }
+
+    .badge-success {
+        @apply badge bg-secondary-50 dark:bg-secondary-900/20 text-secondary-700 dark:text-secondary-400;
+    }
+
+    .badge-danger {
+        @apply badge bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400;
+    }
+
+    .badge-warning {
+        @apply badge bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400;
+    }
+
+    .badge-info {
+        @apply badge bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400;
+    }
+
+    /* Nav Links */
+    .nav-link {
+        @apply px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200;
+    }
+
+    .nav-link-active {
+        @apply nav-link bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm;
+    }
+
+    .nav-link-inactive {
+        @apply nav-link text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700/60;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        @apply card p-5 relative overflow-hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        @apply absolute top-0 right-0 w-24 h-24 rounded-full opacity-5 -translate-y-1/2 translate-x-1/2;
+    }
+
+    /* Page Header */
+    .page-header {
+        @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6;
+    }
+
+    .page-title {
+        @apply text-2xl font-bold text-gray-900 dark:text-white;
+    }
+
+    .page-subtitle {
+        @apply text-gray-600 dark:text-gray-400 text-sm mt-0.5;
+    }
+
+    /* Section Card */
+    .section-card {
+        @apply bg-white dark:bg-gray-800 rounded-2xl shadow-card border border-gray-100 dark:border-gray-700/60 overflow-hidden;
+    }
+
+    .section-card-header {
+        @apply px-6 py-4 border-b border-gray-100 dark:border-gray-700/60 flex items-center justify-between;
+    }
+
+    .section-card-body {
+        @apply p-6;
+    }
+
+    /* Tip Box */
+    .tip-box {
+        @apply bg-primary-50/50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-800/30 rounded-xl p-4;
+    }
+
+    .tip-box-text {
+        @apply text-sm text-primary-800 dark:text-primary-300;
+    }
+}
+
+/* ===== Utility Layer ===== */
+@layer utilities {
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-600;
+    }
+
+    .text-gradient-brand {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-secondary-500;
+    }
+
+    .glass {
+        @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl;
+    }
+
+    .glass-border {
+        @apply border border-white/20 dark:border-gray-700/40;
+    }
+}
+
+/* ===== Loading Overlay ===== */
+#loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+#loading-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+#loading-overlay .loading-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 2.5rem;
+    background: white;
+    border-radius: 1.25rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: scaleIn 0.3s ease-out;
+}
+
+.dark #loading-overlay .loading-card {
+    background: #1f2937;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#loading-overlay .spinner-ring {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+
+#loading-overlay .spinner-ring::before,
+#loading-overlay .spinner-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid transparent;
+}
+
+#loading-overlay .spinner-ring::before {
+    border-top-color: #1a6df5;
+    border-right-color: #1a6df5;
+    animation: spin 0.8s linear infinite;
+}
+
+#loading-overlay .spinner-ring::after {
+    border-bottom-color: #1aaf5f;
+    border-left-color: #1aaf5f;
+    animation: spin 1.2s linear infinite reverse;
+    inset: 4px;
+}
+
+#loading-overlay .loading-text {
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.dark #loading-overlay .loading-text {
+    color: #d1d5db;
+}
+
+#loading-overlay .loading-brand {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.dark #loading-overlay .loading-brand {
+    color: #6b7280;
+}
+
+/* ===== Page Transition ===== */
+.page-enter {
+    animation: pageEnter 0.3s ease-out forwards;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* ===== Alpine Cloak ===== */
+[x-cloak] {
+    display: none !important;
+}
+
+/* ===== Brand Logo Animation ===== */
+.brand-logo {
+    transition: transform 0.3s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.05);
+}
+
+/* ===== Table Improvements ===== */
+.data-table {
+    @apply w-full;
+}
+
+.data-table thead {
+    @apply bg-gray-50/80 dark:bg-gray-700/30;
+}
+
+.data-table th {
+    @apply px-6 py-3.5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider;
+}
+
+.data-table td {
+    @apply px-6 py-4 text-sm;
+}
+
+.data-table tbody tr {
+    @apply border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50/50 dark:hover:bg-gray-700/20 transition-colors duration-150;
+}
+
+.data-table tbody tr:last-child {
+    @apply border-b-0;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+    @apply text-center py-16 px-4;
+}
+
+.empty-state-icon {
+    @apply text-5xl text-gray-300 dark:text-gray-600 mb-4;
+}
+
+.empty-state-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-white mb-2;
+}
+
+.empty-state-text {
+    @apply text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto;
 }

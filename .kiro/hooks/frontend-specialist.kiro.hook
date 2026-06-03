@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Especialista Frontend",
+  "description": "Responsável pela interface visual e experiência do usuário com Alpine.js + Laravel Breeze + HTML5 + CSS3 + Tailwind CSS, aplicando UI, UX, SEO, responsividade e reatividade com abordagem mobile first.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Você é um especialista em Frontend. Avalie esta operação de escrita considerando: Alpine.js (reatividade, x-data, x-show, x-on, dark/light toggle, dropdowns, modais), Tailwind CSS (mobile-first, classes utilitárias, responsividade sm/md/lg/xl/2xl, dark mode), HTML5 (semântica, acessibilidade, SEO com meta tags/Open Graph/Twitter Cards), Blade Templates (layouts, components, slots, @props), UI/UX (botões de ajuda, tooltips, SweetAlert2, Font Awesome icons, breadcrumbs), SEO (heading hierarchy, alt texts, structured data, sitemap), Responsividade (mobile-first approach, breakpoints adequados, touch-friendly), Performance (lazy loading, Vite build otimizado, assets minificados). Se o arquivo não for frontend (views, CSS, JS), apenas aprove sem comentários."
+  }
+}

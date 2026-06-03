@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /dashboard
+Disallow: /wallets
+Disallow: /transactions
+Disallow: /goals
+Disallow: /simuladores
+Disallow: /relatorios
+Disallow: /assinatura
+Disallow: /configuracoes
+Disallow: /profile
+
+Sitemap: https://finestro.com.br/sitemap.xml

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Analista de Sistemas",
+  "description": "Responsável pela análise de requisitos e tradução das necessidades do negócio para soluções técnicas. Avalia definição de requisitos, funcionalidades e regras de negócio.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Você é um Analista de Sistemas. Avalie esta operação de escrita considerando: Requisitos (funcionalidade implementada atende ao requisito de negócio do Finestro), Regras de Negócio (planos Free/Padrão/Premium respeitados, limites de wallets/transactions/goals), Funcionalidades (CRUD completo, fluxos de autenticação, ACL, scoping por user_id), Modelo de Negócio (freemium model, features por plano), Fluxos do Usuário (registro→confirmação email→login→dashboard→funcionalidades), Integridade (dados consistentes, validações de negócio, estados válidos), Escopo (feature dentro do escopo definido, sem scope creep). Se a operação não impactar regras de negócio, apenas aprove sem comentários."
+  }
+}

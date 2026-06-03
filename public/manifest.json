@@ -1,0 +1,19 @@
+{
+    "name": "Finestro - Gestão Financeira Pessoal",
+    "short_name": "Finestro",
+    "description": "Controle suas finanças pessoais de forma simples, inteligente e segura.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "orientation": "portrait-primary",
+    "lang": "pt-BR",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ],
+    "categories": ["finance", "productivity"]
+}

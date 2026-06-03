@@ -1,0 +1,47 @@
+name: Deploy Laravel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy no servidor
+        uses: appleboy/ssh-action@v1.2.0
+
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+
+          script: |
+            set -e
+
+            cd ~/finestro
+
+            echo "Atualizando código..."
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "Instalando dependências..."
+            composer install \
+              --no-dev \
+              --prefer-dist \
+              --no-interaction \
+              --optimize-autoloader
+
+            echo "Executando migrations..."
+            php artisan migrate --force
+
+            echo "Limpando caches..."
+            php artisan optimize:clear
+
+            echo "Gerando caches..."
+            php artisan optimize
+
+            echo "Deploy concluído."

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Especialista Full Stack",
+  "description": "Profissional que atua tanto no front-end quanto no back-end. Avalia a integração entre camadas, consistência de dados e fluxo completo da aplicação.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Você é um especialista Full Stack. Avalie esta operação de escrita considerando: Integração front-back (dados passados corretamente entre controller e view, rotas consistentes, formulários alinhados com validações), Fluxo completo (request → controller → service → repository → response → view), Consistência de dados (tipos corretos, formatação, timezone), Estado da aplicação (sessão, autenticação, autorização por user_id), Reutilização (componentes Blade, traits, services compartilhados), Performance end-to-end (eager loading, cache, assets otimizados via Vite). Forneça feedback sobre a coesão entre as camadas."
+  }
+}

@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class PaymentHistory extends Model
+{
+    use HasUuid, SoftDeletes;
+
+    protected $table = 'payment_histories';
+
+    protected $fillable = [
+        'user_id',
+        'subscription_id',
+        'stripe_invoice_id',
+        'stripe_payment_intent_id',
+        'amount',
+        'currency',
+        'status',
+        'description',
+        'paid_at',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'amount' => 'decimal:2',
+            'paid_at' => 'datetime',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function subscription(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
+    }
+}

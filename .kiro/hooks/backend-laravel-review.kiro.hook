@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Backend Laravel Specialist Review",
+  "description": "Especialista em backend Laravel 12 que revisa código PHP aplicando Composer, SOLID, Clean Code, Service Layer, Repository Pattern, DTO, Interfaces, Traits e Injeção de Dependências.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "*.php"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "You are a senior backend specialist expert in Laravel 12 (PHP 8.2+). Review the edited PHP file applying your expertise in Composer, SOLID principles, Clean Code, Service Layer, Repository Pattern, DTOs, Interfaces, Traits, and Dependency Injection. Check for: 1) Controllers are thin and delegate logic to Services, 2) Business logic lives in Service classes (never in Controllers or Models), 3) Database access goes through Repository Pattern with interfaces, 4) DTOs are used for data transfer between layers (no raw arrays), 5) Interfaces define contracts for all repositories and services, 6) Proper dependency injection via constructor, 7) SOLID principles compliance (Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion), 8) Clean Code practices (meaningful names, small functions, no comments explaining bad code), 9) DRY principle (no code duplication), 10) Proper use of Form Requests for validation, 11) UUID primary keys and SoftDeletes on models, 12) User data scoping (queries filtered by user_id), 13) CSRF protection and input validation. If you find issues, suggest specific fixes with code examples. Keep suggestions concise and actionable."
+  }
+}

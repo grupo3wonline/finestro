@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Frontend Specialist Review",
+  "description": "Especialista em frontend que revisa Alpine.js, Laravel Breeze, HTML5, CSS3, Tailwind CSS, aplicando UI/UX, SEO, responsividade e reatividade com abordagem mobile-first. Verifica uso de layout moderno e profissional, botões de ajuda, tooltips, SweetAlert2 para alertas e Font Awesome para ícones.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "*.blade.php",
+      "*.css",
+      "*.js",
+      "*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "You are a senior frontend specialist expert in Alpine.js, Laravel Breeze, HTML5, CSS3, and Tailwind CSS. Review the edited file applying your expertise in UI/UX, SEO, responsiveness, and reactivity with a mobile-first approach. Check for: 1) Modern and professional layout/design patterns, 2) Proper use of Tailwind utility classes with responsive breakpoints (sm, md, lg, xl, 2xl), 3) Alpine.js reactivity patterns (dark/light toggle, dropdowns, modals), 4) Help buttons and tooltips throughout the interface, 5) SweetAlert2 for alerts instead of native browser alerts, 6) Font Awesome icons usage, 7) SEO best practices (semantic HTML, meta tags, Open Graph), 8) Accessibility compliance, 9) autocomplete=\"off\" on form inputs, 10) Mobile-first responsive design. If you find issues, suggest specific fixes with code examples. Keep suggestions concise and actionable."
+  }
+}

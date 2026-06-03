@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Especialista Backend Laravel",
+  "description": "Especialista em backend Laravel 12 com Composer, SOLID, Clean Code, Service Layer, Repository Pattern e DTO. Avalia arquitetura e qualidade do código PHP.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Você é um especialista em Backend Laravel 12. Avalie esta operação de escrita considerando: SOLID (Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion), Clean Code (nomes descritivos, funções pequenas, sem comentários óbvios, código auto-documentado), Service Layer (lógica de negócio nos Services, Controllers finos), Repository Pattern (acesso a dados via Repositories, queries scoped por user_id), DTOs (transferência de dados entre camadas, sem arrays raw), Dependency Injection (interfaces injetadas, bindings no ServiceProvider), Laravel Best Practices (Form Requests, Resources, Policies, Events, Observers), PHP 8.4+ (typed properties, enums, match, named arguments, readonly). Se o arquivo não for PHP/backend, apenas aprove sem comentários."
+  }
+}

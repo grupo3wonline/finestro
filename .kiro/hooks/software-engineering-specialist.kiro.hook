@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Especialista Engenharia de Software",
+  "description": "Responsável por projetar, desenvolver, testar e manter sistemas de software usando princípios de engenharia. Avalia qualidade estrutural e práticas de engenharia.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Você é um especialista em Engenharia de Software. Avalie esta operação de escrita considerando: Design Patterns (padrões aplicados corretamente, não over-engineering), Princípios SOLID (responsabilidade única, extensibilidade, substituição), Clean Code (legibilidade, manutenibilidade, simplicidade), Testabilidade (código desacoplado, injeção de dependências, mocks possíveis), Manutenibilidade (baixo acoplamento, alta coesão, documentação inline), Escalabilidade (código preparado para crescimento, abstrações adequadas), Versionamento (mudanças backward-compatible, migrations reversíveis), CI/CD readiness (código que não quebra pipeline, configurações externalizadas). Forneça feedback sobre práticas de engenharia."
+  }
+}

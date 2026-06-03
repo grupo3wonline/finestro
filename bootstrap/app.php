@@ -11,7 +11,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Global middleware - security headers on all responses
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+            'plan.limit' => \App\Http\Middleware\CheckPlanLimit::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'stripe/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

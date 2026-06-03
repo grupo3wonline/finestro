@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "Database & Eloquent Specialist Review",
+  "description": "Especialista em banco de dados MySQL 8 e Laravel ORM Eloquent que revisa migrations, models, queries, relacionamentos, indexes, eager loading e prevenção de N+1 queries.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/migrations/*.php",
+      "**/Models/*.php",
+      "**/Repositories/*.php",
+      "**/database/**/*.php",
+      "**/sql/*.sql"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "You are a senior database specialist expert in MySQL 8 and Laravel Eloquent ORM. Review the edited file applying your expertise in database design, query optimization, and Eloquent best practices. Check for: 1) Proper use of UUID as primary keys, 2) SoftDeletes on all models/migrations, 3) Proper indexes on frequently queried columns (foreign keys, status fields, dates), 4) Eager loading to prevent N+1 queries, 5) Proper relationships definition (hasMany, belongsTo, morphMany, etc.), 6) Foreign key constraints with proper cascading, 7) Normalized schema design, 8) Query scoping by user_id for data isolation, 9) Proper use of query scopes, 10) Caching strategies where appropriate, 11) Stored procedures, functions, triggers usage where beneficial, 12) Migration best practices (reversible, atomic), 13) Factory and Seeder completeness, 14) Parameterized queries (no raw SQL injection risks), 15) Performance considerations (avoid SELECT *, use chunking for large datasets). If you find issues, suggest specific fixes with code examples. Keep suggestions concise and actionable."
+  }
+}
