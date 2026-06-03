@@ -17,13 +17,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+          extensions: mbstring, zip, pdo_mysql
 
       - name: Instalar dependências
-        run: composer install \
-          --no-dev \
-          --prefer-dist \
-          --optimize-autoloader \
-          --no-interaction
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
       - name: Executando migrations...
         run: php artisan migrate --force
