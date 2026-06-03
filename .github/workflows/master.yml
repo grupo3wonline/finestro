@@ -1,11 +1,11 @@
+name: 🚀 Deploy website to FTP Server Hostgator
+
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-name: 🚀 Deploy website to FTP Server Hostgator
+      - master
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -14,43 +14,49 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install NPM dependencies and build
+        run: |
+          npm ci
+          npm run build
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: mbstring, zip, pdo_mysql
 
-      - name: Composer Install
+      - name: Install Composer dependencies
         run: |
-          composer install \
-            --no-dev \
-            --prefer-dist \
-            --optimize-autoloader \
-            --no-interaction
+          composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
-      - name: Executando migrations...
-      - run: php artisan migrate --force --seed
-
-      - name: Limpando caches...
-      - run: |
-          composer dump-autoload
+      - name: Optimize Laravel
+        run: |
           php artisan config:clear
           php artisan cache:clear
-          php artisan optimize
-          php artisan optimize:clear
+          php artisan route:clear
+          php artisan view:clear
 
-      - name: Limpar arquivos desnecessários
+      - name: Remove unnecessary files
         run: |
           rm -rf .git
+          rm -rf .github
           rm -rf tests
           rm -rf node_modules
+          rm -rf .editorconfig
+          rm -rf .styleci.yml
+          rm -rf phpunit.xml
 
       - name: 📂 Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.ftp_host }}
-          username: ${{ secrets.ftp_user }}
-          password: ${{ secrets.ftp_password }}
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
           server-dir: finestro/
-
-      - name: Deploy concluído.
