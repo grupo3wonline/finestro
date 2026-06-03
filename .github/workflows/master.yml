@@ -2,7 +2,8 @@ on:
   push:
     branches:
       - main
-    pull_request:
+  pull_request:
+    branches:
       - main
 name: 🚀 Deploy website to FTP Server Hostgator
 
@@ -12,6 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Using Node.Js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: |
+          npm ci
+          npm install
+          npm run build
+          npm run test
+
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
