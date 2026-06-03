@@ -1,11 +1,8 @@
-name: 🚀 Deploy website to FTP Server Hostgator
-
 on:
   push:
     branches:
       - main
-      - master
-
+name: 🚀 Deploy website to FTP Server Hostgator
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -20,15 +17,4 @@ jobs:
           server: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          protocol: ftp
-          port: 21
           server-dir: finestro/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            .env
-            .editorconfig
-            .styleci.yml
-            tests/**
-            phpunit.xml
