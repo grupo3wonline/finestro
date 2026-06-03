@@ -10,38 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy no servidor
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PASSWORD }}
-          # port: ${{ secrets.PORT }}
+          php-version: '8.3'
 
-          script: |
-            set -e
+      - name: Instalar dependências
+        run: composer install \
+          --no-dev \
+          --prefer-dist \
+          --optimize-autoloader \
+          --no-interaction
 
-            cd ~/finestro
+      - name: Executando migrations...
+        run: php artisan migrate --force
 
-            echo "Atualizando código..."
-            git fetch origin
-            git reset --hard origin/main
+      - name: Limpando caches...
+        run: php artisan optimize:clear
 
-            echo "Instalando dependências..."
-            composer install \
-              --no-dev \
-              --prefer-dist \
-              --no-interaction \
-              --optimize-autoloader
+      - name: Gerando caches...
+        run: php artisan optimize
 
-            echo "Executando migrations..."
-            php artisan migrate --force
+      - name: Limpar arquivos desnecessários
+        run: |
+          rm -rf .git
+          rm -rf tests
+          rm -rf node_modules
 
-            echo "Limpando caches..."
-            php artisan optimize:clear
-
-            echo "Gerando caches..."
-            php artisan optimize
-
-            echo "Deploy concluído."
+      - name: Deploy FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ~/finestro
