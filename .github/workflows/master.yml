@@ -20,6 +20,8 @@ jobs:
           server: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          protocol: ftps
+          port: 21
           server-dir: finestro/
           exclude: |
             **/.git*
