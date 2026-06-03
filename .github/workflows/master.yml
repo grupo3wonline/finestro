@@ -1,18 +1,18 @@
 on:
   push:
     branches:
-      - main
-name: 🚀 Deploy website to FTP Server Hostgator
+      - develop
+name: 🚀 Deploy test website on push
 jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      - name: 📂 Sync files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.ftp_host }}
           username: ${{ secrets.ftp_user }}
