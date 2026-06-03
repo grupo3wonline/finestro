@@ -1,46 +1,25 @@
 name: Deploy Laravel
-
 on:
   push:
     branches:
       - main
-
+      - master
+  pull_request:
+    branches:
+      - master
+name: 🚀 Deploy website to FTP Server Hostigator
 jobs:
-  deploy:
+  web-deploy:
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
-      - name: Configurar PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: mbstring, zip, pdo_mysql
-
-      - name: Instalar dependências
-        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
-
-      - name: Executando migrations...
-        run: php artisan migrate --force
-
-      - name: Limpando caches...
-        run: php artisan optimize:clear
-
-      - name: Gerando caches...
-        run: php artisan optimize
-
-      - name: Limpar arquivos desnecessários
-        run: |
-          rm -rf .git
-          rm -rf tests
-          rm -rf node_modules
-
-      - name: Deploy FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
+          username: ${{ secrets.ftp_user }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ~/finestro
+          server-dir: finestro/
