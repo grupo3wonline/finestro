@@ -20,7 +20,7 @@ jobs:
           server: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          protocol: ftp
+          protocol: ftps
           port: 21
           server-dir: finestro/
           exclude: |
