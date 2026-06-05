@@ -7,10 +7,10 @@
     $nearLimit = ($walletsCount >= $limits['wallets']) || ($transactionsCount >= ($limits['transactions_per_month'] * 0.8));
 @endphp
 @if($nearLimit)
-<div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white px-4 py-2 text-center text-sm">
-    <i class="fas fa-info-circle mr-1"></i>
-    Você está próximo do limite do plano gratuito.
-    <a href="{{ route('subscription.plans') }}" class="underline font-semibold ml-1 hover:text-primary-200">Fazer upgrade →</a>
+<div class="bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 text-center text-sm">
+    <i class="fas fa-fire mr-1 text-yellow-300"></i>
+    <strong>OFERTA LIMITADA:</strong> Plano Profissional com <strong>40% OFF</strong> — de <span class="line-through">R$ 41,58</span> por <strong>R$ 24,90/mês</strong>.
+    <a href="{{ route('subscription.plans') }}" class="underline font-bold ml-1 hover:text-yellow-200">Garantir agora →</a>
 </div>
 @endif
 @endif

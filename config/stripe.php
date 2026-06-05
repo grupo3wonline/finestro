@@ -20,7 +20,8 @@ return [
         ],
         'professional' => [
             'name' => 'Profissional',
-            'price' => 29.90,
+            'price' => 24.90,
+            'original_price' => 41.58,
             'stripe_price_id' => env('STRIPE_PROFESSIONAL_PRICE_ID'),
             'features' => [
                 'Carteiras ilimitadas',

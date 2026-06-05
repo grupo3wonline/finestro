@@ -230,11 +230,23 @@
     <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900"></div>
     <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">Pronto para transformar suas finanças?</h2>
-        <p class="text-lg text-primary-100 mb-10 max-w-2xl mx-auto">Junte-se a milhares de pessoas que já estão no controle do seu dinheiro. Comece agora, é grátis!</p>
-        <a href="{{ route('register') }}" class="inline-flex items-center px-10 py-5 bg-white text-primary-700 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 text-lg">
-            <i class="fas fa-user-plus mr-2"></i> Criar Minha Conta Grátis
-        </a>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Pronto para transformar suas finanças?</h2>
+        <p class="text-lg text-primary-100 mb-4 max-w-2xl mx-auto">Junte-se a milhares de pessoas que já estão no controle do seu dinheiro. Comece grátis e desbloqueie tudo com o Plano Profissional.</p>
+
+        <!-- Urgency pricing highlight -->
+        <div class="inline-flex items-center bg-white/10 backdrop-blur rounded-full px-6 py-2 mb-6 border border-white/20">
+            <span class="text-yellow-300 font-bold text-sm mr-2"><i class="fas fa-fire mr-1"></i> OFERTA LIMITADA:</span>
+            <span class="text-white/70 line-through text-sm mr-2">R$ 41,58</span>
+            <span class="text-white font-black text-lg">R$ 24,90/mês</span>
+            <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full ml-2">-40%</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="{{ route('register') }}" class="inline-flex items-center px-10 py-5 bg-white text-primary-700 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 text-lg">
+                <i class="fas fa-user-plus mr-2"></i> Criar Minha Conta Grátis
+            </a>
+        </div>
+        <p class="text-xs text-primary-200 mt-4"><i class="fas fa-clock mr-1"></i> Preço promocional por tempo limitado. Garanta antes que volte para R$ 41,58/mês.</p>
     </div>
 </section>
 

@@ -35,7 +35,8 @@
     </div>
 
     <a href="{{ route('subscription.plans') }}" class="inline-flex items-center px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition shadow-lg">
-        <i class="fas fa-crown mr-2"></i> Fazer Upgrade — R$ 29,90/mês
+        <i class="fas fa-crown mr-2"></i> Fazer Upgrade — <span class="line-through text-primary-200 mr-1">R$ 41,58</span> R$ 24,90/mês
     </a>
+    <p class="text-xs text-red-500 mt-2 font-semibold"><i class="fas fa-hourglass-half mr-1"></i> Promoção por tempo limitado — 40% OFF</p>
 </div>
 @endsection

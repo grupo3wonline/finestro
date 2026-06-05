@@ -140,7 +140,7 @@ class SubscriptionController extends Controller
                     'user_id' => $user->id,
                     'subscription_id' => $user->fresh()->subscription->id,
                     'stripe_payment_intent_id' => $session->payment_intent ?? null,
-                    'amount' => config('stripe.plans.professional.price', 29.90),
+                    'amount' => config('stripe.plans.professional.price', 24.90),
                     'currency' => 'BRL',
                     'status' => 'paid',
                     'description' => 'Assinatura Plano Profissional',

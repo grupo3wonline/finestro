@@ -20,7 +20,7 @@
             <p class="text-gray-600 dark:text-gray-400 text-sm">Gerencie seu plano, vigência e histórico de pagamentos.</p>
         </div>
         <a href="{{ route('subscription.plans') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition">
-            <i class="fas fa-arrow-up mr-2"></i> {{ $user->isProfessional() ? 'Gerenciar Plano' : 'Fazer Upgrade' }}
+            <i class="fas fa-arrow-up mr-2"></i> {{ $user->isProfessional() ? 'Gerenciar Plano' : '🔥 Upgrade -40% OFF' }}
         </a>
     </div>
 
@@ -34,7 +34,7 @@
                         {{ $user->isProfessional() ? 'Profissional' : 'Básico (Gratuito)' }}
                     </h2>
                     @if($user->isProfessional())
-                    <p class="text-primary-200 text-sm mt-1">R$ 29,90/mês</p>
+                    <p class="text-primary-200 text-sm mt-1"><span class="line-through opacity-70">R$ 41,58</span> R$ 24,90/mês <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full ml-1">-40%</span></p>
                     @endif
                 </div>
                 <div class="w-16 h-16 {{ $user->isProfessional() ? 'bg-white/20' : 'bg-gray-300 dark:bg-gray-500' }} rounded-full flex items-center justify-center">
@@ -89,7 +89,8 @@
         @else
         <div class="p-6 border-t border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Você está no plano gratuito. <a href="{{ route('subscription.plans') }}" class="text-primary-600 hover:underline font-medium">Faça upgrade</a> para desbloquear todos os recursos.
+                Você está no plano gratuito. <a href="{{ route('subscription.plans') }}" class="text-primary-600 hover:underline font-bold">Faça upgrade com 40% OFF →</a>
+                <span class="block mt-1 text-xs text-red-500 font-semibold"><i class="fas fa-clock mr-1"></i> Oferta por tempo limitado: de <span class="line-through">R$ 41,58</span> por apenas R$ 24,90/mês</span>
             </p>
         </div>
         @endif

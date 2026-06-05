@@ -23,13 +23,13 @@ class CheckPlanLimit
 
         if ($type === 'feature') {
             if (!$user->hasFeature($resource)) {
-                return redirect()->back()->with('error', 'Este recurso está disponível apenas no plano Profissional. Faça upgrade para desbloquear.');
+                return redirect()->back()->with('error', 'Este recurso está disponível apenas no plano Profissional. Aproveite: 40% OFF por tempo limitado — de R$ 41,58 por R$ 24,90/mês.');
             }
         }
 
         if ($type === 'create') {
             if (!$user->canCreate($resource)) {
-                return redirect()->back()->with('error', "Você atingiu o limite do plano gratuito para {$this->getResourceLabel($resource)}. Faça upgrade para o plano Profissional.");
+                return redirect()->back()->with('error', "Você atingiu o limite do plano gratuito para {$this->getResourceLabel($resource)}. Faça upgrade para o plano Profissional com 40% OFF — apenas R$ 24,90/mês.");
             }
         }
 
