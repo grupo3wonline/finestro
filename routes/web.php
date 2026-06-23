@@ -7,6 +7,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\SimulatorController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TransactionController;
@@ -45,6 +46,19 @@ Route::post('/stripe/webhook', [SubscriptionController::class, 'webhook'])
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Terms Acceptance (must be accessible without terms.accepted middleware)
+    Route::get('/aceitar-termos', fn () => view('auth.accept-terms'))->name('terms.accept');
+    Route::post('/aceitar-termos', function (\Illuminate\Http\Request $request) {
+        $request->validate(['terms' => ['required', 'accepted']], [
+            'terms.required' => 'Você deve aceitar os Termos de Uso.',
+            'terms.accepted' => 'Você deve aceitar os Termos de Uso.',
+        ]);
+        $request->user()->update(['terms_accepted_at' => now()]);
+        return redirect()->route('dashboard')->with('success', 'Termos aceitos com sucesso! Bem-vindo ao Finestro.');
+    })->name('terms.store');
+});
+
+Route::middleware(['auth', 'verified', 'terms.accepted'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -60,12 +74,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Categories
     Route::resource('categories', CategoryController::class)->except(['show']);
 
+    // Calculators (free for all users)
+    Route::prefix('calculadoras')->name('calculators.')->group(function () {
+        Route::get('/', [CalculatorController::class, 'index'])->name('index');
+        Route::get('/investimento', [CalculatorController::class, 'investment'])->name('investment');
+        Route::get('/juros', [CalculatorController::class, 'interest'])->name('interest');
+        Route::get('/aposentadoria', [CalculatorController::class, 'retirement'])->name('retirement');
+        Route::get('/decimo-terceiro', [CalculatorController::class, 'thirteenthSalary'])->name('thirteenth-salary');
+        Route::get('/ferias', [CalculatorController::class, 'vacation'])->name('vacation');
+        Route::get('/financiamento', [CalculatorController::class, 'financing'])->name('financing');
+        Route::get('/cotacao-moedas', [CalculatorController::class, 'currency'])->name('currency');
+    });
+
     // Simulators
     Route::prefix('simuladores')->name('simulators.')->group(function () {
         Route::get('/', [SimulatorController::class, 'index'])->name('index');
         Route::get('/investimento', [SimulatorController::class, 'investment'])->name('investment');
         Route::get('/aposentadoria', [SimulatorController::class, 'retirement'])->name('retirement');
         Route::get('/orcamento', [SimulatorController::class, 'budget'])->name('budget');
+        Route::get('/perfil-financeiro', [SimulatorController::class, 'financialProfile'])->name('financial-profile');
+        Route::get('/perfil-investidor', [SimulatorController::class, 'investorProfile'])->name('investor-profile');
     });
 
     // Reports
@@ -99,6 +127,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/analisar-financas', [AiController::class, 'analyzeFinances'])->name('analyze.finances');
         Route::post('/analisar-metas', [AiController::class, 'analyzeGoals'])->name('analyze.goals');
         Route::post('/gerar-plano', [AiController::class, 'generatePlan'])->name('generate.plan');
+        Route::post('/parecer-tecnico', [AiController::class, 'technicalReport'])->name('technical.report');
+        Route::post('/planejamento', [AiController::class, 'financialPlanning'])->name('financial.planning');
     });
 
     // Profile (from Breeze)

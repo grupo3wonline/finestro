@@ -35,6 +35,10 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'string', 'max:50', 'unique:' . User::class, 'alpha_dash'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'terms' => ['required', 'accepted'],
+        ], [
+            'terms.required' => 'Você deve aceitar os Termos de Uso para criar sua conta.',
+            'terms.accepted' => 'Você deve aceitar os Termos de Uso para criar sua conta.',
         ]);
 
         $user = User::create([
@@ -42,6 +46,7 @@ class RegisteredUserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'terms_accepted_at' => now(),
         ]);
 
         event(new Registered($user));

@@ -39,7 +39,7 @@
     </div>
     @else
     <!-- AI Features Grid -->
-    <div class="grid md:grid-cols-3 gap-6">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Analyze Finances -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
@@ -69,10 +69,34 @@
             <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
                 <i class="fas fa-lightbulb text-white text-xl"></i>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Plano Financeiro</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Plano por Objetivo</h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Gere um plano financeiro personalizado para atingir um objetivo específico.</p>
             <button @click="showPlanForm = true" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition">
                 <i class="fas fa-magic mr-2"></i> Gerar Plano
+            </button>
+        </div>
+
+        <!-- Technical Report -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center mb-4">
+                <i class="fas fa-file-alt text-white text-xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Parecer Técnico</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Receba um parecer técnico formal com indicadores, nota e classificação da sua saúde financeira.</p>
+            <button @click="technicalReport()" :disabled="loading" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition">
+                <i class="fas fa-file-signature mr-2"></i> Gerar Parecer
+            </button>
+        </div>
+
+        <!-- Financial Planning -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center mb-4">
+                <i class="fas fa-route text-white text-xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Planejamento Financeiro</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Crie um planejamento completo com orçamento, investimentos, cenários e timeline.</p>
+            <button @click="showPlanningForm = true" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition">
+                <i class="fas fa-magic mr-2"></i> Criar Planejamento
             </button>
         </div>
     </div>
@@ -102,6 +126,53 @@
                 <button @click="showPlanForm = false" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">Cancelar</button>
                 <button @click="generatePlan()" :disabled="loading || !planForm.objective" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-medium rounded-lg transition">
                     <i class="fas fa-magic mr-1"></i> Gerar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Planning Form Modal -->
+    <div x-show="showPlanningForm" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" @keydown.escape.window="showPlanningForm = false">
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="showPlanningForm = false"></div>
+        <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg p-6 z-10" x-transition>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <i class="fas fa-route text-teal-500 mr-2"></i> Planejamento Financeiro Completo
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horizonte de tempo *</label>
+                    <select x-model="planningForm.horizon" class="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
+                        <option value="">Selecione...</option>
+                        <option value="short">Curto prazo (até 1 ano)</option>
+                        <option value="medium">Médio prazo (1 a 5 anos)</option>
+                        <option value="long">Longo prazo (5+ anos)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prioridade principal *</label>
+                    <select x-model="planningForm.priority" class="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
+                        <option value="">Selecione...</option>
+                        <option value="security">Segurança financeira (reserva de emergência)</option>
+                        <option value="growth">Crescimento patrimonial (investimentos)</option>
+                        <option value="freedom">Liberdade financeira (independência)</option>
+                        <option value="retirement">Aposentadoria (renda passiva)</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Renda mensal (R$)</label>
+                        <input type="number" x-model="planningForm.monthly_income" autocomplete="off" placeholder="5000" step="0.01" min="0" class="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Despesas mensais (R$)</label>
+                        <input type="number" x-model="planningForm.monthly_expenses" autocomplete="off" placeholder="3500" step="0.01" min="0" class="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button @click="showPlanningForm = false" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">Cancelar</button>
+                <button @click="financialPlanning()" :disabled="loading || !planningForm.horizon || !planningForm.priority" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-medium rounded-lg transition">
+                    <i class="fas fa-magic mr-1"></i> Criar Planejamento
                 </button>
             </div>
         </div>
@@ -152,7 +223,9 @@ function aiInsights() {
         provider: '',
         error: '',
         showPlanForm: false,
+        showPlanningForm: false,
         planForm: { objective: '', timeline: '', monthly_available: '' },
+        planningForm: { horizon: '', priority: '', monthly_income: '', monthly_expenses: '' },
 
         async analyzeFinances() {
             await this.makeRequest('{{ route("ai.analyze.finances") }}', {});
@@ -165,6 +238,15 @@ function aiInsights() {
         async generatePlan() {
             this.showPlanForm = false;
             await this.makeRequest('{{ route("ai.generate.plan") }}', this.planForm);
+        },
+
+        async technicalReport() {
+            await this.makeRequest('{{ route("ai.technical.report") }}', {});
+        },
+
+        async financialPlanning() {
+            this.showPlanningForm = false;
+            await this.makeRequest('{{ route("ai.financial.planning") }}', this.planningForm);
         },
 
         async makeRequest(url, data) {

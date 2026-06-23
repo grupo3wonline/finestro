@@ -18,9 +18,15 @@ class WalletController extends Controller
 
     public function index(Request $request): View
     {
-        $wallets = $this->walletService->getAllWallets($request->only(['type', 'is_active']));
+        $user = auth()->user();
+        $wallets = $this->walletService->getAllWallets($request->only(['type', 'ownership', 'is_active']));
 
-        return view('wallets.index', compact('wallets'));
+        // Get shared wallets (business wallets shared with this user)
+        $sharedWallets = \App\Models\Wallet::whereHas('members', function ($query) use ($user) {
+            $query->where('user_id', $user->id)->whereNotNull('accepted_at');
+        })->where('user_id', '!=', $user->id)->get();
+
+        return view('wallets.index', compact('wallets', 'sharedWallets'));
     }
 
     public function create(): View|RedirectResponse

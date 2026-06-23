@@ -58,6 +58,26 @@
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Planeje seu orçamento mensal usando a regra 50-30-20 e veja como distribuir sua renda.</p>
             <span class="text-primary-600 text-sm font-medium">Simular <i class="fas fa-arrow-right ml-1"></i></span>
         </a>
+
+        <!-- Financial Profile Test -->
+        <a href="{{ route('simulators.financial-profile') }}" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700 transition group">
+            <div class="w-14 h-14 bg-teal-100 dark:bg-teal-900/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                <i class="fas fa-clipboard-check text-2xl text-teal-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Perfil Financeiro</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Descubra seu perfil financeiro e receba dicas personalizadas para melhorar sua saúde financeira.</p>
+            <span class="text-primary-600 text-sm font-medium">Fazer teste <i class="fas fa-arrow-right ml-1"></i></span>
+        </a>
+
+        <!-- Investor Profile Test -->
+        <a href="{{ route('simulators.investor-profile') }}" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700 transition group">
+            <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                <i class="fas fa-balance-scale text-2xl text-indigo-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Perfil Investidor</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Analise sua tolerância a risco e descubra quais tipos de investimento combinam com você.</p>
+            <span class="text-primary-600 text-sm font-medium">Fazer teste <i class="fas fa-arrow-right ml-1"></i></span>
+        </a>
     </div>
 </div>
 @endsection

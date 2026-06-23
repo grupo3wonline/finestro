@@ -19,13 +19,25 @@ class ReportController extends Controller
     {
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->toDateString());
         $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->toDateString());
+        $walletFilter = $request->get('wallet_id');
+        $typeFilter = $request->get('type');
 
         $transactions = $this->transactionService->getTransactionsByDateRange($startDate, $endDate);
+
+        // Apply additional filters
+        if ($walletFilter) {
+            $transactions = $transactions->where('wallet_id', $walletFilter);
+        }
+        if ($typeFilter) {
+            $transactions = $transactions->where('type', $typeFilter);
+        }
+
         $wallets = $this->walletService->getAllWallets();
 
         $totalIncome = $transactions->where('type', 'income')->sum('amount');
         $totalExpenses = $transactions->where('type', 'expense')->sum('amount');
         $balance = $totalIncome - $totalExpenses;
+        $transactionCount = $transactions->count();
 
         // Group by category
         $byCategory = $transactions->groupBy(function ($t) {
@@ -59,17 +71,46 @@ class ReportController extends Controller
             ];
         })->sortKeys();
 
+        // Top 5 expenses
+        $topExpenses = $transactions->where('type', 'expense')
+            ->sortByDesc('amount')
+            ->take(5);
+
+        // Monthly comparison (current period vs previous same-length period)
+        $periodDays = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
+        $prevStart = Carbon::parse($startDate)->subDays($periodDays + 1)->toDateString();
+        $prevEnd = Carbon::parse($startDate)->subDay()->toDateString();
+        $prevTransactions = $this->transactionService->getTransactionsByDateRange($prevStart, $prevEnd);
+
+        $prevIncome = $prevTransactions->where('type', 'income')->sum('amount');
+        $prevExpenses = $prevTransactions->where('type', 'expense')->sum('amount');
+
+        $incomeChange = $prevIncome > 0 ? (($totalIncome - $prevIncome) / $prevIncome) * 100 : 0;
+        $expenseChange = $prevExpenses > 0 ? (($totalExpenses - $prevExpenses) / $prevExpenses) * 100 : 0;
+
+        // Expense categories for pie chart
+        $expenseByCategory = $transactions->where('type', 'expense')->groupBy(function ($t) {
+            return $t->category ? $t->category->name : 'Sem Categoria';
+        })->map(fn($group) => $group->sum('amount'))->sortByDesc(fn($v) => $v);
+
         return view('reports.index', compact(
             'transactions',
             'wallets',
             'totalIncome',
             'totalExpenses',
             'balance',
+            'transactionCount',
             'byCategory',
             'byWallet',
             'dailyData',
             'startDate',
-            'endDate'
+            'endDate',
+            'walletFilter',
+            'typeFilter',
+            'topExpenses',
+            'incomeChange',
+            'expenseChange',
+            'expenseByCategory'
         ));
     }
 

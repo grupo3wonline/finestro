@@ -55,8 +55,31 @@
                 </div>
             </div>
             <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $wallet->name }}</h3>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">{{ ucfirst($wallet->type) }}</p>
+            <div class="flex items-center gap-2 mb-3">
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ ucfirst($wallet->type) }}</p>
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium {{ $wallet->ownership === 'business' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' }}">
+                    <i class="fas {{ $wallet->ownership === 'business' ? 'fa-building' : 'fa-user' }} mr-1 text-[10px]"></i>
+                    {{ $wallet->ownership === 'business' ? 'Empresa' : 'Pessoal' }}
+                </span>
+            </div>
             <p class="text-2xl font-bold text-gray-900 dark:text-white">R$ {{ number_format($wallet->balance, 2, ',', '.') }}</p>
+            @if($wallet->isCreditCard() && $wallet->credit_limit)
+            <div class="mt-2">
+                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    <span>Limite: R$ {{ number_format($wallet->credit_limit, 2, ',', '.') }}</span>
+                    <span>{{ number_format($wallet->credit_usage_percent, 0) }}% usado</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                    <div class="h-1.5 rounded-full {{ $wallet->credit_usage_percent > 80 ? 'bg-red-500' : ($wallet->credit_usage_percent > 50 ? 'bg-yellow-500' : 'bg-green-500') }}" style="width: {{ min(100, $wallet->credit_usage_percent) }}%"></div>
+                </div>
+            </div>
+            @endif
+            @if($wallet->isBusiness() && $wallet->company_name)
+            <p class="text-xs text-purple-600 dark:text-purple-400 mt-2"><i class="fas fa-building mr-1"></i> {{ $wallet->company_name }}</p>
+            @endif
+            @if($wallet->is_shared)
+            <p class="text-xs text-green-600 dark:text-green-400 mt-1"><i class="fas fa-users mr-1"></i> Compartilhada</p>
+            @endif
             @if($wallet->description)
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ Str::limit($wallet->description, 60) }}</p>
             @endif
@@ -72,5 +95,38 @@
         </div>
         @endforelse
     </div>
+
+    <!-- Shared Wallets Section -->
+    @if(isset($sharedWallets) && $sharedWallets->count() > 0)
+    <div class="mt-8">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <i class="fas fa-share-alt text-purple-500 mr-2"></i> Carteiras Compartilhadas Comigo
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @foreach($sharedWallets as $wallet)
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border-2 border-purple-200 dark:border-purple-800 hover:shadow-md transition relative">
+                <div class="absolute top-2 right-2">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400">
+                        <i class="fas fa-share-alt mr-1 text-[10px]"></i> Compartilhada
+                    </span>
+                </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: {{ $wallet->color }}20">
+                        <i class="fas {{ $wallet->icon }} text-xl" style="color: {{ $wallet->color }}"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">{{ $wallet->name }}</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $wallet->company_name ?? ucfirst($wallet->type) }}</p>
+                    </div>
+                </div>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">R$ {{ number_format($wallet->balance, 2, ',', '.') }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    <i class="fas fa-user mr-1"></i> Proprietário: {{ $wallet->user->name ?? 'N/A' }}
+                </p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

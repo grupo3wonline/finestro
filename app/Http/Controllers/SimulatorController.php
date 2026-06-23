@@ -42,4 +42,28 @@ class SimulatorController extends Controller
 
         return view('simulators.budget');
     }
+
+    /**
+     * Financial profile test.
+     */
+    public function financialProfile(): View
+    {
+        if (!auth()->user()->hasFeature('simulators')) {
+            return view('simulators.locked');
+        }
+
+        return view('simulators.financial-profile');
+    }
+
+    /**
+     * Investor profile test (suitability).
+     */
+    public function investorProfile(): View
+    {
+        if (!auth()->user()->hasFeature('simulators')) {
+            return view('simulators.locked');
+        }
+
+        return view('simulators.investor-profile');
+    }
 }

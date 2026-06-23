@@ -225,6 +225,141 @@
     </div>
 </section>
 
+<!-- Pricing Section -->
+<section id="planos" class="py-24 bg-white dark:bg-surface-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="inline-flex items-center px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-sm font-medium rounded-full mb-4">
+                <i class="fas fa-tags mr-1.5"></i> Planos
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Escolha o plano ideal para você
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Comece grátis e evolua quando precisar. Sem compromisso, cancele a qualquer momento.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <!-- Free Plan -->
+            <div class="bg-gray-50 dark:bg-surface-800 rounded-2xl p-8 border border-gray-200 dark:border-surface-700">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Básico</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Para quem está começando</p>
+                </div>
+                <div class="mb-6">
+                    <span class="text-4xl font-black text-gray-900 dark:text-white">Grátis</span>
+                    <span class="text-gray-500 dark:text-gray-400 text-sm ml-1">para sempre</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Carteiras pessoais e empresariais
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 100 transações/mês
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 2 metas financeiras
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 5 categorias
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Dashboard com resumo
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 7 Calculadoras financeiras
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Testes de perfil financeiro e investidor
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Cotação de moedas em tempo real
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <i class="fas fa-times text-gray-300 dark:text-gray-600 mt-0.5"></i> Simuladores financeiros
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <i class="fas fa-times text-gray-300 dark:text-gray-600 mt-0.5"></i> Relatórios com gráficos + CSV
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <i class="fas fa-times text-gray-300 dark:text-gray-600 mt-0.5"></i> Inteligência Artificial
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-400 dark:text-gray-500">
+                        <i class="fas fa-times text-gray-300 dark:text-gray-600 mt-0.5"></i> Compartilhamento de carteiras
+                    </li>
+                </ul>
+                <a href="{{ route('register') }}" class="block w-full text-center px-6 py-4 bg-gray-200 dark:bg-surface-700 hover:bg-gray-300 dark:hover:bg-surface-600 text-gray-900 dark:text-white font-bold rounded-xl transition">
+                    <i class="fas fa-user-plus mr-2"></i> Criar Conta Grátis
+                </a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="bg-white dark:bg-surface-800 rounded-2xl p-8 border-2 border-primary-500 shadow-xl relative">
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <span class="inline-flex items-center px-4 py-1.5 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg">
+                        <i class="fas fa-fire mr-1"></i> -40% OFF — OFERTA LIMITADA
+                    </span>
+                </div>
+                <div class="mb-6 mt-2">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Profissional</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Para quem quer resultados reais</p>
+                </div>
+                <div class="mb-6">
+                    <span class="text-sm text-gray-400 line-through mr-2">R$ 41,58</span>
+                    <span class="text-4xl font-black text-primary-600">R$ 24,90</span>
+                    <span class="text-gray-500 dark:text-gray-400 text-sm">/mês</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> <strong>Tudo ilimitado</strong> (carteiras, transações, metas, categorias)
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Compartilhamento de carteiras empresariais
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 3 Simuladores financeiros
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Relatórios com gráficos + exportação CSV
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 5 funcionalidades de Inteligência Artificial
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> 7 Calculadoras financeiras
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Testes de perfil financeiro e investidor
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Cotação de moedas em tempo real
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Dashboard completo
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-check text-secondary-500 mt-0.5"></i> Suporte prioritário
+                    </li>
+                </ul>
+                <a href="{{ route('register') }}" class="block w-full text-center px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition shadow-lg">
+                    <i class="fas fa-rocket mr-2"></i> Assinar Agora — 40% OFF
+                </a>
+                <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-3">
+                    <i class="fas fa-shield-alt mr-1"></i> Cancele a qualquer momento. Sem multa.
+                </p>
+            </div>
+        </div>
+
+        <!-- Social proof -->
+        <div class="text-center mt-10">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                <i class="fas fa-users text-primary-500 mr-1"></i> +500 pessoas já usam o Finestro para controlar suas finanças
+            </p>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="py-24 relative overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900"></div>

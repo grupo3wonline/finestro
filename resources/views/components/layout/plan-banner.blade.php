@@ -1,9 +1,24 @@
 @auth
-@if(Auth::user()->isFree())
 @php
-    $limits = Auth::user()->plan_limits;
-    $walletsCount = Auth::user()->wallets()->count();
-    $transactionsCount = Auth::user()->transactions()->whereMonth('date', now()->month)->whereYear('date', now()->year)->count();
+    $user = Auth::user();
+    $subscription = $user->subscription;
+@endphp
+
+{{-- Subscription expired - needs renewal --}}
+@if($subscription && $subscription->needsRenewal())
+<div class="bg-gradient-to-r from-red-700 to-red-600 text-white px-4 py-3 text-center text-sm">
+    <i class="fas fa-exclamation-triangle mr-1 text-yellow-300"></i>
+    <strong>Sua assinatura venceu.</strong> As funcionalidades do Plano Profissional estão bloqueadas.
+    <a href="{{ route('subscription.plans') }}" class="underline font-bold ml-1 hover:text-yellow-200">Renovar agora →</a>
+    <span class="block sm:inline sm:ml-2 text-xs text-red-200">Renove com 40% OFF — apenas R$ 24,90/mês</span>
+</div>
+
+{{-- Free user near limits --}}
+@elseif($user->isFree())
+@php
+    $limits = $user->plan_limits;
+    $walletsCount = $user->wallets()->count();
+    $transactionsCount = $user->transactions()->whereMonth('date', now()->month)->whereYear('date', now()->year)->count();
     $nearLimit = ($walletsCount >= $limits['wallets']) || ($transactionsCount >= ($limits['transactions_per_month'] * 0.8));
 @endphp
 @if($nearLimit)

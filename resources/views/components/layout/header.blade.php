@@ -26,7 +26,10 @@
                     <i class="fas fa-bullseye mr-1.5"></i> Metas
                 </a>
                 <a href="{{ route('simulators.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('simulators.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700/60' }}" data-loading="Carregando...">
-                    <i class="fas fa-calculator mr-1.5"></i> Simuladores
+                    <i class="fas fa-flask mr-1.5"></i> Simuladores
+                </a>
+                <a href="{{ route('calculators.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('calculators.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700/60' }}" data-loading="Carregando...">
+                    <i class="fas fa-calculator mr-1.5"></i> Calculadoras
                 </a>
                 <a href="{{ route('reports.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('reports.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700/60' }}" data-loading="Carregando...">
                     <i class="fas fa-chart-bar mr-1.5"></i> Relatórios
@@ -131,7 +134,10 @@
                 <i class="fas fa-bullseye w-6 text-center"></i> Metas
             </a>
             <a href="{{ route('simulators.index') }}" class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition {{ request()->routeIs('simulators.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' : '' }}">
-                <i class="fas fa-calculator w-6 text-center"></i> Simuladores
+                <i class="fas fa-flask w-6 text-center"></i> Simuladores
+            </a>
+            <a href="{{ route('calculators.index') }}" class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition {{ request()->routeIs('calculators.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' : '' }}">
+                <i class="fas fa-calculator w-6 text-center"></i> Calculadoras
             </a>
             <a href="{{ route('reports.index') }}" class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition {{ request()->routeIs('reports.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' : '' }}">
                 <i class="fas fa-chart-bar w-6 text-center"></i> Relatórios

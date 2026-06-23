@@ -49,6 +49,15 @@
             placeholder="Repita a senha">
     </div>
 
+    <div class="flex items-start gap-2">
+        <input type="checkbox" name="terms" id="terms" value="1" {{ old('terms') ? 'checked' : '' }}
+            class="mt-0.5 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500">
+        <label for="terms" class="text-sm text-gray-600 dark:text-gray-400">
+            Li e aceito os <a href="{{ route('terms') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Termos de Uso</a> e a <a href="{{ route('privacy') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Política de Privacidade</a>. <span class="text-red-500">*</span>
+        </label>
+    </div>
+    @error('terms') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+
     <button type="submit" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition">
         <i class="fas fa-user-plus mr-2"></i> Criar Conta
     </button>

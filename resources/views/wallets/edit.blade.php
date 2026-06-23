@@ -46,6 +46,30 @@
                 @error('type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Categoria <span class="text-red-500">*</span>
+                    <span class="text-xs text-gray-400 ml-1" title="Separe suas finanças pessoais das empresariais"><i class="fas fa-question-circle"></i></span>
+                </label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="relative flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition
+                        {{ old('ownership', $wallet->ownership) == 'personal' ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-300 dark:border-gray-600 hover:border-primary-300' }}">
+                        <input type="radio" name="ownership" value="personal" {{ old('ownership', $wallet->ownership) == 'personal' ? 'checked' : '' }} class="sr-only peer">
+                        <i class="fas fa-user text-primary-600"></i>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Pessoal</span>
+                        <div class="absolute inset-0 rounded-lg peer-checked:ring-2 peer-checked:ring-primary-500 pointer-events-none"></div>
+                    </label>
+                    <label class="relative flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition
+                        {{ old('ownership', $wallet->ownership) == 'business' ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-300 dark:border-gray-600 hover:border-primary-300' }}">
+                        <input type="radio" name="ownership" value="business" {{ old('ownership', $wallet->ownership) == 'business' ? 'checked' : '' }} class="sr-only peer">
+                        <i class="fas fa-building text-purple-600"></i>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Empresarial</span>
+                        <div class="absolute inset-0 rounded-lg peer-checked:ring-2 peer-checked:ring-primary-500 pointer-events-none"></div>
+                    </label>
+                </div>
+                @error('ownership') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cor</label>

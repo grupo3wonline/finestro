@@ -16,6 +16,7 @@ class UpdateWalletRequest extends FormRequest
         return [
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'type' => ['sometimes', 'required', 'string', 'in:checking,savings,credit,investment,cash'],
+            'ownership' => ['sometimes', 'required', 'string', 'in:personal,business'],
             'balance' => ['nullable', 'numeric'],
             'currency' => ['nullable', 'string', 'size:3'],
             'color' => ['nullable', 'string', 'max:7'],

@@ -50,7 +50,17 @@ class Subscription extends Model
      */
     public function isActive(): bool
     {
-        return in_array($this->status, ['active', 'trialing']);
+        // Must be in active/trialing status
+        if (!in_array($this->status, ['active', 'trialing'])) {
+            return false;
+        }
+
+        // Must not be past the end of the current period
+        if ($this->current_period_end && $this->current_period_end->isPast()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -59,6 +69,26 @@ class Subscription extends Model
     public function isProfessional(): bool
     {
         return $this->plan === 'professional' && $this->isActive();
+    }
+
+    /**
+     * Check if subscription is expired (past period end).
+     */
+    public function isExpired(): bool
+    {
+        if (!$this->current_period_end) {
+            return false;
+        }
+
+        return $this->current_period_end->isPast();
+    }
+
+    /**
+     * Check if subscription needs renewal (expired but not canceled).
+     */
+    public function needsRenewal(): bool
+    {
+        return $this->isExpired() && $this->status !== 'canceled';
     }
 
     /**

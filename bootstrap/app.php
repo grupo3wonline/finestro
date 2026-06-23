@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             'plan.limit' => \App\Http\Middleware\CheckPlanLimit::class,
+            'terms.accepted' => \App\Http\Middleware\EnsureTermsAccepted::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

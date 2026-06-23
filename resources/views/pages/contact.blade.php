@@ -24,26 +24,14 @@
 
         <div class="max-w-3xl mx-auto">
             <!-- Contact Cards -->
-            <div class="grid sm:grid-cols-2 gap-6 mb-10">
-                <!-- WhatsApp -->
-                <a href="https://wa.me/5541996924829" target="_blank" rel="noopener" class="group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-700 hover:shadow-md transition-all duration-300 text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fab fa-whatsapp text-white text-3xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">WhatsApp</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Atendimento rápido e direto</p>
-                    <span class="inline-flex items-center text-green-600 dark:text-green-400 font-semibold">
-                        <i class="fas fa-phone-alt mr-2"></i> (41) 99692-4829
-                    </span>
-                </a>
-
+            <div class="max-w-md mx-auto mb-10">
                 <!-- Email -->
-                <a href="mailto:contato@3wonline.com.br" class="group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md transition-all duration-300 text-center">
+                <a href="mailto:contato@3wonline.com.br" class="group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md transition-all duration-300 text-center block">
                     <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-envelope text-white text-2xl"></i>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">E-mail</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Para dúvidas e solicitações</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Para dúvidas, sugestões e solicitações</p>
                     <span class="inline-flex items-center text-primary-600 dark:text-primary-400 font-semibold">
                         <i class="fas fa-at mr-2"></i> contato@3wonline.com.br
                     </span>
