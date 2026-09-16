@@ -14,6 +14,17 @@
 <meta name="rating" content="general">
 <link rel="canonical" href="{{ url()->current() }}">
 
+{{-- GEO Targeting (local/regional SEO) --}}
+<meta name="geo.region" content="BR">
+<meta name="geo.placename" content="Brasil">
+<meta name="ICBM" content="-14.235004, -51.925280">
+<meta name="language" content="Portuguese">
+<meta http-equiv="content-language" content="pt-BR">
+
+{{-- hreflang (internationalization signals) --}}
+<link rel="alternate" hreflang="pt-BR" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
+
 {{-- Open Graph Meta Tags --}}
 <meta property="og:title" content="{{ config('app.name') }} - {{ $seoTitle }}">
 <meta property="og:description" content="{{ $seoDescription }}">
@@ -93,3 +104,65 @@
     "keywords": "finanças pessoais, controle financeiro, gestão de dinheiro, carteiras digitais, metas financeiras"
 }
 </script>
+
+{{-- Structured Data: Organization (AEO / knowledge panel signals) --}}
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "Organization",
+    "name": "Finestro",
+    "url": "{{ config('app.url') }}",
+    "logo": "{{ asset('favicon.svg') }}",
+    "description": "Plataforma de gestão financeira pessoal para controlar carteiras, transações, metas e simuladores financeiros.",
+    "founder": {
+        "@@type": "Organization",
+        "name": "Grupo 3W Online",
+        "url": "https://www.3wonline.com.br"
+    },
+    "sameAs": [
+        "https://www.3wonline.com.br"
+    ],
+    "areaServed": {
+        "@@type": "Country",
+        "name": "Brasil"
+    }
+}
+</script>
+
+{{-- Structured Data: FAQ (Answer Engine Optimization) --}}
+{{-- Only emitted on the home page, where the matching content is visible --}}
+{{-- (Google requires FAQPage markup to reflect on-page content). --}}
+@if(request()->routeIs('home'))
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@@type": "Question",
+            "name": "O que é o Finestro?",
+            "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "O Finestro é uma plataforma de gestão financeira pessoal que permite controlar carteiras, registrar receitas e despesas, definir metas e usar simuladores e calculadoras financeiras em um só lugar."
+            }
+        },
+        {
+            "@@type": "Question",
+            "name": "O Finestro é gratuito?",
+            "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "Sim. O Finestro possui um plano gratuito com recursos básicos, além do plano Profissional com carteiras, transações e metas ilimitadas, simuladores, inteligência artificial e relatórios exportáveis."
+            }
+        },
+        {
+            "@@type": "Question",
+            "name": "Meus dados financeiros estão seguros no Finestro?",
+            "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "Sim. Cada usuário acessa apenas os próprios dados, com criptografia, controle de acesso e conformidade com as leis de privacidade LGPD, GDPR, CCPA e POPIA."
+            }
+        }
+    ]
+}
+</script>
+@endif

@@ -21,7 +21,7 @@
 
             <div class="prose dark:prose-invert max-w-none space-y-6 text-gray-700 dark:text-gray-300">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">1. Introdução</h2>
-                <p>O Finestro está comprometido com a proteção dos seus dados pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018). Esta política descreve como coletamos, usamos, armazenamos e protegemos suas informações.</p>
+                <p>O Finestro está comprometido com a proteção dos seus dados pessoais em conformidade com as principais legislações globais de privacidade, incluindo a Lei Geral de Proteção de Dados brasileira (LGPD - Lei nº 13.709/2018), o Regulamento Geral de Proteção de Dados europeu (GDPR), a lei da Califórnia (CCPA/CPRA) e a lei sul-africana (POPIA). Esta política descreve como coletamos, usamos, armazenamos e protegemos suas informações.</p>
 
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">2. Dados Coletados</h2>
                 <p>Coletamos apenas os dados necessários para o funcionamento do serviço:</p>
@@ -47,15 +47,18 @@
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">5. Segurança</h2>
                 <p>Implementamos medidas técnicas e organizacionais para proteger seus dados, incluindo criptografia, controle de acesso e monitoramento contínuo.</p>
 
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">6. Seus Direitos (LGPD)</h2>
-                <p>Você tem direito a:</p>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">6. Seus Direitos (LGPD, GDPR, CCPA e POPIA)</h2>
+                <p>Independentemente da legislação aplicável à sua localização, você tem direito a:</p>
                 <ul class="list-disc pl-6 space-y-1">
-                    <li>Acessar seus dados pessoais</li>
+                    <li>Acessar seus dados pessoais e obter uma cópia deles</li>
                     <li>Corrigir dados incompletos ou desatualizados</li>
-                    <li>Solicitar a exclusão dos seus dados</li>
+                    <li>Solicitar a exclusão dos seus dados ("direito ao esquecimento")</li>
                     <li>Revogar o consentimento a qualquer momento</li>
-                    <li>Solicitar portabilidade dos dados</li>
+                    <li>Solicitar a portabilidade dos dados</li>
+                    <li>Opor-se ao tratamento e recusar a venda de dados pessoais (CCPA/CPRA)</li>
+                    <li>Apresentar reclamação à autoridade de proteção de dados competente</li>
                 </ul>
+                <p>Para exercer qualquer um desses direitos, incluindo o gerenciamento de cookies, utilize a página de <a href="{{ route('contact') }}" class="text-primary-600 hover:underline">Contato</a> ou as opções disponíveis nas configurações da sua conta.</p>
 
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">7. Retenção de Dados</h2>
                 <p>Seus dados são mantidos enquanto sua conta estiver ativa. Após a exclusão da conta, os dados são removidos em até 30 dias, exceto quando houver obrigação legal de retenção.</p>

@@ -68,6 +68,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.ctrlKey || e.metaKey || e.shiftKey) return;
             if (this.href === window.location.href) return;
 
+            // Same-page anchor links (e.g. route('home')#sobre) resolve to a
+            // full URL, so they bypass the [href^="#"] filter above. Detect
+            // them by comparing path + host: if only the hash differs, let the
+            // browser scroll to the anchor instead of showing the overlay.
+            if (this.pathname === window.location.pathname
+                && this.host === window.location.host
+                && this.hash) {
+                return;
+            }
+
             setTimeout(() => {
                 if (!document.hidden) {
                     showLoading('Carregando...');

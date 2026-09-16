@@ -26,8 +26,15 @@ Route::get('/sobre', [PageController::class, 'about'])->name('about');
 Route::get('/servicos', [PageController::class, 'services'])->name('services');
 Route::get('/ferramentas', [PageController::class, 'tools'])->name('tools');
 Route::get('/contato', [PageController::class, 'contact'])->name('contact');
+Route::post('/contato', [PageController::class, 'sendContact'])
+    ->middleware('throttle:5,1')
+    ->name('contact.send');
 Route::get('/privacidade', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/termos', [PageController::class, 'terms'])->name('terms');
+
+// SEO — dynamic robots.txt and sitemap.xml (domain-aware)
+Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------

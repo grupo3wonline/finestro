@@ -29,11 +29,11 @@
             <div>
                 <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Links Úteis</h4>
                 <ul class="space-y-2.5">
-                    <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-                    <li><a href="{{ route('about') }}" class="text-gray-400 hover:text-white transition text-sm">Sobre</a></li>
-                    <li><a href="{{ route('services') }}" class="text-gray-400 hover:text-white transition text-sm">Serviços</a></li>
-                    <li><a href="{{ route('tools') }}" class="text-gray-400 hover:text-white transition text-sm">Ferramentas</a></li>
-                    <li><a href="{{ route('contact') }}" class="text-gray-400 hover:text-white transition text-sm">Contato</a></li>
+                    <li><a href="{{ route('home') }}#inicio" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+                    <li><a href="{{ route('home') }}#sobre" class="text-gray-400 hover:text-white transition text-sm">Sobre</a></li>
+                    <li><a href="{{ route('home') }}#servicos" class="text-gray-400 hover:text-white transition text-sm">Serviços</a></li>
+                    <li><a href="{{ route('home') }}#ferramentas" class="text-gray-400 hover:text-white transition text-sm">Ferramentas</a></li>
+                    <li><a href="{{ route('home') }}#contato" class="text-gray-400 hover:text-white transition text-sm">Contato</a></li>
                 </ul>
             </div>
 

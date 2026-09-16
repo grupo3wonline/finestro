@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Prevent theme flash (FOUC): apply dark class before first paint --}}
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     @include('components.layout.seo-head')
 
     <title>{{ config('app.name') }} - @yield('title', 'Dashboard')</title>
@@ -30,8 +36,7 @@
     @stack('styles')
 </head>
 <body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-    {{-- Google Tag Manager (noscript) --}}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVMJV7G6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @include('components.layout.gtm-noscript')
 
     <!-- Loading Overlay -->
     @include('components.ui.loading-overlay')
@@ -89,6 +94,9 @@
         });
     </script>
     @endif
+
+    <!-- Cookie Consent (LGPD/GDPR/CCPA/POPIA) -->
+    @include('components.layout.cookie-consent')
 
     @stack('scripts')
 </body>

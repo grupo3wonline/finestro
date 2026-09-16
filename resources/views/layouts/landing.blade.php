@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Prevent theme flash (FOUC): apply dark class before first paint --}}
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     @include('components.layout.seo-head')
 
     <title>{{ config('app.name') }} - @yield('title', 'Gestão Financeira Pessoal')</title>
@@ -27,8 +33,7 @@
     @stack('styles')
 </head>
 <body class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans">
-    {{-- Google Tag Manager (noscript) --}}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVMJV7G6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @include('components.layout.gtm-noscript')
 
     <!-- Loading Overlay -->
     @include('components.ui.loading-overlay')
@@ -49,11 +54,11 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-1">
-                    <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('home') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">Home</a>
-                    <a href="{{ route('about') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('about') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">Sobre</a>
-                    <a href="{{ route('services') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('services') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">Serviços</a>
-                    <a href="{{ route('tools') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('tools') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">Ferramentas</a>
-                    <a href="{{ route('contact') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('contact') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">Contato</a>
+                    <a href="{{ route('home') }}#inicio" class="px-3 py-2 rounded-lg text-sm font-medium transition text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800">Home</a>
+                    <a href="{{ route('home') }}#sobre" class="px-3 py-2 rounded-lg text-sm font-medium transition text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800">Sobre</a>
+                    <a href="{{ route('home') }}#servicos" class="px-3 py-2 rounded-lg text-sm font-medium transition text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800">Serviços</a>
+                    <a href="{{ route('home') }}#ferramentas" class="px-3 py-2 rounded-lg text-sm font-medium transition text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800">Ferramentas</a>
+                    <a href="{{ route('home') }}#contato" class="px-3 py-2 rounded-lg text-sm font-medium transition text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800">Contato</a>
 
                     <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-2"></div>
 
@@ -91,12 +96,20 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1"
             class="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-            <div class="px-4 py-3 space-y-1">
-                <a href="{{ route('home') }}" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Home</a>
-                <a href="{{ route('about') }}" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Sobre</a>
-                <a href="{{ route('services') }}" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Serviços</a>
-                <a href="{{ route('tools') }}" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Ferramentas</a>
-                <a href="{{ route('contact') }}" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Contato</a>
+            <div class="px-4 py-3 space-y-1" @click="mobileMenu = false">
+                <a href="{{ route('home') }}#inicio" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Home</a>
+                <a href="{{ route('home') }}#sobre" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Sobre</a>
+                <a href="{{ route('home') }}#servicos" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Serviços</a>
+                <a href="{{ route('home') }}#ferramentas" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Ferramentas</a>
+                <a href="{{ route('home') }}#contato" class="block px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm">Contato</a>
+                <hr class="border-gray-200 dark:border-gray-700 my-2">
+                <button type="button" @click.stop="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
+                    class="flex items-center w-full px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm text-gray-700 dark:text-gray-300"
+                    aria-label="Alternar tema claro/escuro">
+                    <i x-show="!darkMode" class="fas fa-moon w-5 mr-2"></i>
+                    <i x-show="darkMode" class="fas fa-sun w-5 mr-2"></i>
+                    <span x-text="darkMode ? 'Tema Claro' : 'Tema Escuro'"></span>
+                </button>
                 <hr class="border-gray-200 dark:border-gray-700 my-2">
                 @auth
                     <a href="{{ route('dashboard') }}" class="block px-3 py-2.5 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 text-white text-center font-medium text-sm">Dashboard</a>
@@ -115,6 +128,25 @@
 
     <!-- Footer -->
     @include('components.layout.footer')
+
+    <!-- Cookie Consent (LGPD/GDPR/CCPA/POPIA) -->
+    @include('components.layout.cookie-consent')
+
+    {{-- SweetAlert2 flash toasts (contact form, etc.) --}}
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({ icon: 'success', title: 'Sucesso', text: @json(session('success')), confirmButtonColor: '#2563eb', timer: 5000, timerProgressBar: true });
+        });
+    </script>
+    @endif
+    @if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({ icon: 'error', title: 'Erro', text: @json(session('error')), confirmButtonColor: '#2563eb' });
+        });
+    </script>
+    @endif
 
     @stack('scripts')
 </body>

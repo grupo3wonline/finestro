@@ -6,6 +6,8 @@
 @layer base {
     html {
         @apply scroll-smooth;
+        /* Offset anchor targets so they clear the 64px sticky nav (h-16). */
+        scroll-padding-top: 5rem;
     }
 
     body {

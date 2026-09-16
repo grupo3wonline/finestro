@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Prevent theme flash (FOUC): apply dark class before first paint --}}
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     @include('components.layout.seo-head')
 
     <title>{{ config('app.name') }} - @yield('title', 'Acesso')</title>
@@ -26,8 +32,7 @@
     @include('components.layout.analytics')
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex flex-col transition-colors duration-300">
-    {{-- Google Tag Manager (noscript) --}}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVMJV7G6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @include('components.layout.gtm-noscript')
 
     <!-- Loading Overlay -->
     @include('components.ui.loading-overlay')
@@ -71,5 +76,8 @@
             </a>
         </p>
     </footer>
+
+    <!-- Cookie Consent (LGPD/GDPR/CCPA/POPIA) -->
+    @include('components.layout.cookie-consent')
 </body>
 </html>

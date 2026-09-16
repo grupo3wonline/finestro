@@ -37,6 +37,7 @@ return [
 
     'google' => [
         'analytics_id' => env('GOOGLE_ANALYTICS_ID'),
+        'gtm_id' => env('GOOGLE_TAG_MANAGER_ID'),
     ],
 
     'facebook' => [

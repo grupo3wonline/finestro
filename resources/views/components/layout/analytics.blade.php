@@ -1,39 +1,68 @@
-{{-- Google Tag Manager --}}
-<script>
-;(function (w, d, s, l, i) {
-    w[l] = w[l] || []
-    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
-    var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s),
-        dl = l != 'dataLayer' ? '&l=' + l : ''
-    j.async = true
-    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
-    f.parentNode.insertBefore(j, f)
-})(window, document, 'script', 'dataLayer', 'GTM-WVMJV7G6')
-</script>
+{{-- Analytics — only rendered when the corresponding IDs are configured via .env --}}
+{{-- and only executed after the user grants cookie consent (LGPD/GDPR/CCPA/POPIA). --}}
+@php
+    $gtmId = config('services.google.gtm_id');
+    $gaId = config('services.google.analytics_id');
+    $pixelId = config('services.facebook.pixel_id');
+@endphp
 
-{{-- Google Analytics 4 --}}
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J06THXX0MW"></script>
+@if($gtmId || $gaId || $pixelId)
 <script>
-    window.dataLayer = window.dataLayer || []
-    function gtag(){dataLayer.push(arguments)}
-    gtag('js', new Date())
-    gtag('config', 'G-J06THXX0MW')
-</script>
+(function () {
+    // Consent gate: scripts below run only when the visitor has accepted cookies.
+    function hasConsent() {
+        return localStorage.getItem('cookie_consent') === 'accepted';
+    }
 
-{{-- Meta Pixel --}}
-@if(config('services.facebook.pixel_id'))
-<script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '{{ config('services.facebook.pixel_id') }}');
-    fbq('track', 'PageView');
+    function loadAnalytics() {
+        if (window.__analyticsLoaded) return;
+        window.__analyticsLoaded = true;
+
+        @if($gtmId)
+        // Google Tag Manager
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', @json($gtmId));
+        @endif
+
+        @if($gaId)
+        // Google Analytics 4
+        var gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + @json($gaId);
+        document.head.appendChild(gaScript);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', @json($gaId));
+        @endif
+
+        @if($pixelId)
+        // Meta Pixel
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', @json($pixelId));
+        fbq('track', 'PageView');
+        @endif
+    }
+
+    if (hasConsent()) {
+        loadAnalytics();
+    } else {
+        // Wait for the consent banner to signal acceptance, then load once.
+        window.addEventListener('cookie-consent-accepted', loadAnalytics, { once: true });
+    }
+})();
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ config('services.facebook.pixel_id') }}&ev=PageView&noscript=1"/></noscript>
 @endif

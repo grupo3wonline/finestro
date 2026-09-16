@@ -115,4 +115,16 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Recipient
+    |--------------------------------------------------------------------------
+    |
+    | Destination address for public contact form submissions. Falls back to
+    | the "from" address when CONTACT_TO_ADDRESS is not configured.
+    |
+    */
+
+    'contact_to' => env('CONTACT_TO_ADDRESS', env('MAIL_FROM_ADDRESS', 'contato@3wonline.com.br')),
+
 ];

@@ -1,22 +1,43 @@
+name: 🚀 Deploy to HostGator (FTP)
+
 on:
   push:
     branches:
       - main
       - master
-  pull_request:
-    branches:
-      - main
-      - master
-name: 🚀 Deploy website to FTP Server Hostgator
+
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
+  build-and-deploy:
+    name: 🏗️ Build & Deploy
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🚚 Get latest code
+      - name: 🚚 Checkout code
         uses: actions/checkout@v4
 
-      - name: 📂 Sync files via FTP
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, pdo_mysql, gd, zip, intl
+          coverage: none
+
+      - name: 📦 Install Composer dependencies (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install npm dependencies
+        run: npm ci
+
+      - name: 🎨 Build frontend assets
+        run: npm run build
+
+      - name: 📂 Deploy files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -26,3 +47,21 @@ jobs:
           port: 21
           log-level: verbose
           server-dir: finestro/
+          # Enviamos vendor/ e public/build/ (gerados no CI, ignorados no git).
+          # Excluímos apenas o que não deve ir para o servidor compartilhado.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.github/**
+            **/tests/**
+            **/.env
+            **/.env.*
+            **/storage/logs/**
+            **/storage/framework/cache/data/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
+            **/README.md
+            **/phpunit.xml
+            **/.editorconfig
+            **/.styleci.yml
