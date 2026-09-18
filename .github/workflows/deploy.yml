@@ -5,6 +5,16 @@ on:
     branches:
       - main
       - master
+    pull_request:
+      branches:
+        - main
+        - master
+  workflow_dispatch:
+
+# Evita deploys concorrentes sobrescrevendo o servidor
+concurrency:
+  group: deploy-hostgator
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -15,16 +25,19 @@ jobs:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
 
+      # ─── PHP / Composer (dependências de produção) ───────────────
       - name: 🐘 Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.2'
           extensions: mbstring, bcmath, pdo_mysql, gd, zip, intl
+          tools: composer:v2
           coverage: none
 
       - name: 📦 Install Composer dependencies (production)
         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
+      # ── Assets front-end (Vite) ──────────────────────────────────────────
       - name: 🟢 Setup Node
         uses: actions/setup-node@v4
         with:
@@ -37,7 +50,17 @@ jobs:
       - name: 🎨 Build frontend assets
         run: npm run build
 
-      - name: 📂 Deploy files via FTP
+      # ── Preparação dos arquivos para envio ───────────────────────────────
+      - name: 🧹 Remover artefatos que não devem ir ao servidor
+        run: |
+          rm -rf node_modules
+          rm -rf .git .github tests
+          rm -f .env .env.example .env.testing .env.prod .env.production
+
+      # ── Envio via FTP ────────────────────────────────────────────────────
+      # Envia o projeto já com vendor/ e public/build/ compilados.
+      # O HostGator NÃO roda composer/npm, por isso o build acontece aqui.
+      - name: 📂 Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -45,6 +68,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
+          local-dir: ./
           log-level: verbose
           server-dir: finestro/
           # Enviamos vendor/ e public/build/ (gerados no CI, ignorados no git).
@@ -53,15 +77,19 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
-            **/.github/**
             **/tests/**
-            **/.env
-            **/.env.*
+            .env
+            .env.*
+            .editorconfig
+            .gitattributes
+            .gitignore
+            phpunit.xml
+            README.md
+            **/.github/**
+            storage/**
             **/storage/logs/**
             **/storage/framework/cache/data/**
             **/storage/framework/sessions/**
             **/storage/framework/views/**
-            **/README.md
-            **/phpunit.xml
-            **/.editorconfig
+            **/*.md
             **/.styleci.yml
