@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\BelongsToUser;
 use App\Traits\Filterable;
+use App\Traits\FlushesUserCache;
 use App\Traits\HasUuid;
+use App\Traits\LogsOwnedActivity;
 use Database\Factories\GoalFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,12 +17,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Goal extends Model
 {
     /** @use HasFactory<GoalFactory> */
-    use BelongsToUser, Filterable, HasFactory, HasUuid, SoftDeletes;
+    use BelongsToUser, Filterable, FlushesUserCache, HasFactory, HasUuid, LogsOwnedActivity, SoftDeletes;
+
+    /**
+     * Attributes recorded in the activity log.
+     *
+     * @return list<string>
+     */
+    protected function activityLogAttributes(): array
+    {
+        return ['name', 'description', 'target_amount', 'current_amount', 'deadline', 'status'];
+    }
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',

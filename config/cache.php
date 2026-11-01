@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Str;
 
 return [
@@ -113,6 +115,19 @@ return [
     */
 
     'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Per-user Aggregate Cache TTL
+    |--------------------------------------------------------------------------
+    |
+    | Lifetime (seconds) of the per-user cached summaries (App\Services\UserCache).
+    | Entries are also invalidated by model events, so this only bounds how
+    | long a write that bypasses Eloquent can stay invisible.
+    |
+    */
+
+    'user_ttl' => (int) env('CACHE_USER_TTL', 300),
 
     /*
     |--------------------------------------------------------------------------

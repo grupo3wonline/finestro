@@ -2,42 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaymentHistory;
-use App\Models\Subscription;
+use App\Enums\SubscriptionStatus;
+use App\Exceptions\CheckoutSessionNotFoundException;
+use App\Exceptions\SubscriptionActionException;
+use App\Interfaces\Services\StripeGatewayInterface;
+use App\Interfaces\Services\SubscriptionServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Stripe\Checkout\Session as StripeSession;
-use Stripe\Customer;
-use Stripe\Stripe;
-use Stripe\Webhook;
+use Stripe\Exception\SignatureVerificationException;
 
 class SubscriptionController extends Controller
 {
-    public function __construct()
-    {
-        Stripe::setApiKey(config('stripe.secret_key'));
-    }
+    public function __construct(
+        protected SubscriptionServiceInterface $service,
+    ) {}
 
     /**
-     * Show subscription management page (financial menu).
+     * Financial menu: current plan, validity/renewal countdown and
+     * paginated payment history.
      */
     public function index(): View
     {
         $user = Auth::user();
-        $subscription = $user->subscription;
-        $payments = PaymentHistory::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
+        $subscription = $this->service->getSubscriptionForUser($user);
+        $payments = $this->service->getPaymentHistory($user, 10);
         $plans = config('stripe.plans');
+        $chargedPrice = $this->service->chargedPrice($subscription);
 
-        return view('subscription.index', compact('user', 'subscription', 'payments', 'plans'));
+        return view('subscription.index', ['user' => $user, 'subscription' => $subscription, 'payments' => $payments, 'plans' => $plans, 'chargedPrice' => $chargedPrice]);
     }
 
     /**
-     * Show plan selection/upgrade page.
+     * Plan selection / upgrade page.
      */
     public function plans(): View
     {
@@ -45,255 +45,153 @@ class SubscriptionController extends Controller
         $plans = config('stripe.plans');
         $currentPlan = $user->current_plan;
 
-        return view('subscription.plans', compact('user', 'plans', 'currentPlan'));
+        return view('subscription.plans', ['user' => $user, 'plans' => $plans, 'currentPlan' => $currentPlan]);
     }
 
     /**
-     * Create Stripe Checkout session for subscription.
+     * Create a Stripe Checkout session and redirect the user to it.
      */
-    public function checkout(Request $request): RedirectResponse
+    public function checkout(): RedirectResponse
     {
-        $user = Auth::user();
-        $priceId = config('stripe.plans.professional.stripe_price_id');
-
-        if (!$priceId) {
+        try {
+            $url = $this->service->startCheckout(Auth::user());
+        } catch (SubscriptionActionException $e) {
+            return redirect()->route('subscription.index')->with('info', $e->getMessage());
+        } catch (\RuntimeException) {
             return redirect()->back()->with('error', 'Plano não configurado. Contate o suporte.');
+        } catch (\Throwable $e) {
+            Log::error('Stripe checkout error', ['exception' => $e::class]);
+
+            return redirect()->back()->with('error', 'Não foi possível iniciar o pagamento. Tente novamente.');
         }
 
-        // Get or create Stripe customer
-        $subscription = $user->subscription;
-        $customerId = $subscription?->stripe_customer_id;
-
-        if (!$customerId) {
-            $customer = Customer::create([
-                'email' => $user->email,
-                'name' => $user->name,
-                'metadata' => ['user_id' => $user->id],
-            ]);
-            $customerId = $customer->id;
-        }
-
-        $session = StripeSession::create([
-            'customer' => $customerId,
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price' => $priceId,
-                'quantity' => 1,
-            ]],
-            'mode' => 'subscription',
-            'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('subscription.plans'),
-            'metadata' => [
-                'user_id' => $user->id,
-            ],
-        ]);
-
-        return redirect($session->url);
+        return redirect()->away($url);
     }
 
     /**
-     * Handle successful checkout return.
+     * Handle successful checkout return from Stripe. Unknown, incomplete or
+     * foreign sessions answer 404.
      */
-    public function success(Request $request): View
+    public function success(Request $request): View|RedirectResponse
     {
-        $sessionId = $request->get('session_id');
+        $sessionId = (string) $request->query('session_id', '');
 
-        if ($sessionId) {
-            try {
-                $session = StripeSession::retrieve([
-                    'id' => $sessionId,
-                    'expand' => ['subscription'],
-                ]);
-
-                $user = Auth::user();
-                $stripeSubscription = $session->subscription;
-
-                // If subscription is a string ID (not expanded), fetch it directly
-                if (is_string($stripeSubscription)) {
-                    $stripeSubscription = \Stripe\Subscription::retrieve($stripeSubscription);
-                }
-
-                // Safely get period timestamps with fallbacks
-                $periodStart = $stripeSubscription->current_period_start
-                    ? \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start)
-                    : now();
-                $periodEnd = $stripeSubscription->current_period_end
-                    ? \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end)
-                    : now()->addMonth();
-
-                // Create or update local subscription
-                Subscription::updateOrCreate(
-                    ['user_id' => $user->id],
-                    [
-                        'stripe_subscription_id' => $stripeSubscription->id,
-                        'stripe_customer_id' => $session->customer,
-                        'stripe_price_id' => config('stripe.plans.professional.stripe_price_id'),
-                        'plan' => 'professional',
-                        'status' => 'active',
-                        'current_period_start' => $periodStart,
-                        'current_period_end' => $periodEnd,
-                    ]
-                );
-
-                // Record payment
-                PaymentHistory::create([
-                    'user_id' => $user->id,
-                    'subscription_id' => $user->fresh()->subscription->id,
-                    'stripe_payment_intent_id' => $session->payment_intent ?? null,
-                    'amount' => config('stripe.plans.professional.price', 24.90),
-                    'currency' => 'BRL',
-                    'status' => 'paid',
-                    'description' => 'Assinatura Plano Profissional',
-                    'paid_at' => now(),
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('Stripe checkout success error', [
-                    'session_id' => $sessionId,
-                    'error' => $e->getMessage(),
-                ]);
-            }
-        }
-
-        return view('subscription.success');
-    }
-
-    /**
-     * Cancel subscription.
-     */
-    public function cancel(): RedirectResponse
-    {
-        $user = Auth::user();
-        $subscription = $user->subscription;
-
-        if ($subscription && $subscription->stripe_subscription_id) {
-            try {
-                $stripeSubscription = \Stripe\Subscription::retrieve($subscription->stripe_subscription_id);
-                $stripeSubscription->cancel();
-
-                $subscription->update([
-                    'status' => 'canceled',
-                    'canceled_at' => now(),
-                ]);
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Erro ao cancelar assinatura. Tente novamente.');
-            }
-        }
-
-        return redirect()->route('subscription.index')
-            ->with('success', 'Assinatura cancelada. Você terá acesso até o fim do período atual.');
-    }
-
-    /**
-     * Handle Stripe webhooks.
-     */
-    public function webhook(Request $request)
-    {
-        $payload = $request->getContent();
-        $sigHeader = $request->header('Stripe-Signature');
-        $webhookSecret = config('stripe.webhook_secret');
-
-        if (!$webhookSecret) {
-            \Log::error('Stripe webhook secret not configured');
-            return response('Webhook secret not configured', 500);
+        if ($sessionId === '') {
+            abort(404);
         }
 
         try {
-            $event = Webhook::constructEvent($payload, $sigHeader, $webhookSecret);
-        } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            \Log::warning('Stripe webhook signature verification failed', [
-                'ip' => $request->ip(),
-                'error' => $e->getMessage(),
-            ]);
+            $subscription = $this->service->handleCheckoutSuccess(Auth::user(), $sessionId);
+        } catch (CheckoutSessionNotFoundException) {
+            abort(404);
+        } catch (\Throwable $e) {
+            Log::error('Stripe checkout success error', ['exception' => $e::class]);
+
+            return redirect()->route('subscription.index')
+                ->with('error', 'Não foi possível confirmar sua assinatura agora. Se o pagamento foi aprovado, ela será ativada em instantes.');
+        }
+
+        // Only a subscription that currently grants Pro access may see the
+        // confirmation page. Every other status (past_due, unpaid, incomplete,
+        // canceled, expired) goes back to Financeiro with a per-status message.
+        if (! $subscription->isProfessional()) {
+            return redirect()->route('subscription.index')->with('error', $subscription->ineligibleAccessMessage());
+        }
+
+        return view('subscription.success', ['subscription' => $subscription]);
+    }
+
+    /**
+     * Cancel the subscription: immediately when a payment is pending,
+     * otherwise scheduled for the end of the current period.
+     */
+    public function cancel(): RedirectResponse
+    {
+        try {
+            $subscription = $this->service->cancel(Auth::user());
+        } catch (SubscriptionActionException $e) {
+            return redirect()->route('subscription.index')->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Stripe cancel error', ['exception' => $e::class]);
+
+            return redirect()->route('subscription.index')->with('error', 'Erro ao cancelar assinatura. Tente novamente.');
+        }
+
+        if ($subscription->status === SubscriptionStatus::CANCELED) {
+            return redirect()->route('subscription.index')
+                ->with('success', 'Assinatura cancelada. O Stripe não fará novas tentativas de cobrança e sua conta segue no plano Básico.');
+        }
+
+        $until = $subscription->current_period_end?->format('d/m/Y');
+
+        return redirect()->route('subscription.index')->with('success', $until
+            ? "Cancelamento agendado. Você mantém o plano Profissional até {$until}."
+            : 'Cancelamento agendado. Você mantém o plano Profissional até o fim do período atual.');
+    }
+
+    /**
+     * Undo a scheduled cancellation.
+     */
+    public function resume(): RedirectResponse
+    {
+        try {
+            $this->service->resume(Auth::user());
+        } catch (SubscriptionActionException $e) {
+            return redirect()->route('subscription.index')->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Stripe resume error', ['exception' => $e::class]);
+
+            return redirect()->route('subscription.index')->with('error', 'Não foi possível reativar sua assinatura. Tente novamente.');
+        }
+
+        return redirect()->route('subscription.index')
+            ->with('success', 'Assinatura reativada. Sua renovação automática continua normalmente.');
+    }
+
+    /**
+     * Stripe webhook endpoint (no auth, no CSRF).
+     */
+    public function webhook(Request $request, StripeGatewayInterface $gateway): Response
+    {
+        $webhookSecret = (string) config('stripe.webhook_secret');
+
+        if ($webhookSecret === '') {
+            Log::error('Stripe webhook secret not configured');
+
+            return response('Webhook secret not configured', 400);
+        }
+
+        try {
+            $event = $gateway->constructWebhookEvent(
+                $request->getContent(),
+                $request->header('Stripe-Signature'),
+                $webhookSecret,
+            );
+        } catch (SignatureVerificationException $e) {
+            Log::warning('Stripe webhook signature verification failed', ['ip' => $request->ip()]);
+
             return response('Invalid signature', 400);
-        } catch (\Exception $e) {
-            \Log::error('Stripe webhook error', ['error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            Log::error('Stripe webhook error', ['exception' => $e::class]);
+
             return response('Webhook error', 400);
         }
 
-        \Log::info('Stripe webhook received', ['type' => $event->type, 'id' => $event->id]);
-
-        switch ($event->type) {
-            case 'invoice.payment_succeeded':
-                $this->handlePaymentSucceeded($event->data->object);
-                break;
-
-            case 'invoice.payment_failed':
-                $this->handlePaymentFailed($event->data->object);
-                break;
-
-            case 'customer.subscription.updated':
-                $this->handleSubscriptionUpdated($event->data->object);
-                break;
-
-            case 'customer.subscription.deleted':
-                $this->handleSubscriptionDeleted($event->data->object);
-                break;
-        }
-
-        return response('OK', 200);
-    }
-
-    private function handlePaymentSucceeded($invoice): void
-    {
-        $subscription = Subscription::where('stripe_subscription_id', $invoice->subscription)->first();
-
-        if ($subscription) {
-            PaymentHistory::create([
-                'user_id' => $subscription->user_id,
-                'subscription_id' => $subscription->id,
-                'stripe_invoice_id' => $invoice->id,
-                'stripe_payment_intent_id' => $invoice->payment_intent,
-                'amount' => $invoice->amount_paid / 100,
-                'currency' => strtoupper($invoice->currency),
-                'status' => 'paid',
-                'description' => 'Renovação Plano Profissional',
-                'paid_at' => now(),
+        try {
+            $processed = $this->service->handleWebhookEvent($event);
+        } catch (\Throwable $e) {
+            Log::error('Stripe webhook processing failed', [
+                'event_id' => $event->id,
+                'type' => $event->type,
+                'exception' => $e::class,
+                'message' => $e->getMessage(),
             ]);
+
+            return response('Webhook processing error', 500);
         }
-    }
 
-    private function handlePaymentFailed($invoice): void
-    {
-        $subscription = Subscription::where('stripe_subscription_id', $invoice->subscription)->first();
-
-        if ($subscription) {
-            $subscription->update(['status' => 'past_due']);
-
-            PaymentHistory::create([
-                'user_id' => $subscription->user_id,
-                'subscription_id' => $subscription->id,
-                'stripe_invoice_id' => $invoice->id,
-                'amount' => $invoice->amount_due / 100,
-                'currency' => strtoupper($invoice->currency),
-                'status' => 'failed',
-                'description' => 'Falha no pagamento',
-                'paid_at' => null,
-            ]);
-        }
-    }
-
-    private function handleSubscriptionUpdated($stripeSubscription): void
-    {
-        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscription->id)->first();
-
-        if ($subscription) {
-            $subscription->update([
-                'status' => $stripeSubscription->status === 'active' ? 'active' : $stripeSubscription->status,
-                'current_period_start' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start),
-                'current_period_end' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end),
-            ]);
-        }
-    }
-
-    private function handleSubscriptionDeleted($stripeSubscription): void
-    {
-        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscription->id)->first();
-
-        if ($subscription) {
-            $subscription->update([
-                'status' => 'canceled',
-                'canceled_at' => now(),
-            ]);
-        }
+        return $processed
+            ? response('OK', 200)
+            : response('Already processed', 200);
     }
 }

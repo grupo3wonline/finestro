@@ -7,6 +7,8 @@
 @php
     $items = collect($items)->filter()->values();
     $lastIndex = $items->count() - 1;
+    // Root: dashboard for signed-in users, public home for guests.
+    $rootUrl = auth()->check() ? route('dashboard') : route('home');
 @endphp
 
 @if($items->isNotEmpty())
@@ -14,20 +16,20 @@
     <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
         {{-- Home sempre como raiz --}}
         <li class="flex items-center">
-            <a href="{{ route('dashboard') }}" class="text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition" title="Início" aria-label="Início">
+            <a href="{{ $rootUrl }}" class="text-surface-500 dark:text-surface-400 hover:text-primary-600 dark:hover:text-primary-400 transition" title="Início" aria-label="Início">
                 <i class="fas fa-home"></i>
             </a>
         </li>
 
         @foreach($items as $index => $item)
             <li class="flex items-center">
-                <i class="fas fa-chevron-right text-gray-400 text-xs mx-1" aria-hidden="true"></i>
+                <i class="fas fa-chevron-right text-surface-400 text-xs mx-1" aria-hidden="true"></i>
             </li>
             <li class="flex items-center">
                 @if($index === $lastIndex || empty($item['url']))
-                    <span class="text-gray-700 dark:text-gray-300 font-medium" aria-current="page">{{ $item['label'] }}</span>
+                    <span class="text-surface-700 dark:text-surface-300 font-medium" aria-current="page">{{ $item['label'] }}</span>
                 @else
-                    <a href="{{ $item['url'] }}" class="text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition">{{ $item['label'] }}</a>
+                    <a href="{{ $item['url'] }}" class="text-surface-500 dark:text-surface-400 hover:text-primary-600 dark:hover:text-primary-400 transition">{{ $item['label'] }}</a>
                 @endif
             </li>
         @endforeach
@@ -35,26 +37,9 @@
 </nav>
 
 {{-- Structured Data: BreadcrumbList (SEO) --}}
-<script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@@type": "BreadcrumbList",
-    "itemListElement": [
-        {
-            "@@type": "ListItem",
-            "position": 1,
-            "name": "Início",
-            "item": "{{ route('dashboard') }}"
-        }
-        @foreach($items as $index => $item)
-        ,{
-            "@@type": "ListItem",
-            "position": {{ $index + 2 }},
-            "name": "{{ e($item['label']) }}"
-            @if(!empty($item['url'])),"item": "{{ $item['url'] }}"@endif
-        }
-        @endforeach
-    ]
-}
-</script>
+<x-seo.json-ld :data="app(\App\Interfaces\Services\StructuredDataServiceInterface::class)->breadcrumbList(
+    $items->map(fn (array $item): array => ['label' => (string) $item['label'], 'url' => $item['url'] ?? null])
+        ->prepend(['label' => 'Início', 'url' => $rootUrl])
+        ->all()
+)" />
 @endif

@@ -38,6 +38,17 @@ return [
             'report' => false,
         ],
 
+        // Arquivos sensíveis do usuário (ex.: comprovantes de transações).
+        // Nunca servidos publicamente: o download passa por um controller
+        // que valida o dono do arquivo (ver TransactionController@receipt).
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

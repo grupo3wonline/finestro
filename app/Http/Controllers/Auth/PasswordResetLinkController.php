@@ -30,16 +30,12 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        // The broker result (sent, unknown user or throttled) is deliberately
+        // not shown: answering every case with the same neutral message stops
+        // anyone from checking whether an e-mail has an account. The route
+        // throttle (6/min per IP) still limits repeated requests.
+        Password::sendResetLink($request->only('email'));
 
-        return $status == Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        return back()->with('status', __('passwords.sent'));
     }
 }

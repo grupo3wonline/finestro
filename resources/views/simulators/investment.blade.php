@@ -5,11 +5,11 @@
 @section('breadcrumb')
 <nav class="text-sm" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li><a href="{{ route('simulators.index') }}" class="text-gray-500 hover:text-primary-600">Simuladores</a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li class="text-gray-700 dark:text-gray-300 font-medium">Investimento</li>
+        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li><a href="{{ route('simulators.index') }}" class="text-surface-500 hover:text-primary-600">Simuladores</a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li class="text-surface-700 dark:text-surface-300 font-medium">Investimento</li>
     </ol>
 </nav>
 @endsection
@@ -17,40 +17,40 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6" x-data="investmentSimulator()">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-2xl font-bold text-surface-900 dark:text-white">
             <i class="fas fa-chart-line text-green-500 mr-2"></i> Simulador de Investimento
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-sm">Calcule o rendimento dos seus investimentos com juros compostos.</p>
+        <p class="text-surface-600 dark:text-surface-400 text-sm">Calcule o rendimento dos seus investimentos com juros compostos.</p>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-5">
+        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Valor Inicial (R$)</label>
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Valor Inicial (R$)</label>
                 <input type="number" x-model.number="initialAmount" min="0" step="100" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="1000">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Aporte Mensal (R$)</label>
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Aporte Mensal (R$)</label>
                 <input type="number" x-model.number="monthlyContribution" min="0" step="50" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="500">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taxa de Juros Anual (%)</label>
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Taxa de Juros Anual (%)</label>
                 <input type="number" x-model.number="annualRate" min="0" max="100" step="0.1" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="12">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Período (anos)</label>
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Período (anos)</label>
                 <input type="number" x-model.number="years" min="1" max="50" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="10">
             </div>
 
@@ -60,8 +60,8 @@
         </div>
 
         <!-- Results -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Resultado da Simulação</h3>
+        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6">
+            <h3 class="text-lg font-semibold text-surface-900 dark:text-white mb-4">Resultado da Simulação</h3>
 
             <template x-if="result">
                 <div class="space-y-4">
@@ -71,18 +71,18 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Total Investido</p>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white" x-text="formatCurrency(result.totalInvested)"></p>
+                        <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-3 text-center">
+                            <p class="text-xs text-surface-500 dark:text-surface-400">Total Investido</p>
+                            <p class="text-lg font-semibold text-surface-900 dark:text-white" x-text="formatCurrency(result.totalInvested)"></p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Juros Ganhos</p>
+                        <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-3 text-center">
+                            <p class="text-xs text-surface-500 dark:text-surface-400">Juros Ganhos</p>
                             <p class="text-lg font-semibold text-green-600" x-text="formatCurrency(result.totalInterest)"></p>
                         </div>
                     </div>
 
-                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Rendimento Total</p>
+                    <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-3 text-center">
+                        <p class="text-xs text-surface-500 dark:text-surface-400">Rendimento Total</p>
                         <p class="text-lg font-semibold text-primary-600" x-text="result.percentGain.toFixed(2) + '%'"></p>
                     </div>
                 </div>
@@ -90,8 +90,8 @@
 
             <template x-if="!result">
                 <div class="text-center py-12">
-                    <i class="fas fa-chart-line text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
-                    <p class="text-gray-500 dark:text-gray-400">Preencha os dados e clique em calcular para ver o resultado.</p>
+                    <i class="fas fa-chart-line text-4xl text-surface-300 dark:text-surface-600 mb-3"></i>
+                    <p class="text-surface-500 dark:text-surface-400">Preencha os dados e clique em calcular para ver o resultado.</p>
                 </div>
             </template>
         </div>

@@ -26,7 +26,7 @@
 - All forms: `autocomplete="off"` on inputs
 - Descriptions, usage examples, tips, and guidance throughout the UI
 - Error pages (404, 403, 500, 503) with proper styling
-- Footer: "Sistema desenvolvido por HOTWYL | WILLFROMBRASIL"
+- Footer: "Sistema desenvolvido pelo desenvolvedor HOTWYL | WILLFROMBRASIL"
 - CTA sections with persuasive copy linking to www.3wonline.com.br (Grupo 3W Online)
 
 ## Security & Compliance

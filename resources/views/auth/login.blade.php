@@ -1,51 +1,73 @@
 @extends('layouts.guest')
 
 @section('title', 'Entrar')
+@section('meta_description', 'Entre na sua conta Finestro com usuário, e-mail e senha para acessar carteiras, transações, metas e relatórios.')
 
 @section('content')
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">Entrar</h2>
-<p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">Acesse sua conta para gerenciar suas finanças.</p>
+<div class="text-center mb-6">
+    <h2 class="text-2xl font-bold text-surface-900 dark:text-white">Bem-vindo de volta</h2>
+    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Acesse sua conta para gerenciar suas finanças.</p>
+</div>
 
 @if(session('status'))
-<div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-sm text-green-700 dark:text-green-400">
-    {{ session('status') }}
-</div>
+    <x-ui.alert variant="success" class="mb-4">{{ session('status') }}</x-ui.alert>
 @endif
 
-<form method="POST" action="{{ route('login') }}" class="space-y-4">
+<form method="POST" action="{{ route('login') }}" class="space-y-4" data-loading="Entrando...">
     @csrf
 
-    <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
-        <input type="email" name="email" id="email" value="{{ old('email') }}" autocomplete="off" required autofocus
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="seu@email.com">
-        @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
+    @error('login')
+        <x-ui.alert variant="danger">{{ $message }}</x-ui.alert>
+    @enderror
 
-    <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha</label>
-        <input type="password" name="password" id="password" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="Sua senha">
-        @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
+    <x-ui.tip icon="fa-shield-halved">Por segurança, informe usuário, e-mail e senha da mesma conta.</x-ui.tip>
+
+    <x-ui.field
+        label="Usuário"
+        for="username"
+        error="username"
+        tooltip="Seu nome de usuário cadastrado.">
+        <x-ui.input type="text" name="username" icon="fa-user" error="username"
+            value="{{ old('username') }}" required autofocus maxlength="50"
+            placeholder="seu_usuario" />
+    </x-ui.field>
+
+    <x-ui.field
+        label="E-mail"
+        for="email"
+        error="email"
+        tooltip="O e-mail cadastrado na mesma conta do usuário acima.">
+        <x-ui.input type="email" name="email" icon="fa-envelope" error="email"
+            value="{{ old('email') }}" required maxlength="255"
+            placeholder="seu@email.com" />
+    </x-ui.field>
+
+    <x-ui.field label="Senha" for="password" error="password">
+        <div x-data="{ show: false }" class="input-group">
+            <span class="input-group-icon"><i class="fas fa-lock"></i></span>
+            <input :type="show ? 'text' : 'password'" name="password" id="password" autocomplete="off" required
+                class="input pr-11 {{ $errors->has('password') ? 'has-error' : '' }}" placeholder="Sua senha">
+            <button type="button" @click="show = !show" tabindex="-1"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition"
+                :aria-label="show ? 'Ocultar senha' : 'Mostrar senha'">
+                <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+        </div>
+    </x-ui.field>
 
     <div class="flex items-center justify-between">
-        <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <input type="checkbox" name="remember" class="rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500">
+        <label class="flex items-center gap-2 text-sm text-surface-600 dark:text-surface-400 cursor-pointer">
+            <input type="checkbox" name="remember" class="rounded border-surface-300 dark:border-surface-600 text-primary-600 focus:ring-primary-500">
             Lembrar-me
         </label>
         @if (Route::has('password.request'))
-        <a href="{{ route('password.request') }}" class="text-sm text-primary-600 hover:underline">Esqueceu a senha?</a>
+            <a href="{{ route('password.request') }}" class="text-sm text-primary-600 hover:underline">Esqueceu a senha?</a>
         @endif
     </div>
 
-    <button type="submit" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition">
-        <i class="fas fa-sign-in-alt mr-2"></i> Entrar
-    </button>
+    <x-ui.button type="submit" icon="fa-arrow-right-to-bracket" block class="py-3">Entrar</x-ui.button>
 
-    <p class="text-center text-sm text-gray-500 dark:text-gray-400">
+    <p class="text-center text-sm text-surface-500 dark:text-surface-400">
         Não tem conta? <a href="{{ route('register') }}" class="text-primary-600 hover:underline font-medium">Criar conta grátis</a>
     </p>
 </form>

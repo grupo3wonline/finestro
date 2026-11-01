@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 
 return [
@@ -39,6 +41,14 @@ return [
 
     'guards' => [
         'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        // Filament admin panel (/admin). A separate session guard forces every
+        // admin through the panel login with MFA, even when already signed in
+        // to the user app on the `web` guard.
+        'admin' => [
             'driver' => 'session',
             'provider' => 'users',
         ],

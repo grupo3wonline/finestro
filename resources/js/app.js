@@ -1,6 +1,20 @@
 import Alpine from 'alpinejs';
+import { chart, brl, palette, bootCharts } from './charts';
+import { bootForms, debounce } from './forms';
+import { bootConsent } from './consent';
 
 window.Alpine = Alpine;
+
+// Brand-aware chart helpers available to any Blade view.
+window.Finestro = { chart, brl, palette, debounce };
+bootCharts();
+
+// Double-submit / debounce protection on all forms.
+bootForms();
+
+// Cookie consent banner (Alpine.data) + consent-gated analytics; must run
+// before Alpine.start().
+bootConsent(Alpine);
 
 // ===== Loading Overlay =====
 window.showLoading = function(text = 'Processando...') {
@@ -54,6 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         form.addEventListener('submit', function(e) {
             if (this.getAttribute('onsubmit')?.includes('confirm')) return;
+            // data-confirm forms show the overlay only after the user confirms.
+            if (this.hasAttribute('data-confirm') && this.dataset.confirmed !== '1') return;
             if (!this.checkValidity()) return;
             showLoading('Salvando...');
         });

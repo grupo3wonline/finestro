@@ -1,68 +1,80 @@
 @extends('layouts.guest')
 
 @section('title', 'Criar Conta')
+@section('meta_description', 'Crie sua conta grátis no Finestro e comece a organizar suas finanças pessoais. Plano Básico sem cartão de crédito.')
 
 @section('content')
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">Criar Conta</h2>
-<p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">Preencha os dados abaixo para criar sua conta gratuita.</p>
+<div class="text-center mb-6">
+    <h2 class="text-2xl font-bold text-surface-900 dark:text-white">Criar conta grátis</h2>
+    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Preencha os dados abaixo. Leva menos de 2 minutos.</p>
+</div>
 
-<form method="POST" action="{{ route('register') }}" class="space-y-4">
+<form method="POST" action="{{ route('register') }}" class="space-y-4" data-loading="Criando conta...">
     @csrf
+    <x-ui.honeypot />
 
-    <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome Completo</label>
-        <input type="text" name="name" id="name" value="{{ old('name') }}" autocomplete="off" required autofocus
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="Seu nome completo">
-        @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+    <x-ui.field label="Nome completo" for="name" error="name">
+        <x-ui.input type="text" name="name" icon="fa-id-card" error="name"
+            value="{{ old('name') }}" required autofocus placeholder="Seu nome completo" />
+    </x-ui.field>
+
+    <x-ui.field label="Nome de usuário" for="username" error="username"
+        hint="Apenas letras, números, traços e underscores.">
+        <x-ui.input type="text" name="username" icon="fa-at" error="username"
+            value="{{ old('username') }}" required placeholder="seu_usuario" />
+    </x-ui.field>
+
+    <x-ui.field label="E-mail" for="email" error="email">
+        <x-ui.input type="email" name="email" icon="fa-envelope" error="email"
+            value="{{ old('email', $invitedEmail ?? '') }}" required placeholder="seu@email.com" />
+    </x-ui.field>
+
+    <div x-data="{ pwd: '', get score() {
+            let s = 0;
+            if (this.pwd.length >= 8) s++;
+            if (/[A-Z]/.test(this.pwd)) s++;
+            if (/[0-9]/.test(this.pwd)) s++;
+            if (/[^A-Za-z0-9]/.test(this.pwd)) s++;
+            return s;
+        } }">
+        <x-ui.field label="Senha" for="password" error="password">
+            <div class="input-group">
+                <span class="input-group-icon"><i class="fas fa-lock"></i></span>
+                <input type="password" name="password" id="password" x-model="pwd" autocomplete="off" required
+                    class="input {{ $errors->has('password') ? 'has-error' : '' }}" placeholder="Mínimo 8 caracteres">
+            </div>
+        </x-ui.field>
+        {{-- Medidor de força da senha --}}
+        <div class="mt-2" x-show="pwd.length > 0" x-cloak>
+            <div class="flex gap-1.5">
+                <template x-for="i in 4" :key="i">
+                    <div class="h-1.5 flex-1 rounded-full transition-colors duration-300"
+                        :class="i <= score ? (score <= 1 ? 'bg-red-500' : score === 2 ? 'bg-accent-500' : score === 3 ? 'bg-secondary-500' : 'bg-primary-500') : 'bg-surface-200 dark:bg-surface-700'"></div>
+                </template>
+            </div>
+            <p class="text-xs mt-1 text-surface-500 dark:text-surface-400"
+                x-text="score <= 1 ? 'Senha fraca' : score === 2 ? 'Senha razoável' : score === 3 ? 'Senha boa' : 'Senha forte'"></p>
+        </div>
     </div>
 
-    <div>
-        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome de Usuário</label>
-        <input type="text" name="username" id="username" value="{{ old('username') }}" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="seu_usuario">
-        <p class="text-xs text-gray-500 mt-1">Apenas letras, números, traços e underscores.</p>
-        @error('username') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
+    <x-ui.field label="Confirmar senha" for="password_confirmation">
+        <x-ui.input type="password" name="password_confirmation" icon="fa-lock" required placeholder="Repita a senha" />
+    </x-ui.field>
 
     <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
-        <input type="email" name="email" id="email" value="{{ old('email') }}" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="seu@email.com">
-        @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
-
-    <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha</label>
-        <input type="password" name="password" id="password" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="Mínimo 8 caracteres">
-        @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
-
-    <div>
-        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar Senha</label>
-        <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="Repita a senha">
-    </div>
-
-    <div class="flex items-start gap-2">
-        <input type="checkbox" name="terms" id="terms" value="1" {{ old('terms') ? 'checked' : '' }}
-            class="mt-0.5 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500">
-        <label for="terms" class="text-sm text-gray-600 dark:text-gray-400">
-            Li e aceito os <a href="{{ route('terms') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Termos de Uso</a> e a <a href="{{ route('privacy') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Política de Privacidade</a>. <span class="text-red-500">*</span>
+        <label for="terms" class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" name="terms" id="terms" value="1" {{ old('terms') ? 'checked' : '' }}
+                class="mt-0.5 rounded border-surface-300 dark:border-surface-600 text-primary-600 focus:ring-primary-500">
+            <span class="text-sm text-surface-600 dark:text-surface-400">
+                Li e aceito os <a href="{{ route('terms') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Termos de Uso</a> e a <a href="{{ route('privacy') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Política de Privacidade</a>. <span class="text-red-500">*</span>
+            </span>
         </label>
+        @error('terms') <p class="input-error mt-1.5"><i class="fas fa-circle-exclamation"></i>{{ $message }}</p> @enderror
     </div>
-    @error('terms') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
 
-    <button type="submit" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition">
-        <i class="fas fa-user-plus mr-2"></i> Criar Conta
-    </button>
+    <x-ui.button type="submit" icon="fa-user-plus" block class="py-3">Criar conta</x-ui.button>
 
-    <p class="text-center text-sm text-gray-500 dark:text-gray-400">
+    <p class="text-center text-sm text-surface-500 dark:text-surface-400">
         Já tem uma conta? <a href="{{ route('login') }}" class="text-primary-600 hover:underline font-medium">Entrar</a>
     </p>
 </form>

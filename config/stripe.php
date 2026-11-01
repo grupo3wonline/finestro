@@ -1,9 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'secret_key' => env('STRIPE_SECRET_KEY'),
     'publishable_key' => env('STRIPE_PUBLISHABLE_KEY'),
     'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+
+    'currency' => 'BRL',
+
+    /*
+    | Optional promotion. Only shown/charged when every field is valid and
+    | ends_at is in the future (see App\Services\PlanPricing::isPromoActive).
+    */
+    'promo' => [
+        'enabled' => (bool) env('STRIPE_PROMO_ENABLED', false),
+        'price' => env('STRIPE_PROMO_PRICE'),
+        'ends_at' => env('STRIPE_PROMO_ENDS_AT'),
+        'stripe_price_id' => env('STRIPE_PROMO_PRICE_ID'),
+        'label' => env('STRIPE_PROMO_LABEL', 'Oferta especial'),
+    ],
 
     'plans' => [
         'free' => [
@@ -28,14 +44,15 @@ return [
                 'Inteligência Artificial',
                 'Parecer técnico com IA',
                 'Planejamento financeiro com IA',
+                'Acesso à API REST',
                 'Suporte prioritário',
             ],
         ],
         'professional' => [
             'name' => 'Profissional',
             'description' => 'Para quem leva suas finanças a sério e quer o controle total com inteligência artificial.',
-            'price' => 24.90,
-            'original_price' => 41.58,
+            'price' => (float) env('STRIPE_PROFESSIONAL_PRICE', 29.90),
+            'interval' => 'month',
             'stripe_price_id' => env('STRIPE_PROFESSIONAL_PRICE_ID'),
             'features' => [
                 'Carteiras ilimitadas (pessoais e empresariais)',
@@ -51,6 +68,7 @@ return [
                 'Análise de metas com IA',
                 'Plano por objetivo com IA',
                 'Calculadoras e cotações gratuitas',
+                'Acesso à API REST com tokens pessoais',
                 'Suporte prioritário',
             ],
             'highlights' => [

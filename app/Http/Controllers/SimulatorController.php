@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SimulatorController extends Controller
 {
     public function index(): View
     {
-        if (!auth()->user()->hasFeature('simulators')) {
+        if (! auth()->user()->hasFeature('simulators')) {
             return view('simulators.locked');
         }
 
@@ -18,7 +17,7 @@ class SimulatorController extends Controller
 
     public function investment(): View
     {
-        if (!auth()->user()->hasFeature('simulators')) {
+        if (! auth()->user()->hasFeature('simulators')) {
             return view('simulators.locked');
         }
 
@@ -27,7 +26,7 @@ class SimulatorController extends Controller
 
     public function retirement(): View
     {
-        if (!auth()->user()->hasFeature('simulators')) {
+        if (! auth()->user()->hasFeature('simulators')) {
             return view('simulators.locked');
         }
 
@@ -36,7 +35,7 @@ class SimulatorController extends Controller
 
     public function budget(): View
     {
-        if (!auth()->user()->hasFeature('simulators')) {
+        if (! auth()->user()->hasFeature('simulators')) {
             return view('simulators.locked');
         }
 
@@ -48,7 +47,7 @@ class SimulatorController extends Controller
      */
     public function financialProfile(): View
     {
-        if (!auth()->user()->hasFeature('simulators')) {
+        if (! auth()->user()->hasFeature('simulators')) {
             return view('simulators.locked');
         }
 
@@ -60,7 +59,7 @@ class SimulatorController extends Controller
      */
     public function investorProfile(): View
     {
-        if (!auth()->user()->hasFeature('simulators')) {
+        if (! auth()->user()->hasFeature('simulators')) {
             return view('simulators.locked');
         }
 

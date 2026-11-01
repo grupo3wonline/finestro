@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AccountDeletionException;
+use App\Interfaces\Services\AccountActivityServiceInterface;
+use App\Interfaces\Services\AccountDeletionServiceInterface;
+use App\Interfaces\Services\SecurityActivityLoggerInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +19,17 @@ class SettingController extends Controller
     {
         $user = Auth::user();
 
-        return view('settings.index', compact('user'));
+        return view('settings.index', ['user' => $user]);
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    public function activity(AccountActivityServiceInterface $activities): View
+    {
+        return view('settings.activity', [
+            'entries' => $activities->paginateForUser(Auth::user()),
+        ]);
+    }
+
+    public function updatePassword(Request $request, SecurityActivityLoggerInterface $security): RedirectResponse
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
@@ -30,15 +41,19 @@ class SettingController extends Controller
             'password.confirmed' => 'A confirmação da senha não confere.',
         ]);
 
-        Auth::user()->update([
+        $user = Auth::user();
+
+        $user->update([
             'password' => Hash::make($request->password),
         ]);
+
+        $security->log('password_changed', $user);
 
         return redirect()->route('settings.index')
             ->with('success', 'Senha alterada com sucesso!');
     }
 
-    public function deleteAccount(Request $request): RedirectResponse
+    public function deleteAccount(Request $request, AccountDeletionServiceInterface $accounts): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current_password'],
@@ -49,14 +64,18 @@ class SettingController extends Controller
 
         $user = Auth::user();
 
-        Auth::logout();
+        try {
+            $accounts->delete($user);
+        } catch (AccountDeletionException $e) {
+            return redirect()->route('settings.privacy')->with('error', $e->getMessage());
+        }
 
-        $user->delete();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('home')
-            ->with('success', 'Sua conta foi excluída com sucesso.');
+            ->with('success', 'Sua conta foi excluída e seu acesso foi encerrado.');
     }
 }

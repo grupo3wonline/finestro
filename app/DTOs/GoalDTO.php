@@ -2,7 +2,9 @@
 
 namespace App\DTOs;
 
-class GoalDTO
+use Spatie\LaravelData\Data;
+
+class GoalDTO extends Data
 {
     public function __construct(
         public readonly ?string $id = null,
@@ -19,6 +21,8 @@ class GoalDTO
 
     /**
      * Create DTO from request array.
+     *
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {
@@ -38,6 +42,8 @@ class GoalDTO
 
     /**
      * Convert DTO to array for model operations.
+     *
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -51,6 +57,6 @@ class GoalDTO
             'status' => $this->status,
             'icon' => $this->icon,
             'color' => $this->color,
-        ], fn($value) => !is_null($value));
+        ], fn (float|string|null $value): bool => ! is_null($value));
     }
 }

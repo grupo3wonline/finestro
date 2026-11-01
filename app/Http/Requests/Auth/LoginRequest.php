@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -23,18 +25,40 @@ class LoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * Login requires the username, the e-mail and the password of the same
+     * account.
+     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'username' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string'],
         ];
     }
 
     /**
+     * Custom attribute names for validation messages (pt-BR).
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'username' => 'usuário',
+            'email' => 'e-mail',
+            'password' => 'senha',
+        ];
+    }
+
+    /**
      * Attempt to authenticate the request's credentials.
+     *
+     * The user provider matches username AND e-mail on the same row, so a
+     * mismatch between them fails exactly like a wrong password. Every
+     * failure uses the generic "login" error key.
      *
      * @throws ValidationException
      */
@@ -42,15 +66,45 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        /** @var SessionGuard $guard */
+        $guard = Auth::guard('web');
+
+        if (! $guard->attemptWhen($this->credentials(), fn (User $user): bool => ! $user->isSuspended(), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            // The suspension notice is shown only with the right password,
+            // so it never reveals whether an account exists.
+            $lastAttempted = $guard->getLastAttempted();
+
+            if ($lastAttempted instanceof User
+                && $lastAttempted->isSuspended()
+                && $guard->getProvider()->validateCredentials($lastAttempted, ['password' => (string) $this->string('password')])) {
+                throw ValidationException::withMessages([
+                    'login' => User::SUSPENDED_MESSAGE,
+                ]);
+            }
+
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'login' => trans('auth.failed'),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Build the credential array: username + e-mail (lower-cased, as stored
+     * at registration) + password.
+     *
+     * @return array<string, string>
+     */
+    protected function credentials(): array
+    {
+        return [
+            'username' => (string) $this->string('username'),
+            'email' => Str::lower((string) $this->string('email')),
+            'password' => (string) $this->string('password'),
+        ];
     }
 
     /**
@@ -69,7 +123,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'login' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -81,6 +135,10 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(
+            Str::lower((string) $this->string('username')).'|'
+            .Str::lower((string) $this->string('email')).'|'
+            .$this->ip()
+        );
     }
 }

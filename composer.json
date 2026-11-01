@@ -7,19 +7,34 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "laravel/framework": "^13.8",
+        "barryvdh/laravel-dompdf": "3.1.2",
+        "darkaonline/l5-swagger": "^11.2",
+        "filament/filament": "^5.11",
+        "laravel/framework": "^13.39",
+        "laravel/sanctum": "^4.3",
+        "laravel/scout": "^11.9",
         "laravel/tinker": "^3.0",
+        "maatwebsite/excel": "^4.0",
+        "spatie/laravel-activitylog": "^5.1",
+        "spatie/laravel-data": "^4.23",
+        "spatie/laravel-medialibrary": "^11.23",
+        "spatie/laravel-permission": "^8.3",
         "stripe/stripe-php": "^20.1"
     },
     "require-dev": {
+        "driftingly/rector-laravel": "^2.7",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
+        "larastan/larastan": "^3.13",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^12.5.12"
+        "nunomaduro/collision": "^8.9.5",
+        "pestphp/pest": "^4.7",
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "phpunit/phpunit": "^12.5.33",
+        "rector/rector": "^2.8"
     },
     "autoload": {
         "psr-4": {
@@ -47,12 +62,28 @@
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
         ],
         "test": [
-            "@php artisan config:clear --ansi @no_additional_args",
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan optimize:clear --ansi @no_additional_args",
             "@php artisan test"
+        ],
+        "lint": "pint --test",
+        "format": "pint",
+        "analyse": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpstan analyse --memory-limit=1G --no-progress"
+        ],
+        "refactor": "rector --dry-run",
+        "quality": [
+            "Composer\\Config::disableProcessTimeout",
+            "@lint",
+            "@analyse",
+            "@refactor",
+            "@test"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
@@ -68,6 +99,14 @@
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ]
+    },
+    "scripts-descriptions": {
+        "test": "Clear all framework caches (config, routes, views, Filament components) and run the test suite (Pest runner via php artisan test). Clearing avoids stale local caches polluting runs.",
+        "lint": "Check code style with Laravel Pint without changing files.",
+        "format": "Fix code style with Laravel Pint.",
+        "analyse": "Run PHPStan (level 6 + Larastan) static analysis.",
+        "refactor": "Run Rector in dry-run mode; fails if Rector would change any file.",
+        "quality": "Run lint, analyse, refactor and test in sequence (same as CI)."
     },
     "extra": {
         "laravel": {

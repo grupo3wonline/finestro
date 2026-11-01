@@ -5,11 +5,11 @@
 @section('breadcrumb')
 <nav class="text-sm" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li><a href="{{ route('calculators.index') }}" class="text-gray-500 hover:text-primary-600">Calculadoras</a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li class="text-gray-700 dark:text-gray-300 font-medium">13º Salário</li>
+        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li><a href="{{ route('calculators.index') }}" class="text-surface-500 hover:text-primary-600">Calculadoras</a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li class="text-surface-700 dark:text-surface-300 font-medium">13º Salário</li>
     </ol>
 </nav>
 @endsection
@@ -17,42 +17,42 @@
 @section('content')
 <div class="max-w-5xl mx-auto space-y-6" x-data="thirteenthSalaryCalculator()">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-2xl font-bold text-surface-900 dark:text-white">
             <i class="fas fa-money-bill-wave text-orange-500 mr-2"></i> Calculadora de 13º Salário
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-sm">Calcule as parcelas do décimo terceiro com descontos de INSS e IRRF (tabelas 2024).</p>
+        <p class="text-surface-600 dark:text-surface-400 text-sm">Calcule as parcelas do décimo terceiro com descontos de INSS e IRRF (tabelas 2024).</p>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-5">
+        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Salário Bruto (R$)
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Salário bruto mensal registrado em carteira"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Salário bruto mensal registrado em carteira"></i>
                 </label>
                 <input type="number" x-model.number="grossSalary" min="0" step="100" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 5000">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Meses Trabalhados no Ano
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Quantos meses trabalhou neste ano (1 a 12)"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Quantos meses trabalhou neste ano (1 a 12)"></i>
                 </label>
                 <input type="number" x-model.number="monthsWorked" min="1" max="12" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 12">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Número de Dependentes
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Dependentes para dedução do IRRF (R$ 189,59 cada)"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Dependentes para dedução do IRRF (R$ 189,59 cada)"></i>
                 </label>
                 <input type="number" x-model.number="dependents" min="0" max="20" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 0">
             </div>
 
@@ -60,15 +60,15 @@
                 <button @click="calculate()" class="flex-1 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition">
                     <i class="fas fa-calculator mr-2"></i> Calcular
                 </button>
-                <button @click="reset()" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition">
+                <button @click="reset()" class="px-6 py-3 bg-surface-200 dark:bg-surface-800 hover:bg-surface-300 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 font-medium rounded-lg transition">
                     <i class="fas fa-eraser mr-1"></i> Limpar
                 </button>
             </div>
         </div>
 
         <!-- Results -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Resultado</h3>
+        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6">
+            <h3 class="text-lg font-semibold text-surface-900 dark:text-white mb-4">Resultado</h3>
 
             <template x-if="result">
                 <div class="space-y-4">
@@ -87,22 +87,22 @@
                     </div>
 
                     <!-- Details -->
-                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
-                        <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Detalhamento</h4>
+                    <div class="border-t border-surface-100 dark:border-surface-800 pt-4 space-y-2">
+                        <h4 class="text-sm font-semibold text-surface-700 dark:text-surface-300 mb-2">Detalhamento</h4>
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400">13º Bruto Proporcional</span>
-                            <span class="font-medium text-gray-900 dark:text-white" x-text="formatCurrency(result.grossThirteenth)"></span>
+                            <span class="text-surface-600 dark:text-surface-400">13º Bruto Proporcional</span>
+                            <span class="font-medium text-surface-900 dark:text-white" x-text="formatCurrency(result.grossThirteenth)"></span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400">INSS</span>
+                            <span class="text-surface-600 dark:text-surface-400">INSS</span>
                             <span class="font-medium text-red-600" x-text="'- ' + formatCurrency(result.inss)"></span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400">IRRF</span>
+                            <span class="text-surface-600 dark:text-surface-400">IRRF</span>
                             <span class="font-medium text-red-600" x-text="'- ' + formatCurrency(result.irrf)"></span>
                         </div>
-                        <div class="flex justify-between text-sm border-t border-gray-200 dark:border-gray-700 pt-2">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">Total Líquido</span>
+                        <div class="flex justify-between text-sm border-t border-surface-100 dark:border-surface-800 pt-2">
+                            <span class="font-medium text-surface-700 dark:text-surface-300">Total Líquido</span>
                             <span class="font-bold text-green-600" x-text="formatCurrency(result.netTotal)"></span>
                         </div>
                     </div>
@@ -111,43 +111,43 @@
 
             <template x-if="!result">
                 <div class="text-center py-12">
-                    <i class="fas fa-money-bill-wave text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
-                    <p class="text-gray-500 dark:text-gray-400">Preencha os dados e clique em calcular.</p>
+                    <i class="fas fa-money-bill-wave text-4xl text-surface-300 dark:text-surface-600 mb-3"></i>
+                    <p class="text-surface-500 dark:text-surface-400">Preencha os dados e clique em calcular.</p>
                 </div>
             </template>
         </div>
     </div>
 
     <!-- Tax Tables -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6" x-data="{ showFormula: false }">
+    <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6" x-data="{ showFormula: false }">
         <button @click="showFormula = !showFormula" class="flex items-center justify-between w-full text-left">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 class="text-lg font-semibold text-surface-900 dark:text-white">
                 <i class="fas fa-book-open text-primary-500 mr-2"></i> Tabelas de INSS e IRRF (2024)
             </h3>
-            <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="{ 'rotate-180': showFormula }"></i>
+            <i class="fas fa-chevron-down text-surface-400 transition-transform" :class="{ 'rotate-180': showFormula }"></i>
         </button>
         <div x-show="showFormula" x-transition class="mt-4 space-y-4">
             <!-- INSS Table -->
             <div>
-                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Faixas INSS 2024 (Progressiva)</h4>
+                <h4 class="text-sm font-semibold text-surface-700 dark:text-surface-300 mb-2">Faixas INSS 2024 (Progressiva)</h4>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th class="text-left py-2 px-3 text-gray-600 dark:text-gray-400">Faixa Salarial</th>
-                                <th class="text-right py-2 px-3 text-gray-600 dark:text-gray-400">Alíquota</th>
+                            <tr class="border-b border-surface-100 dark:border-surface-800">
+                                <th class="text-left py-2 px-3 text-surface-600 dark:text-surface-400">Faixa Salarial</th>
+                                <th class="text-right py-2 px-3 text-surface-600 dark:text-surface-400">Alíquota</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-700 dark:text-gray-300">
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                        <tbody class="text-surface-700 dark:text-surface-300">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">Até R$ 1.412,00</td>
                                 <td class="py-2 px-3 text-right">7,5%</td>
                             </tr>
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">R$ 1.412,01 a R$ 2.666,68</td>
                                 <td class="py-2 px-3 text-right">9%</td>
                             </tr>
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">R$ 2.666,69 a R$ 4.000,03</td>
                                 <td class="py-2 px-3 text-right">12%</td>
                             </tr>
@@ -162,33 +162,33 @@
 
             <!-- IRRF Table -->
             <div>
-                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Faixas IRRF 2024</h4>
+                <h4 class="text-sm font-semibold text-surface-700 dark:text-surface-300 mb-2">Faixas IRRF 2024</h4>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th class="text-left py-2 px-3 text-gray-600 dark:text-gray-400">Base de Cálculo</th>
-                                <th class="text-right py-2 px-3 text-gray-600 dark:text-gray-400">Alíquota</th>
-                                <th class="text-right py-2 px-3 text-gray-600 dark:text-gray-400">Dedução</th>
+                            <tr class="border-b border-surface-100 dark:border-surface-800">
+                                <th class="text-left py-2 px-3 text-surface-600 dark:text-surface-400">Base de Cálculo</th>
+                                <th class="text-right py-2 px-3 text-surface-600 dark:text-surface-400">Alíquota</th>
+                                <th class="text-right py-2 px-3 text-surface-600 dark:text-surface-400">Dedução</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-700 dark:text-gray-300">
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                        <tbody class="text-surface-700 dark:text-surface-300">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">Até R$ 2.259,20</td>
                                 <td class="py-2 px-3 text-right">Isento</td>
                                 <td class="py-2 px-3 text-right">—</td>
                             </tr>
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">R$ 2.259,21 a R$ 2.826,65</td>
                                 <td class="py-2 px-3 text-right">7,5%</td>
                                 <td class="py-2 px-3 text-right">R$ 169,44</td>
                             </tr>
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">R$ 2.826,66 a R$ 3.751,05</td>
                                 <td class="py-2 px-3 text-right">15%</td>
                                 <td class="py-2 px-3 text-right">R$ 381,44</td>
                             </tr>
-                            <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                            <tr class="border-b border-surface-100 dark:border-surface-800/50">
                                 <td class="py-2 px-3">R$ 3.751,06 a R$ 4.664,68</td>
                                 <td class="py-2 px-3 text-right">22,5%</td>
                                 <td class="py-2 px-3 text-right">R$ 662,77</td>
@@ -201,7 +201,7 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Dedução por dependente: R$ 189,59</p>
+                <p class="text-xs text-surface-500 dark:text-surface-400 mt-2">Dedução por dependente: R$ 189,59</p>
             </div>
         </div>
     </div>

@@ -7,16 +7,16 @@
     @method('patch')
 
     <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome</label>
+        <label for="name" class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Nome</label>
         <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
+            class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
         @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
 
     <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
+        <label for="email" class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">E-mail</label>
         <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
+            class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
         @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
 
         @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())

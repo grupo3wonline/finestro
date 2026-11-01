@@ -1,6 +1,6 @@
 # Project Structure
 
-> Laravel 12 application with Service Layer, Repository Pattern, and clean architecture.
+> Laravel 13 application with Service Layer, Repository Pattern, and clean architecture.
 
 ```
 Finestro/

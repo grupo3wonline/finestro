@@ -1,0 +1,19 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property App\\Models\\Goal\:\:\$filterable \(array\<int, string\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: app/Models/Goal.php
+
+		-
+			message: '#^Property App\\Models\\Transaction\:\:\$filterable \(array\<int, string\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: app/Models/Transaction.php
+
+		-
+			message: '#^Property App\\Models\\Wallet\:\:\$filterable \(array\<int, string\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: app/Models/Wallet.php

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AiCredential;
-use App\Services\AiService;
+use App\DTOs\AiCredentialDTO;
+use App\Interfaces\Services\AiServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ use Illuminate\View\View;
 class AiController extends Controller
 {
     public function __construct(
-        protected AiService $aiService
+        protected AiServiceInterface $aiService
     ) {}
 
     /**
@@ -23,7 +23,7 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return redirect()->route('subscription.plans')
                 ->with('error', 'Análise com IA está disponível apenas no plano Profissional.');
         }
@@ -31,7 +31,7 @@ class AiController extends Controller
         $credentials = $user->aiCredential;
         $hasCredentials = $credentials && $credentials->hasConfiguredProvider();
 
-        return view('ai.index', compact('credentials', 'hasCredentials'));
+        return view('ai.index', ['credentials' => $credentials, 'hasCredentials' => $hasCredentials]);
     }
 
     /**
@@ -41,14 +41,14 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return redirect()->route('subscription.plans')
                 ->with('error', 'Configuração de IA está disponível apenas no plano Profissional.');
         }
 
         $credentials = $user->aiCredential;
 
-        return view('ai.settings', compact('credentials'));
+        return view('ai.settings', ['credentials' => $credentials]);
     }
 
     /**
@@ -58,7 +58,7 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return redirect()->route('subscription.plans')
                 ->with('error', 'Recurso disponível apenas no plano Profissional.');
         }
@@ -70,9 +70,9 @@ class AiController extends Controller
             'preferred_provider' => 'required|in:gemini,groq,openrouter',
         ]);
 
-        AiCredential::updateOrCreate(
-            ['user_id' => $user->id],
-            $validated
+        $this->aiService->saveCredentials(
+            $user,
+            AiCredentialDTO::fromArray($validated + ['user_id' => $user->id])
         );
 
         return redirect()->route('ai.settings')
@@ -86,7 +86,7 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return response()->json(['success' => false, 'error' => 'Recurso do plano Profissional.'], 403);
         }
 
@@ -105,7 +105,7 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return response()->json(['success' => false, 'error' => 'Recurso do plano Profissional.'], 403);
         }
 
@@ -124,7 +124,7 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return response()->json(['success' => false, 'error' => 'Recurso do plano Profissional.'], 403);
         }
 
@@ -139,11 +139,11 @@ class AiController extends Controller
         $prompt = "Com base na minha situação financeira, crie um plano financeiro personalizado para:\n";
         $prompt .= "Objetivo: {$validated['objective']}\n";
 
-        if (!empty($validated['timeline'])) {
+        if (! empty($validated['timeline'])) {
             $prompt .= "Prazo desejado: {$validated['timeline']}\n";
         }
-        if (!empty($validated['monthly_available'])) {
-            $prompt .= "Valor disponível por mês: R$ " . number_format($validated['monthly_available'], 2, ',', '.') . "\n";
+        if (! empty($validated['monthly_available'])) {
+            $prompt .= 'Valor disponível por mês: R$ '.number_format($validated['monthly_available'], 2, ',', '.')."\n";
         }
 
         $prompt .= "\nForneça:\n1. Análise de viabilidade\n2. Plano mensal detalhado (mês a mês nos primeiros 6 meses)\n3. Estratégias de economia recomendadas\n4. Riscos e como mitigá-los\n5. Marcos intermediários para acompanhamento\n6. Alternativas caso o plano principal não funcione";
@@ -160,13 +160,13 @@ class AiController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return response()->json(['success' => false, 'error' => 'Recurso do plano Profissional.'], 403);
         }
 
         $context = $this->aiService->buildFinancialContext($user);
 
-        $prompt = <<<PROMPT
+        $prompt = <<<'PROMPT'
 Elabore um PARECER TÉCNICO FINANCEIRO completo e formal sobre a minha situação financeira. O parecer deve seguir a estrutura:
 
 ## PARECER TÉCNICO FINANCEIRO
@@ -222,7 +222,7 @@ PROMPT;
     {
         $user = Auth::user();
 
-        if (!$user->hasFeature('ai_insights')) {
+        if (! $user->hasFeature('ai_insights')) {
             return response()->json(['success' => false, 'error' => 'Recurso do plano Profissional.'], 403);
         }
 
@@ -247,11 +247,11 @@ PROMPT;
         $prompt .= "Horizonte: {$horizons[$validated['horizon']]}\n";
         $prompt .= "Prioridade principal: {$priorities[$validated['priority']]}\n";
 
-        if (!empty($validated['monthly_income'])) {
-            $prompt .= "Renda mensal informada: R$ " . number_format($validated['monthly_income'], 2, ',', '.') . "\n";
+        if (! empty($validated['monthly_income'])) {
+            $prompt .= 'Renda mensal informada: R$ '.number_format($validated['monthly_income'], 2, ',', '.')."\n";
         }
-        if (!empty($validated['monthly_expenses'])) {
-            $prompt .= "Despesas mensais informadas: R$ " . number_format($validated['monthly_expenses'], 2, ',', '.') . "\n";
+        if (! empty($validated['monthly_expenses'])) {
+            $prompt .= 'Despesas mensais informadas: R$ '.number_format($validated['monthly_expenses'], 2, ',', '.')."\n";
         }
 
         $prompt .= "\n\nEstruture o planejamento em:\n\n## PLANEJAMENTO FINANCEIRO PERSONALIZADO\n\n### 1. DIAGNÓSTICO ATUAL\n- Resumo da situação (renda, gastos, patrimônio, dívidas)\n- Capacidade de investimento mensal estimada\n\n### 2. OBJETIVOS DEFINIDOS\n- Meta principal com valor e prazo\n- Metas intermediárias (marcos)\n- Indicadores de sucesso\n\n### 3. ORÇAMENTO SUGERIDO\n- Distribuição ideal da renda (% por categoria)\n- Áreas onde pode economizar\n\n### 4. ESTRATÉGIA DE INVESTIMENTOS\n- Perfil sugerido com base nos dados\n- Alocação recomendada por classe de ativo\n- Produtos específicos sugeridos\n- Aportes mensais recomendados\n\n### 5. PLANO DE AÇÃO (Timeline)\n- Mês 1-3: Ações imediatas\n- Mês 4-6: Consolidação\n- Mês 7-12: Crescimento\n- Para cada fase: o que fazer, quanto investir, resultado esperado\n\n### 6. CENÁRIOS\n- Cenário Otimista: se seguir 100% do plano\n- Cenário Realista: seguindo 70-80%\n- Cenário Pessimista: imprevistos e como se proteger\n\n### 7. MONITORAMENTO\n- KPIs para acompanhar mensalmente\n- Quando reavaliar o plano\n\n### 8. DISCLAIMER\n- Este planejamento é educacional e não constitui aconselhamento financeiro profissional\n\nUse valores reais dos meus dados, seja específico com números e prazos.";

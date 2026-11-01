@@ -4,9 +4,22 @@ Finestro is a personal finance management micro SaaS web application with a free
 
 ## Business Model
 
-- **Free**: 1 wallet, 100 transactions/month, basic features
-- **Padrão (Standard)**: Up to 3 wallets, unlimited transactions, simulators, up to 5 goals
-- **Premium**: Unlimited wallets, goals, AI insights, exportable reports (PDF/CSV)
+Two plans: **Free** (`free`) and **Profissional** (`professional`). The plan is
+derived from the user's subscription (`User::current_plan`). Limits live in
+`User::freePlanLimits()` / `User::getPlanLimitsAttribute()` — that code is the
+single source of truth; keep this table and the landing pricing in sync with it.
+
+- **Free** (grátis, para sempre): 1 wallet, 100 transactions/month, 2 goals,
+  5 categories, 3 budgets/month, dashboard summary, 7 financial calculators,
+  profile tests, real-time currency quotes.
+- **Profissional** (paid, monthly — price from `PlanPricingInterface`):
+  everything unlimited (wallets, transactions, goals, categories, budgets),
+  plus wallet sharing, 3 financial simulators, reports with charts + CSV/PDF
+  export, 5 AI features, REST API access, and priority support.
+
+Feature gating is enforced via plan limits and policies (e.g. `WalletPolicy`,
+`ApiTokenService`, `AiService`); access falls back to Free when a subscription
+is `past_due`/`unpaid`/`canceled` (see `App\Enums\SubscriptionStatus`).
 
 ## Target Audience
 
@@ -24,23 +37,29 @@ Adults aged 20–50: freelancers, small business owners, and professionals seeki
 - Financial simulators (investment, retirement, budget)
 - Financial goals with progress tracking
 - Dashboard with charts and period comparisons
-- Reports and CSV/PDF export (Premium)
-- AI-powered insights and alerts (Premium)
+- Reports and CSV/PDF export (Profissional)
+- AI-powered insights and alerts (Profissional)
+- REST API access with personal tokens (Profissional)
 - Landing page (hotsite) for conversion
 
 ## Public Pages
 
-- **Home**: Landing page in hotsite format highlighting benefits, features, usage instructions, and tips
-- **Sobre**: About page with company/product info
-- **Serviços**: Services offered
-- **Ferramentas**: Tools and utilities
-- **Contato**: Contact page with iframe form
+The public site is a **single-page hotsite** (`landing/home.blade.php`). The
+former standalone pages are now in-page sections reached via anchors; legacy
+routes redirect to those anchors (see `PublicPagesTest`).
 
-Each public page includes a CTA (Call to Action) with persuasive copy promoting Grupo 3W Online (www.3wonline.com.br) — a company that develops custom websites and systems on demand.
+- **Home** (`#inicio`): hero highlighting benefits and the main sign-up CTA
+- **Sobre** (`#sobre`): company/product info, vision/mission, tech stack
+- **Serviços** (`#servicos`): services offered, with Free/Pro gating badges
+- **Ferramentas** (`#ferramentas`): calculators, simulators, profile tests, AI
+- **Planos** (`#planos`): pricing table (price from `PlanPricingInterface`)
+- **Contato** (`#contato`): direct channels only — WhatsApp + e-mail, no form/iframe
+
+The page includes a CTA (Call to Action) with persuasive copy promoting Grupo 3W Online (www.3wonline.com.br) — a company that develops custom websites and systems on demand.
 
 ## Branding
 
-- Footer on ALL pages: "Sistema desenvolvido por HOTWYL | WILLFROMBRASIL"
+- Footer on ALL pages: "Sistema desenvolvido pelo desenvolvedor HOTWYL | WILLFROMBRASIL"
 - Header and footer visible on every page
 - Developer company: Grupo 3W Online (www.3wonline.com.br)
 

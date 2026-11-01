@@ -1,0 +1,22 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    # Residual entries only (see FEAT-004 findings): the Filterable trait's
+    # `$this->filterable ?? []` fallback, reported once per model using it.
+    - phpstan-baseline.neon
+
+parameters:
+    level: 6
+    paths:
+        - app
+        - config
+        - database
+        - routes
+    excludePaths:
+        - vendor
+        - storage
+        - bootstrap/cache
+    tmpDir: storage/framework/cache/phpstan
+    # Models declare casts in a casts() method typed `array<string, string>`;
+    # let Larastan read the returned literal so attributes such as
+    # Subscription::$status (enum) and Transaction::$date (Carbon) get their cast types.
+    parseModelCastsMethod: true

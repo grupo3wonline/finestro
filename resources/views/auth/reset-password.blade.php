@@ -1,39 +1,33 @@
 @extends('layouts.guest')
 
 @section('title', 'Redefinir Senha')
+@section('meta_description', 'Defina uma nova senha para a sua conta Finestro.')
 
 @section('content')
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">Redefinir Senha</h2>
-<p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">Crie uma nova senha para sua conta.</p>
+<div class="text-center mb-6">
+    <h2 class="text-2xl font-bold text-surface-900 dark:text-white">Redefinir senha</h2>
+    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Crie uma nova senha para sua conta.</p>
+</div>
 
-<form method="POST" action="{{ route('password.store') }}" class="space-y-4">
+<form method="POST" action="{{ route('password.store') }}" class="space-y-4" data-loading="Redefinindo...">
     @csrf
     <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-    <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
-        <input type="email" name="email" id="email" value="{{ old('email', $request->email) }}" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
-        @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
+    <x-ui.field label="E-mail" for="email" error="email">
+        <x-ui.input type="email" name="email" icon="fa-envelope" error="email"
+            value="{{ old('email', $request->email) }}" required />
+    </x-ui.field>
 
-    <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nova Senha</label>
-        <input type="password" name="password" id="password" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="Mínimo 8 caracteres">
-        @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
+    <x-ui.field label="Nova senha" for="password" error="password">
+        <x-ui.input type="password" name="password" icon="fa-lock" error="password"
+            required placeholder="Mínimo 8 caracteres" />
+    </x-ui.field>
 
-    <div>
-        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar Nova Senha</label>
-        <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="off" required
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
-            placeholder="Repita a nova senha">
-    </div>
+    <x-ui.field label="Confirmar nova senha" for="password_confirmation">
+        <x-ui.input type="password" name="password_confirmation" icon="fa-lock"
+            required placeholder="Repita a nova senha" />
+    </x-ui.field>
 
-    <button type="submit" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition">
-        <i class="fas fa-key mr-2"></i> Redefinir Senha
-    </button>
+    <x-ui.button type="submit" icon="fa-key" block class="py-3">Redefinir senha</x-ui.button>
 </form>
 @endsection

@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Database\Factories\AiCredentialFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AiCredential extends Model
 {
-    use HasUuid, SoftDeletes;
+    /** @use HasFactory<AiCredentialFactory> */
+    use HasFactory, HasUuid, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -34,6 +37,7 @@ class AiCredential extends Model
         'openrouter_api_key',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -45,9 +49,9 @@ class AiCredential extends Model
     public function hasConfiguredProvider(): bool
     {
         return match ($this->preferred_provider) {
-            'gemini' => !empty($this->gemini_api_key),
-            'groq' => !empty($this->groq_api_key),
-            'openrouter' => !empty($this->openrouter_api_key),
+            'gemini' => ! empty($this->gemini_api_key),
+            'groq' => ! empty($this->groq_api_key),
+            'openrouter' => ! empty($this->openrouter_api_key),
             default => false,
         };
     }

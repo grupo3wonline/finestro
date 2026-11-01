@@ -1,0 +1,13 @@
+{
+    "preset": "laravel",
+    "exclude": [
+        "vendor",
+        "storage",
+        "bootstrap/cache",
+        "node_modules",
+        "public"
+    ],
+    "notName": [
+        "*.blade.php"
+    ]
+}

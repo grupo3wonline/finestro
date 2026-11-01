@@ -28,9 +28,15 @@
         <env name="DB_URL" value=""/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SCOUT_DRIVER" value="database"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="STRIPE_SECRET_KEY" value="" force="true"/>
+        <env name="STRIPE_PUBLISHABLE_KEY" value="" force="true"/>
+        <env name="STRIPE_WEBHOOK_SECRET" value="" force="true"/>
+        <env name="STRIPE_PROFESSIONAL_PRICE_ID" value="price_test_professional" force="true"/>
+        <env name="STRIPE_PROMO_ENABLED" value="false" force="true"/>
     </php>
 </phpunit>

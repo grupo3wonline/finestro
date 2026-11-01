@@ -1,0 +1,24 @@
+{
+  "verdict": "APPROVED",
+  "summary": "Phase 5 meets the DONE criteria in plan.md. The REST API v1 has 29 routes behind auth:sanctum, verified, throttle:api, api.plan and per-route abilities, with permission:reports.view on the report summary. Sanctum is token-only (guard []), and a session-only request gets 401 in tests. Isolation returns 404 for another user's record, 403 forbidden for a missing permission, 403 missing_ability for a missing token ability and 401 without a token; ApiEndpointMatrixTest checks every registered route for these cases. All errors use the pt-BR {message, code[, errors]} envelope. Resources use explicit allowlists, with no user_id, deleted_at, receipt_path, media, stripe_* or non-owner company_document. CORS is limited to api/* and the allowed origins, with no credentials. Swagger UI and the JSON spec are open in local only; in production guests get 404, non-admins 403 and admins 200. Scout search stays scoped to the user and excludes soft-deleted rows. Part C-1 to C-5 are implemented and tested. The PHPStan baseline is unchanged at 3 entries. Recorded evidence: 672 passed / 15 skipped / 2734 assertions in normal and random order, and composer quality exit 0. Three minor, non-blocking findings remain.",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "minor",
+      "file": "routes/api.php",
+      "detail": "throttle:api runs after auth:sanctum, so requests with no token or an invalid token are never rate limited. Each one still costs a personal_access_tokens lookup, and the IP fallback in the AppServiceProvider limiter can never run. Fix: add an IP-keyed limiter in front of auth:sanctum for the v1 group and keep the per-user limiter as it is, or document the trade-off in docs/api/phase-5-api.md."
+    },
+    {
+      "id": "R2",
+      "severity": "minor",
+      "file": "app/Repositories/TransactionRepository.php",
+      "detail": "searchKeys() loads every matching transaction id through Scout's DatabaseEngine (no limit) and binds them all into whereIn('transactions.id', [...]). It repeats this for both the list and the summary. A broad term on a large Professional account could exceed MySQL's 65,535 placeholder limit and returns more data than needed. Fix: use a subquery (whereIn with a query builder built from the same LIKE constraints) instead of a materialized id list, or cap the result size."
+    },
+    {
+      "id": "R3",
+      "severity": "minor",
+      "file": "app/OpenApi/RequestSchemas.php",
+      "detail": "The PUT/PATCH /api/v1/wallets/{wallet} docs reference WalletInput, which lists company_name, company_document, credit_limit, closing_day and due_day. UpdateWalletRequest has no rules for these fields, so they are silently dropped and the API still returns 200. The PUT text also says all required fields must be sent, but both verbs accept partial bodies. Fix: either add the rules to UpdateWalletRequest, or give updates their own schema that leaves those fields out and say that updates can be partial."
+    }
+  ]
+}

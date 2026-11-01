@@ -1,68 +1,13 @@
-{{-- Analytics — only rendered when the corresponding IDs are configured via .env --}}
-{{-- and only executed after the user grants cookie consent (LGPD/GDPR/CCPA/POPIA). --}}
+{{-- Consent-gated analytics (LGPD/GDPR/CCPA/POPIA). Only configuration is printed here: --}}
+{{-- resources/js/consent.js loads GTM / GA4 / Meta Pixel after the visitor opts in. --}}
 @php
-    $gtmId = config('services.google.gtm_id');
-    $gaId = config('services.google.analytics_id');
-    $pixelId = config('services.facebook.pixel_id');
+    $consentConfig = [
+        'gtmId' => config('services.google.gtm_id') ?: null,
+        'gaId' => config('services.google.analytics_id') ?: null,
+        'pixelId' => config('services.facebook.pixel_id') ?: null,
+        'version' => (string) config('legal.policy_version'),
+        'endpoint' => route('consent.store'),
+        'serverGpc' => app(\App\Interfaces\Services\ConsentServiceInterface::class)->gpcRequested(request()),
+    ];
 @endphp
-
-@if($gtmId || $gaId || $pixelId)
-<script>
-(function () {
-    // Consent gate: scripts below run only when the visitor has accepted cookies.
-    function hasConsent() {
-        return localStorage.getItem('cookie_consent') === 'accepted';
-    }
-
-    function loadAnalytics() {
-        if (window.__analyticsLoaded) return;
-        window.__analyticsLoaded = true;
-
-        @if($gtmId)
-        // Google Tag Manager
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', @json($gtmId));
-        @endif
-
-        @if($gaId)
-        // Google Analytics 4
-        var gaScript = document.createElement('script');
-        gaScript.async = true;
-        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + @json($gaId);
-        document.head.appendChild(gaScript);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', @json($gaId));
-        @endif
-
-        @if($pixelId)
-        // Meta Pixel
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) };
-            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-            n.queue = []; t = b.createElement(e); t.async = !0;
-            t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
-        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', @json($pixelId));
-        fbq('track', 'PageView');
-        @endif
-    }
-
-    if (hasConsent()) {
-        loadAnalytics();
-    } else {
-        // Wait for the consent banner to signal acceptance, then load once.
-        window.addEventListener('cookie-consent-accepted', loadAnalytics, { once: true });
-    }
-})();
-</script>
-@endif
+<script type="application/json" id="finestro-consent-config">@json($consentConfig)</script>

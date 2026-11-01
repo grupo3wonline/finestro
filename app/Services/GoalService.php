@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\DTOs\GoalDTO;
 use App\Interfaces\Repositories\GoalRepositoryInterface;
 use App\Interfaces\Services\GoalServiceInterface;
 use App\Models\Goal;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class GoalService implements GoalServiceInterface
@@ -17,6 +20,11 @@ class GoalService implements GoalServiceInterface
     public function getAllGoals(array $filters = []): Collection
     {
         return $this->goalRepository->getAll($filters);
+    }
+
+    public function getPaginatedGoals(array $filters, int $perPage): LengthAwarePaginator
+    {
+        return $this->goalRepository->paginate($filters, $perPage);
     }
 
     public function getGoalById(string $id): ?Goal

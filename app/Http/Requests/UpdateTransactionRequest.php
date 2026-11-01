@@ -1,39 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\TransactionRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTransactionRequest extends FormRequest
 {
+    use TransactionRules;
+
     public function authorize(): bool
     {
         return true;
     }
 
+    /** @return array<string, mixed> */
     public function rules(): array
     {
-        return [
-            'wallet_id' => ['sometimes', 'required', 'uuid', 'exists:wallets,id'],
-            'category_id' => ['nullable', 'uuid', 'exists:categories,id'],
+        return array_merge($this->sharedRules(), [
+            'wallet_id' => ['sometimes', 'required', 'uuid', $this->ownedWalletRule()],
             'type' => ['sometimes', 'required', 'string', 'in:income,expense'],
-            'amount' => ['sometimes', 'required', 'numeric', 'min:0.01'],
+            'amount' => ['sometimes', 'required', 'numeric', 'min:0.01', 'max:9999999999999'],
             'description' => ['sometimes', 'required', 'string', 'max:255'],
             'date' => ['sometimes', 'required', 'date'],
-            'is_recurring' => ['nullable', 'boolean'],
-            'recurring_frequency' => ['nullable', 'string', 'in:daily,weekly,monthly,yearly'],
-            'receipt' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-            'notes' => ['nullable', 'string', 'max:1000'],
-        ];
+        ]);
     }
 
     public function messages(): array
     {
-        return [
-            'wallet_id.exists' => 'Carteira não encontrada.',
-            'type.in' => 'Tipo de transação inválido.',
-            'amount.min' => 'O valor deve ser maior que zero.',
-            'date.date' => 'Data inválida.',
-        ];
+        return $this->sharedMessages();
     }
 }

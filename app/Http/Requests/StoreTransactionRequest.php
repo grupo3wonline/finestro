@@ -2,45 +2,51 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\TransactionRules;
+use App\Models\Transaction;
+use App\Services\TransactionService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreTransactionRequest extends FormRequest
 {
+    use TransactionRules;
+
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Transaction::class) ?? false;
     }
 
+    /** @return array<string, mixed> */
     public function rules(): array
     {
-        return [
-            'wallet_id' => ['required', 'uuid', 'exists:wallets,id'],
-            'category_id' => ['nullable', 'uuid', 'exists:categories,id'],
+        return array_merge($this->sharedRules(), [
+            'wallet_id' => ['required', 'uuid', $this->ownedWalletRule()],
             'type' => ['required', 'string', 'in:income,expense'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
+            'amount' => ['required', 'numeric', 'min:0.01', 'max:9999999999999'],
             'description' => ['required', 'string', 'max:255'],
             'date' => ['required', 'date'],
-            'is_recurring' => ['nullable', 'boolean'],
-            'recurring_frequency' => ['nullable', 'string', 'in:daily,weekly,monthly,yearly'],
-            'receipt' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-            'notes' => ['nullable', 'string', 'max:1000'],
-        ];
+            'installments' => ['nullable', 'integer', 'min:1', 'max:'.TransactionService::MAX_INSTALLMENTS],
+        ]);
+    }
+
+    /**
+     * Parcelamento e recorrência são mutuamente exclusivos
+     * (só faz sentido bloquear quando há mais de 1 parcela).
+     *
+     * @param  Validator  $validator
+     */
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator): void {
+            if ((int) $this->input('installments', 1) > 1 && $this->boolean('is_recurring')) {
+                $validator->errors()->add('installments', 'Uma transação não pode ser parcelada e recorrente ao mesmo tempo.');
+            }
+        });
     }
 
     public function messages(): array
     {
-        return [
-            'wallet_id.required' => 'Selecione uma carteira.',
-            'wallet_id.exists' => 'Carteira não encontrada.',
-            'type.required' => 'O tipo da transação é obrigatório.',
-            'type.in' => 'Tipo de transação inválido.',
-            'amount.required' => 'O valor é obrigatório.',
-            'amount.min' => 'O valor deve ser maior que zero.',
-            'description.required' => 'A descrição é obrigatória.',
-            'date.required' => 'A data é obrigatória.',
-            'date.date' => 'Data inválida.',
-            'receipt.mimes' => 'O comprovante deve ser JPG, PNG ou PDF.',
-            'receipt.max' => 'O comprovante não pode ter mais de 5MB.',
-        ];
+        return $this->sharedMessages();
     }
 }

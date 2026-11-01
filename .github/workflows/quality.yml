@@ -1,0 +1,66 @@
+name: Quality
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, static analysis, Rector and tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, dom, fileinfo, intl, gd, bcmath, pdo_sqlite, sqlite3
+          coverage: none
+          tools: composer:v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      # Fails on any known security advisory in the locked PHP packages.
+      # Abandoned packages are reported but do not fail the build
+      # (symplify/rule-doc-generator-contracts is a dev-only Rector dependency).
+      - name: Audit PHP dependencies
+        run: composer audit --locked --no-interaction --abandoned=report
+
+      - name: Prepare environment
+        run: cp .env.example .env && php artisan key:generate
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Fails on high or critical advisories in production npm dependencies.
+      - name: Audit frontend dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Build frontend assets
+        run: npm run build
+
+      # Pint (--test), PHPStan level 6 + Larastan, Rector (--dry-run) and the test suite.
+      # Tests run on SQLite :memory: through phpunit.xml; no secrets are needed.
+      - name: Run quality checks
+        run: composer quality
+        env:
+          DB_CONNECTION: sqlite

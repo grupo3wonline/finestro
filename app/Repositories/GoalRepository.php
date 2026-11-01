@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\DTOs\GoalDTO;
 use App\Interfaces\Repositories\GoalRepositoryInterface;
 use App\Models\Goal;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class GoalRepository implements GoalRepositoryInterface
@@ -16,6 +17,11 @@ class GoalRepository implements GoalRepositoryInterface
     public function getAll(array $filters = []): Collection
     {
         return $this->model->filter($filters)->orderBy('deadline')->get();
+    }
+
+    public function paginate(array $filters, int $perPage): LengthAwarePaginator
+    {
+        return $this->model->filter($filters)->orderBy('deadline')->paginate($perPage);
     }
 
     public function findById(string $id): ?Goal
@@ -30,7 +36,7 @@ class GoalRepository implements GoalRepositoryInterface
 
     public function update(string $id, GoalDTO $dto): Goal
     {
-        $goal = $this->findById($id);
+        $goal = $this->model->findOrFail($id);
         $goal->update($dto->toArray());
 
         return $goal->fresh();
@@ -40,6 +46,6 @@ class GoalRepository implements GoalRepositoryInterface
     {
         $goal = $this->findById($id);
 
-        return $goal ? $goal->delete() : false;
+        return $goal instanceof Goal ? $goal->delete() : false;
     }
 }

@@ -37,6 +37,11 @@ class SecurityHeaders
             $response->headers->set('Content-Security-Policy', $this->buildContentSecurityPolicy());
         }
 
+        // Keep the admin panel and the API (incl. Swagger UI) out of search indexes.
+        if ($request->is('admin', 'admin/*', 'api/*')) {
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+        }
+
         // Cross-origin isolation hardening
         $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin');
         $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
@@ -81,6 +86,9 @@ class SecurityHeaders
             'https://cdnjs.cloudflare.com',
             'https://www.googletagmanager.com',
             'https://www.google-analytics.com',
+            // GA4 loads regional script/collect hosts (region1.google-analytics.com, *.analytics.google.com).
+            'https://*.google-analytics.com',
+            'https://*.analytics.google.com',
             'https://connect.facebook.net',
         ];
 
@@ -108,7 +116,12 @@ class SecurityHeaders
             "'self'",
             'https://www.google-analytics.com',
             'https://www.googletagmanager.com',
+            // GA4 beacons go to regional hosts; only reached after analytics consent.
+            'https://*.google-analytics.com',
+            'https://*.analytics.google.com',
             'https://connect.facebook.net',
+            // Meta Pixel events (/tr); only reached after marketing consent.
+            'https://www.facebook.com',
             'https://api.stripe.com',
         ];
 
@@ -120,15 +133,15 @@ class SecurityHeaders
 
         $directives = [
             "default-src 'self'",
-            'script-src ' . implode(' ', $scriptSrc),
-            'style-src ' . implode(' ', $styleSrc),
-            'font-src ' . implode(' ', $fontSrc),
-            'img-src ' . implode(' ', $imgSrc),
-            'connect-src ' . implode(' ', $connectSrc),
-            'frame-src ' . implode(' ', $frameSrc),
+            'script-src '.implode(' ', $scriptSrc),
+            'style-src '.implode(' ', $styleSrc),
+            'font-src '.implode(' ', $fontSrc),
+            'img-src '.implode(' ', $imgSrc),
+            'connect-src '.implode(' ', $connectSrc),
+            'frame-src '.implode(' ', $frameSrc),
             "object-src 'none'",
             "base-uri 'self'",
-            "form-action 'self'",
+            "form-action 'self' https://checkout.stripe.com",
             "frame-ancestors 'self'",
         ];
 

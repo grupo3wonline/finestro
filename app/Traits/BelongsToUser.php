@@ -16,21 +16,23 @@ trait BelongsToUser
      */
     protected static function bootBelongsToUser(): void
     {
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (Auth::check() && empty($model->user_id)) {
                 $model->user_id = Auth::id();
             }
         });
 
-        static::addGlobalScope('user', function (Builder $builder) {
+        static::addGlobalScope('user', function (Builder $builder): void {
             if (Auth::check()) {
-                $builder->where($builder->getModel()->getTable() . '.user_id', Auth::id());
+                $builder->where($builder->getModel()->getTable().'.user_id', Auth::id());
             }
         });
     }
 
     /**
      * Get the user that owns this record.
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

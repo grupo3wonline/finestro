@@ -2,13 +2,28 @@
 
 namespace App\Services;
 
+use App\DTOs\AiCredentialDTO;
+use App\Interfaces\Repositories\AiCredentialRepositoryInterface;
+use App\Interfaces\Services\AiServiceInterface;
 use App\Models\AiCredential;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class AiService
+class AiService implements AiServiceInterface
 {
+    public function __construct(
+        protected AiCredentialRepositoryInterface $aiCredentialRepository
+    ) {}
+
+    /**
+     * Persist the AI provider credentials of the given user.
+     */
+    public function saveCredentials(User $user, AiCredentialDTO $dto): AiCredential
+    {
+        return $this->aiCredentialRepository->updateOrCreateForUser($user->id, $dto);
+    }
+
     /**
      * Generate AI response based on user's preferred provider.
      */
@@ -16,7 +31,7 @@ class AiService
     {
         $credentials = $user->aiCredential;
 
-        if (!$credentials || !$credentials->hasConfiguredProvider()) {
+        if (! $credentials || ! $credentials->hasConfiguredProvider()) {
             return [
                 'success' => false,
                 'error' => 'Credenciais de IA não configuradas. Acesse Configurações > Inteligência Artificial.',
@@ -35,6 +50,8 @@ class AiService
 
     /**
      * Call Google Gemini API.
+     *
+     * @return array<string, mixed>
      */
     private function callGemini(string $apiKey, string $prompt): array
     {
@@ -57,7 +74,7 @@ class AiService
 
             return [
                 'success' => false,
-                'error' => 'Erro na API Gemini: ' . ($response->json('error.message') ?? 'Resposta inválida'),
+                'error' => 'Erro na API Gemini: '.($response->json('error.message') ?? 'Resposta inválida'),
             ];
         } catch (\Exception $e) {
             Log::error('Gemini API error', ['error' => $e->getMessage()]);
@@ -68,6 +85,8 @@ class AiService
 
     /**
      * Call Groq API (OpenAI-compatible).
+     *
+     * @return array<string, mixed>
      */
     private function callGroq(string $apiKey, string $prompt): array
     {
@@ -93,7 +112,7 @@ class AiService
 
             return [
                 'success' => false,
-                'error' => 'Erro na API Groq: ' . ($response->json('error.message') ?? 'Resposta inválida'),
+                'error' => 'Erro na API Groq: '.($response->json('error.message') ?? 'Resposta inválida'),
             ];
         } catch (\Exception $e) {
             Log::error('Groq API error', ['error' => $e->getMessage()]);
@@ -104,6 +123,8 @@ class AiService
 
     /**
      * Call OpenRouter API.
+     *
+     * @return array<string, mixed>
      */
     private function callOpenRouter(string $apiKey, string $prompt): array
     {
@@ -131,7 +152,7 @@ class AiService
 
             return [
                 'success' => false,
-                'error' => 'Erro na API OpenRouter: ' . ($response->json('error.message') ?? 'Resposta inválida'),
+                'error' => 'Erro na API OpenRouter: '.($response->json('error.message') ?? 'Resposta inválida'),
             ];
         } catch (\Exception $e) {
             Log::error('OpenRouter API error', ['error' => $e->getMessage()]);
@@ -170,18 +191,18 @@ class AiService
 
         $goals = $user->goals()->where('status', 'active')->get();
 
-        $context = "Saldo total: R$ " . number_format($totalBalance, 2, ',', '.') . "\n";
-        $context .= "Receitas do mês: R$ " . number_format($income, 2, ',', '.') . "\n";
-        $context .= "Despesas do mês: R$ " . number_format($expenses, 2, ',', '.') . "\n";
-        $context .= "Balanço mensal: R$ " . number_format($income - $expenses, 2, ',', '.') . "\n";
-        $context .= "Carteiras: " . $wallets->count() . "\n";
+        $context = 'Saldo total: R$ '.number_format($totalBalance, 2, ',', '.')."\n";
+        $context .= 'Receitas do mês: R$ '.number_format($income, 2, ',', '.')."\n";
+        $context .= 'Despesas do mês: R$ '.number_format($expenses, 2, ',', '.')."\n";
+        $context .= 'Balanço mensal: R$ '.number_format($income - $expenses, 2, ',', '.')."\n";
+        $context .= 'Carteiras: '.$wallets->count()."\n";
 
         if ($goals->isNotEmpty()) {
             $context .= "\nMetas ativas:\n";
             foreach ($goals as $goal) {
-                $context .= "- {$goal->name}: R$ " . number_format($goal->current_amount, 2, ',', '.')
-                    . " / R$ " . number_format($goal->target_amount, 2, ',', '.')
-                    . " ({$goal->progress}%)\n";
+                $context .= "- {$goal->name}: R$ ".number_format((float) $goal->current_amount, 2, ',', '.')
+                    .' / R$ '.number_format((float) $goal->target_amount, 2, ',', '.')
+                    ." ({$goal->progress}%)\n";
             }
         }
 
@@ -193,8 +214,8 @@ class AiService
             ->with('category')
             ->get()
             ->groupBy('category_id')
-            ->map(fn($group) => [
-                'name' => $group->first()->category?->name ?? 'Sem categoria',
+            ->map(fn ($group): array => [
+                'name' => $group->first()->category->name ?? 'Sem categoria',
                 'total' => $group->sum('amount'),
             ])
             ->sortByDesc('total')
@@ -203,7 +224,7 @@ class AiService
         if ($topCategories->isNotEmpty()) {
             $context .= "\nTop 5 categorias de despesa:\n";
             foreach ($topCategories as $cat) {
-                $context .= "- {$cat['name']}: R$ " . number_format($cat['total'], 2, ',', '.') . "\n";
+                $context .= "- {$cat['name']}: R$ ".number_format($cat['total'], 2, ',', '.')."\n";
             }
         }
 

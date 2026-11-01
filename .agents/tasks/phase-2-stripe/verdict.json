@@ -1,0 +1,11 @@
+{
+  "verdict": "APPROVED",
+  "summary": "Review pass 2. All five pass 1 issues are addressed. A success-page replay of an ended subscription now stores current_period_end = ended_at ?? now() and redirects with an error, and an old ended session never overwrites a newer subscription. Financeiro shows the latest paid invoice amount of the user's own subscription. stripe_price_id comes from the session's subscription item. The webhook 500/rollback/retry path is tested. The past_due cancel gap is documented as deferred. The earlier checks still hold: ownership 404 with no write, webhook 400 for an unset secret or a missing/invalid signature, the idempotency table inside a transaction, the 5 events with invoice amounts, canceled-in-period keeps Pro and expired/past_due fall back to Free, Financeiro nav on desktop and mobile with validity, Alpine countdown and paginated own-only history, upgrade/cancel/resume through the gateway with SweetAlert2 data-confirm, config-only prices with an honest promo that is off by default, placeholder-only .env.example, and the docs. The recorded evidence shows 306 tests / 952 assertions passing twice (once random-order), clean php -l, route:list, view:cache and npm run build, and zero price-grep hits. A fresh grep found no key-like strings. One minor, non-blocking item remains.",
+  "findings": [
+    {
+      "severity": "minor",
+      "file": "app/Http/Controllers/SubscriptionController.php",
+      "detail": "Confirmed. success() redirects only when the result is non-Pro and status 'canceled'. A replayed session whose subscription is past_due (incl. Stripe 'unpaid') or incomplete renders subscription.success ('Assinatura confirmada! ... Todos os recursos estão liberados') while isProfessional() is false. Redirect to Financeiro whenever ! isProfessional(), with a status-specific message, and add a test for a past_due replay."
+    }
+  ]
+}

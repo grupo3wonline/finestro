@@ -2,7 +2,9 @@
 
 namespace App\DTOs;
 
-class CategoryDTO
+use Spatie\LaravelData\Data;
+
+class CategoryDTO extends Data
 {
     public function __construct(
         public readonly ?string $id = null,
@@ -15,6 +17,8 @@ class CategoryDTO
 
     /**
      * Create DTO from request array.
+     *
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {
@@ -30,6 +34,8 @@ class CategoryDTO
 
     /**
      * Convert DTO to array for model operations.
+     *
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -39,6 +45,6 @@ class CategoryDTO
             'type' => $this->type,
             'icon' => $this->icon,
             'color' => $this->color,
-        ], fn($value) => !is_null($value));
+        ], fn (?string $value): bool => ! is_null($value));
     }
 }

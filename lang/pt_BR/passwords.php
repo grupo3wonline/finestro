@@ -2,7 +2,8 @@
 
 return [
     'reset' => 'Sua senha foi redefinida com sucesso.',
-    'sent' => 'Enviamos um link de redefinição de senha para o seu e-mail.',
+    // Neutral on purpose: also shown for unknown e-mails and throttled requests.
+    'sent' => 'Se o e-mail estiver cadastrado, você receberá um link de redefinição em instantes.',
     'throttled' => 'Aguarde antes de tentar novamente.',
     'token' => 'Este token de redefinição de senha é inválido.',
     'user' => 'Não encontramos um usuário com esse endereço de e-mail.',

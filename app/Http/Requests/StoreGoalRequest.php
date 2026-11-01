@@ -2,15 +2,17 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Goal;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreGoalRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Goal::class) ?? false;
     }
 
+    /** @return array<string, mixed> */
     public function rules(): array
     {
         return [

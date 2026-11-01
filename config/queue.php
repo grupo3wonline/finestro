@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -14,6 +16,20 @@ return [
     */
 
     'default' => env('QUEUE_CONNECTION', 'database'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Run The Worker From The Scheduler
+    |--------------------------------------------------------------------------
+    |
+    | Shared-hosting fallback: when true, routes/console.php schedules
+    | `queue:work --stop-when-empty` every minute, so the single
+    | `schedule:run` cron line also drains the queue. Leave false when a
+    | dedicated worker (Supervisor, `composer dev`) is running.
+    |
+    */
+
+    'run_via_scheduler' => (bool) env('QUEUE_RUN_VIA_SCHEDULER', false),
 
     /*
     |--------------------------------------------------------------------------

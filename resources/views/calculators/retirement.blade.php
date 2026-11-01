@@ -5,11 +5,11 @@
 @section('breadcrumb')
 <nav class="text-sm" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li><a href="{{ route('calculators.index') }}" class="text-gray-500 hover:text-primary-600">Calculadoras</a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li class="text-gray-700 dark:text-gray-300 font-medium">Aposentadoria</li>
+        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li><a href="{{ route('calculators.index') }}" class="text-surface-500 hover:text-primary-600">Calculadoras</a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li class="text-surface-700 dark:text-surface-300 font-medium">Aposentadoria</li>
     </ol>
 </nav>
 @endsection
@@ -17,62 +17,62 @@
 @section('content')
 <div class="max-w-5xl mx-auto space-y-6" x-data="retirementCalculator()">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-2xl font-bold text-surface-900 dark:text-white">
             <i class="fas fa-umbrella-beach text-purple-500 mr-2"></i> Calculadora de Aposentadoria
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-sm">Descubra quanto precisa investir por mês para se aposentar com a renda desejada.</p>
+        <p class="text-surface-600 dark:text-surface-400 text-sm">Descubra quanto precisa investir por mês para se aposentar com a renda desejada.</p>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-5">
+        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Idade Atual
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Sua idade hoje"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Sua idade hoje"></i>
                 </label>
                 <input type="number" x-model.number="currentAge" min="16" max="80" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 30">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Idade Desejada de Aposentadoria
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Com quantos anos deseja se aposentar"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Com quantos anos deseja se aposentar"></i>
                 </label>
                 <input type="number" x-model.number="retirementAge" min="30" max="100" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 60">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Renda Mensal Desejada na Aposentadoria (R$)
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Quanto quer receber por mês na aposentadoria"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Quanto quer receber por mês na aposentadoria"></i>
                 </label>
                 <input type="number" x-model.number="desiredIncome" min="0" step="500" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 10000">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Patrimônio Atual (R$)
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Quanto você já tem investido hoje"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Quanto você já tem investido hoje"></i>
                 </label>
                 <input type="number" x-model.number="currentWealth" min="0" step="1000" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 50000">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Rentabilidade Esperada (% ao ano)
-                    <i class="fas fa-question-circle text-gray-400 ml-1" title="Rendimento anual esperado dos investimentos (real, acima da inflação)"></i>
+                    <i class="fas fa-question-circle text-surface-400 ml-1" title="Rendimento anual esperado dos investimentos (real, acima da inflação)"></i>
                 </label>
                 <input type="number" x-model.number="annualReturn" min="0" max="30" step="0.5" autocomplete="off"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                     placeholder="Ex: 8">
             </div>
 
@@ -80,15 +80,15 @@
                 <button @click="calculate()" class="flex-1 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition">
                     <i class="fas fa-calculator mr-2"></i> Calcular
                 </button>
-                <button @click="reset()" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition">
+                <button @click="reset()" class="px-6 py-3 bg-surface-200 dark:bg-surface-800 hover:bg-surface-300 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 font-medium rounded-lg transition">
                     <i class="fas fa-eraser mr-1"></i> Limpar
                 </button>
             </div>
         </div>
 
         <!-- Results -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Resultado</h3>
+        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6">
+            <h3 class="text-lg font-semibold text-surface-900 dark:text-white mb-4">Resultado</h3>
 
             <template x-if="result">
                 <div class="space-y-4">
@@ -98,13 +98,13 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Anos até Aposentadoria</p>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white" x-text="result.yearsToRetirement"></p>
+                        <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-3 text-center">
+                            <p class="text-xs text-surface-500 dark:text-surface-400">Anos até Aposentadoria</p>
+                            <p class="text-lg font-semibold text-surface-900 dark:text-white" x-text="result.yearsToRetirement"></p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Meses até Aposentadoria</p>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white" x-text="result.monthsToRetirement"></p>
+                        <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-3 text-center">
+                            <p class="text-xs text-surface-500 dark:text-surface-400">Meses até Aposentadoria</p>
+                            <p class="text-lg font-semibold text-surface-900 dark:text-white" x-text="result.monthsToRetirement"></p>
                         </div>
                     </div>
 
@@ -122,31 +122,31 @@
 
             <template x-if="!result">
                 <div class="text-center py-12">
-                    <i class="fas fa-umbrella-beach text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
-                    <p class="text-gray-500 dark:text-gray-400">Preencha os dados e clique em calcular.</p>
+                    <i class="fas fa-umbrella-beach text-4xl text-surface-300 dark:text-surface-600 mb-3"></i>
+                    <p class="text-surface-500 dark:text-surface-400">Preencha os dados e clique em calcular.</p>
                 </div>
             </template>
         </div>
     </div>
 
     <!-- Formula -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6" x-data="{ showFormula: false }">
+    <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6" x-data="{ showFormula: false }">
         <button @click="showFormula = !showFormula" class="flex items-center justify-between w-full text-left">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 class="text-lg font-semibold text-surface-900 dark:text-white">
                 <i class="fas fa-book-open text-primary-500 mr-2"></i> Metodologia Utilizada
             </h3>
-            <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="{ 'rotate-180': showFormula }"></i>
+            <i class="fas fa-chevron-down text-surface-400 transition-transform" :class="{ 'rotate-180': showFormula }"></i>
         </button>
         <div x-show="showFormula" x-transition class="mt-4 space-y-3">
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 space-y-2">
-                <p class="font-mono text-sm text-gray-800 dark:text-gray-200">
+            <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-4 space-y-2">
+                <p class="font-mono text-sm text-surface-800 dark:text-surface-200">
                     <strong>Regra dos 4%:</strong> Patrimônio = Renda Mensal × 12 / 0,04
                 </p>
-                <p class="font-mono text-sm text-gray-800 dark:text-gray-200">
+                <p class="font-mono text-sm text-surface-800 dark:text-surface-200">
                     <strong>Aporte Mensal:</strong> PMT = (VF - PV × (1+i)ⁿ) × i / ((1+i)ⁿ - 1)
                 </p>
             </div>
-            <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <ul class="text-sm text-surface-600 dark:text-surface-400 space-y-1">
                 <li><strong>Regra dos 4%</strong> — metodologia FIRE: você pode retirar 4% ao ano do patrimônio sem consumi-lo</li>
                 <li><strong>VF</strong> = Valor futuro necessário (patrimônio alvo)</li>
                 <li><strong>PV</strong> = Patrimônio atual</li>

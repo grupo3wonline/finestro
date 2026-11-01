@@ -5,11 +5,11 @@
 @section('breadcrumb')
 <nav class="text-sm" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li><a href="{{ route('simulators.index') }}" class="text-gray-500 hover:text-primary-600">Simuladores</a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li class="text-gray-700 dark:text-gray-300 font-medium">Perfil Financeiro</li>
+        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li><a href="{{ route('simulators.index') }}" class="text-surface-500 hover:text-primary-600">Simuladores</a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li class="text-surface-700 dark:text-surface-300 font-medium">Perfil Financeiro</li>
     </ol>
 </nav>
 @endsection
@@ -18,22 +18,22 @@
 <div class="max-w-3xl mx-auto space-y-6" x-data="financialProfileQuiz()" x-cloak>
     <!-- Header -->
     <div class="text-center">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-2xl font-bold text-surface-900 dark:text-white">
             <i class="fas fa-user-circle text-primary-500 mr-2"></i> Teste de Perfil Financeiro
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Descubra como você lida com suas finanças e receba dicas personalizadas.</p>
+        <p class="text-surface-600 dark:text-surface-400 text-sm mt-1">Descubra como você lida com suas finanças e receba dicas personalizadas.</p>
     </div>
 
     <!-- Quiz Card -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+    <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 sm:p-8">
 
         <!-- Progress Bar -->
         <div x-show="!showResult" class="mb-8">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Pergunta <span x-text="currentStep + 1"></span> de 8</span>
+                <span class="text-sm font-medium text-surface-600 dark:text-surface-400">Pergunta <span x-text="currentStep + 1"></span> de 8</span>
                 <span class="text-sm font-medium text-primary-600" x-text="Math.round(((currentStep) / 8) * 100) + '%'"></span>
             </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div class="w-full bg-surface-200 dark:bg-surface-800 rounded-full h-2.5">
                 <div class="bg-primary-600 h-2.5 rounded-full transition-all duration-500 ease-out" :style="'width: ' + ((currentStep) / 8 * 100) + '%'"></div>
             </div>
         </div>
@@ -42,21 +42,21 @@
         <div x-show="!showResult">
             <template x-for="(question, qIndex) in questions" :key="qIndex">
                 <div x-show="currentStep === qIndex" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6" x-text="question.text"></h2>
+                    <h2 class="text-lg font-semibold text-surface-900 dark:text-white mb-6" x-text="question.text"></h2>
 
                     <div class="space-y-3">
                         <template x-for="(option, oIndex) in question.options" :key="oIndex">
                             <button
                                 @click="selectAnswer(qIndex, oIndex + 1)"
-                                :class="answers[qIndex] === (oIndex + 1) ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 ring-2 ring-primary-500' : 'border-gray-200 dark:border-gray-600 hover:border-primary-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'"
+                                :class="answers[qIndex] === (oIndex + 1) ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 ring-2 ring-primary-500' : 'border-surface-200 dark:border-surface-600 hover:border-primary-300 hover:bg-surface-50 dark:hover:bg-surface-800/50'"
                                 class="w-full text-left px-4 py-3 rounded-lg border transition-all duration-200 flex items-center gap-3"
                             >
                                 <span
-                                    :class="answers[qIndex] === (oIndex + 1) ? 'bg-primary-600 text-white' : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'"
+                                    :class="answers[qIndex] === (oIndex + 1) ? 'bg-primary-600 text-white' : 'bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300'"
                                     class="w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0 transition-colors"
                                     x-text="String.fromCharCode(65 + oIndex)">
                                 </span>
-                                <span class="text-gray-700 dark:text-gray-200 text-sm" x-text="option"></span>
+                                <span class="text-surface-700 dark:text-surface-200 text-sm" x-text="option"></span>
                             </button>
                         </template>
                     </div>
@@ -66,7 +66,7 @@
                         <button
                             @click="prevStep()"
                             x-show="currentStep > 0"
-                            class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium rounded-lg transition flex items-center gap-2"
+                            class="px-4 py-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white font-medium rounded-lg transition flex items-center gap-2"
                         >
                             <i class="fas fa-arrow-left"></i> Anterior
                         </button>
@@ -75,7 +75,7 @@
                         <button
                             @click="nextStep()"
                             :disabled="!answers[currentStep]"
-                            :class="answers[currentStep] ? 'bg-primary-600 hover:bg-primary-700 text-white' : 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'"
+                            :class="answers[currentStep] ? 'bg-primary-600 hover:bg-primary-700 text-white' : 'bg-surface-300 dark:bg-surface-700 text-surface-500 cursor-not-allowed'"
                             class="px-6 py-2 font-medium rounded-lg transition flex items-center gap-2"
                         >
                             <span x-text="currentStep === 7 ? 'Ver Resultado' : 'Próxima'"></span>
@@ -92,20 +92,20 @@
                 <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4" :class="profile.bgColor">
                     <i class="text-3xl" :class="profile.icon + ' ' + profile.textColor"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white" x-text="'Seu perfil: ' + profile.name"></h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Pontuação: <span x-text="totalScore"></span> de 40</p>
+                <h2 class="text-2xl font-bold text-surface-900 dark:text-white" x-text="'Seu perfil: ' + profile.name"></h2>
+                <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Pontuação: <span x-text="totalScore"></span> de 40</p>
             </div>
 
             <!-- Score Bar -->
             <div class="mb-6">
-                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <div class="flex justify-between text-xs text-surface-500 dark:text-surface-400 mb-1">
                     <span>Endividado</span>
                     <span>Investidor</span>
                 </div>
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 relative overflow-hidden">
+                <div class="w-full bg-surface-200 dark:bg-surface-800 rounded-full h-4 relative overflow-hidden">
                     <div class="h-full rounded-full transition-all duration-1000 ease-out" :class="profile.barColor" :style="'width: ' + ((totalScore - 8) / 32 * 100) + '%'"></div>
                 </div>
-                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                <div class="flex justify-between text-xs text-surface-400 mt-1">
                     <span>8</span>
                     <span>16</span>
                     <span>24</span>
@@ -115,20 +115,20 @@
             </div>
 
             <!-- Description -->
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
-                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed" x-text="profile.description"></p>
+            <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-4 mb-6">
+                <p class="text-surface-700 dark:text-surface-300 text-sm leading-relaxed" x-text="profile.description"></p>
             </div>
 
             <!-- Tips -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                <h3 class="text-lg font-semibold text-surface-900 dark:text-white mb-3">
                     <i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Dicas para você
                 </h3>
                 <ul class="space-y-2">
                     <template x-for="(tip, index) in profile.tips" :key="index">
                         <li class="flex items-start gap-2">
                             <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
-                            <span class="text-sm text-gray-700 dark:text-gray-300" x-text="tip"></span>
+                            <span class="text-sm text-surface-700 dark:text-surface-300" x-text="tip"></span>
                         </li>
                     </template>
                 </ul>
@@ -284,7 +284,7 @@ function financialProfileQuiz() {
                 name: 'Poupador',
                 icon: 'fas fa-piggy-bank',
                 bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
-                textColor: 'text-emerald-600 dark:text-emerald-400',
+                textColor: 'text-primary-600 dark:text-emerald-400',
                 barColor: 'bg-emerald-500',
                 description: 'Você tem disciplina financeira e guarda dinheiro regularmente. Possui reserva de emergência e controla bem seus gastos. O próximo nível é diversificar investimentos e buscar rentabilidades maiores.',
                 tips: [

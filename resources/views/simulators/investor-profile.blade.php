@@ -5,11 +5,11 @@
 @section('breadcrumb')
 <nav class="text-sm" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li><a href="{{ route('simulators.index') }}" class="text-gray-500 hover:text-primary-600">Simuladores</a></li>
-        <li><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
-        <li class="text-gray-700 dark:text-gray-300 font-medium">Perfil Investidor</li>
+        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li><a href="{{ route('simulators.index') }}" class="text-surface-500 hover:text-primary-600">Simuladores</a></li>
+        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
+        <li class="text-surface-700 dark:text-surface-300 font-medium">Perfil Investidor</li>
     </ol>
 </nav>
 @endsection
@@ -18,22 +18,22 @@
 <div class="max-w-3xl mx-auto space-y-6" x-data="investorProfileQuiz()" x-cloak>
     <!-- Header -->
     <div class="text-center">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-2xl font-bold text-surface-900 dark:text-white">
             <i class="fas fa-chart-line text-green-500 mr-2"></i> Teste de Perfil Investidor
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Descubra sua tolerância a riscos e receba sugestões de alocação.</p>
+        <p class="text-surface-600 dark:text-surface-400 text-sm mt-1">Descubra sua tolerância a riscos e receba sugestões de alocação.</p>
     </div>
 
     <!-- Quiz Card -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+    <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 sm:p-8">
 
         <!-- Progress Bar -->
         <div x-show="!showResult" class="mb-8">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Pergunta <span x-text="currentStep + 1"></span> de 8</span>
+                <span class="text-sm font-medium text-surface-600 dark:text-surface-400">Pergunta <span x-text="currentStep + 1"></span> de 8</span>
                 <span class="text-sm font-medium text-green-600" x-text="Math.round(((currentStep) / 8) * 100) + '%'"></span>
             </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div class="w-full bg-surface-200 dark:bg-surface-800 rounded-full h-2.5">
                 <div class="bg-green-500 h-2.5 rounded-full transition-all duration-500 ease-out" :style="'width: ' + ((currentStep) / 8 * 100) + '%'"></div>
             </div>
         </div>
@@ -42,21 +42,21 @@
         <div x-show="!showResult">
             <template x-for="(question, qIndex) in questions" :key="qIndex">
                 <div x-show="currentStep === qIndex" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6" x-text="question.text"></h2>
+                    <h2 class="text-lg font-semibold text-surface-900 dark:text-white mb-6" x-text="question.text"></h2>
 
                     <div class="space-y-3">
                         <template x-for="(option, oIndex) in question.options" :key="oIndex">
                             <button
                                 @click="selectAnswer(qIndex, oIndex + 1)"
-                                :class="answers[qIndex] === (oIndex + 1) ? 'border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500' : 'border-gray-200 dark:border-gray-600 hover:border-green-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'"
+                                :class="answers[qIndex] === (oIndex + 1) ? 'border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500' : 'border-surface-200 dark:border-surface-600 hover:border-green-300 hover:bg-surface-50 dark:hover:bg-surface-800/50'"
                                 class="w-full text-left px-4 py-3 rounded-lg border transition-all duration-200 flex items-center gap-3"
                             >
                                 <span
-                                    :class="answers[qIndex] === (oIndex + 1) ? 'bg-green-600 text-white' : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'"
+                                    :class="answers[qIndex] === (oIndex + 1) ? 'bg-green-600 text-white' : 'bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300'"
                                     class="w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0 transition-colors"
                                     x-text="String.fromCharCode(65 + oIndex)">
                                 </span>
-                                <span class="text-gray-700 dark:text-gray-200 text-sm" x-text="option"></span>
+                                <span class="text-surface-700 dark:text-surface-200 text-sm" x-text="option"></span>
                             </button>
                         </template>
                     </div>
@@ -66,7 +66,7 @@
                         <button
                             @click="prevStep()"
                             x-show="currentStep > 0"
-                            class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium rounded-lg transition flex items-center gap-2"
+                            class="px-4 py-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white font-medium rounded-lg transition flex items-center gap-2"
                         >
                             <i class="fas fa-arrow-left"></i> Anterior
                         </button>
@@ -75,7 +75,7 @@
                         <button
                             @click="nextStep()"
                             :disabled="!answers[currentStep]"
-                            :class="answers[currentStep] ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'"
+                            :class="answers[currentStep] ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-surface-300 dark:bg-surface-700 text-surface-500 cursor-not-allowed'"
                             class="px-6 py-2 font-medium rounded-lg transition flex items-center gap-2"
                         >
                             <span x-text="currentStep === 7 ? 'Ver Resultado' : 'Próxima'"></span>
@@ -91,12 +91,12 @@
             <!-- Profile Badge -->
             <div class="text-center mb-6">
                 <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold" :class="profile.badgeClass" x-text="profile.name"></span>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Pontuação: <span x-text="totalScore"></span> de 40</p>
+                <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">Pontuação: <span x-text="totalScore"></span> de 40</p>
             </div>
 
             <!-- Risk Meter -->
             <div class="mb-8">
-                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center">Nível de Risco</h3>
+                <h3 class="text-sm font-medium text-surface-700 dark:text-surface-300 mb-3 text-center">Nível de Risco</h3>
                 <div class="relative">
                     <!-- Meter Background -->
                     <div class="flex rounded-full h-6 overflow-hidden">
@@ -107,36 +107,36 @@
                         <div class="bg-red-500 flex-1"></div>
                     </div>
                     <!-- Meter Labels -->
-                    <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1 px-1">
+                    <div class="flex justify-between text-xs text-surface-500 dark:text-surface-400 mt-1 px-1">
                         <span>Conservador</span>
                         <span>Moderado</span>
                         <span>Agressivo</span>
                     </div>
                     <!-- Pointer -->
                     <div class="absolute top-0 h-6 flex items-center transition-all duration-1000" :style="'left: ' + ((totalScore - 8) / 32 * 100) + '%'">
-                        <div class="w-1 h-8 bg-gray-900 dark:bg-white rounded-full -mt-1 shadow-lg"></div>
+                        <div class="w-1 h-8 bg-surface-900 dark:bg-white rounded-full -mt-1 shadow-lg"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Description -->
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
-                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed" x-text="profile.description"></p>
+            <div class="bg-surface-50 dark:bg-surface-800/60 rounded-lg p-4 mb-6">
+                <p class="text-surface-700 dark:text-surface-300 text-sm leading-relaxed" x-text="profile.description"></p>
             </div>
 
             <!-- Recommended Allocation -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 class="text-lg font-semibold text-surface-900 dark:text-white mb-4">
                     <i class="fas fa-chart-pie text-green-500 mr-2"></i> Alocação Sugerida
                 </h3>
                 <div class="space-y-3">
                     <template x-for="(item, index) in profile.allocation" :key="index">
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300" x-text="item.name"></span>
+                                <span class="text-sm font-medium text-surface-700 dark:text-surface-300" x-text="item.name"></span>
                                 <span class="text-sm font-bold" :class="item.color" x-text="item.percent + '%'"></span>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                            <div class="w-full bg-surface-200 dark:bg-surface-800 rounded-full h-3">
                                 <div class="h-3 rounded-full transition-all duration-1000 ease-out" :class="item.barColor" :style="'width: ' + item.percent + '%'"></div>
                             </div>
                         </div>
@@ -146,14 +146,14 @@
 
             <!-- Tips -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                <h3 class="text-lg font-semibold text-surface-900 dark:text-white mb-3">
                     <i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Dicas para seu perfil
                 </h3>
                 <ul class="space-y-2">
                     <template x-for="(tip, index) in profile.tips" :key="index">
                         <li class="flex items-start gap-2">
                             <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
-                            <span class="text-sm text-gray-700 dark:text-gray-300" x-text="tip"></span>
+                            <span class="text-sm text-surface-700 dark:text-surface-300" x-text="tip"></span>
                         </li>
                     </template>
                 </ul>
@@ -273,7 +273,7 @@ function investorProfileQuiz() {
         profiles: {
             ultraconservador: {
                 name: 'Ultraconservador',
-                badgeClass: 'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100',
+                badgeClass: 'bg-surface-200 text-surface-800 dark:bg-surface-700 dark:text-surface-100',
                 description: 'Você prioriza a segurança total do seu capital. Não aceita riscos e prefere investimentos com rentabilidade previsível, mesmo que menor. Seu foco é preservar o patrimônio acima de tudo.',
                 allocation: [
                     { name: 'Renda Fixa (Tesouro Selic, CDB)', percent: 80, barColor: 'bg-blue-500', color: 'text-blue-600' },
@@ -296,7 +296,7 @@ function investorProfileQuiz() {
                 allocation: [
                     { name: 'Renda Fixa (Tesouro, CDB, LCI/LCA)', percent: 65, barColor: 'bg-blue-500', color: 'text-blue-600' },
                     { name: 'Fundos Multimercado', percent: 20, barColor: 'bg-yellow-400', color: 'text-yellow-600' },
-                    { name: 'Fundos Imobiliários (FIIs)', percent: 10, barColor: 'bg-emerald-400', color: 'text-emerald-600' },
+                    { name: 'Fundos Imobiliários (FIIs)', percent: 10, barColor: 'bg-emerald-400', color: 'text-primary-600' },
                     { name: 'Ações', percent: 5, barColor: 'bg-red-400', color: 'text-red-600' },
                     { name: 'Cripto', percent: 0, barColor: 'bg-purple-400', color: 'text-purple-600' }
                 ],
@@ -315,7 +315,7 @@ function investorProfileQuiz() {
                     { name: 'Renda Fixa', percent: 40, barColor: 'bg-blue-500', color: 'text-blue-600' },
                     { name: 'Fundos Multimercado', percent: 20, barColor: 'bg-yellow-400', color: 'text-yellow-600' },
                     { name: 'Ações Nacionais', percent: 20, barColor: 'bg-red-400', color: 'text-red-600' },
-                    { name: 'Fundos Imobiliários (FIIs)', percent: 15, barColor: 'bg-emerald-400', color: 'text-emerald-600' },
+                    { name: 'Fundos Imobiliários (FIIs)', percent: 15, barColor: 'bg-emerald-400', color: 'text-primary-600' },
                     { name: 'Cripto / Ativos Alternativos', percent: 5, barColor: 'bg-purple-400', color: 'text-purple-600' }
                 ],
                 tips: [
@@ -333,7 +333,7 @@ function investorProfileQuiz() {
                     { name: 'Renda Fixa', percent: 20, barColor: 'bg-blue-500', color: 'text-blue-600' },
                     { name: 'Ações Nacionais', percent: 35, barColor: 'bg-red-400', color: 'text-red-600' },
                     { name: 'Ações Internacionais', percent: 15, barColor: 'bg-pink-400', color: 'text-pink-600' },
-                    { name: 'Fundos Imobiliários (FIIs)', percent: 15, barColor: 'bg-emerald-400', color: 'text-emerald-600' },
+                    { name: 'Fundos Imobiliários (FIIs)', percent: 15, barColor: 'bg-emerald-400', color: 'text-primary-600' },
                     { name: 'Cripto / Ativos Alternativos', percent: 15, barColor: 'bg-purple-400', color: 'text-purple-600' }
                 ],
                 tips: [
@@ -351,7 +351,7 @@ function investorProfileQuiz() {
                     { name: 'Renda Fixa', percent: 10, barColor: 'bg-blue-500', color: 'text-blue-600' },
                     { name: 'Ações Nacionais', percent: 35, barColor: 'bg-red-400', color: 'text-red-600' },
                     { name: 'Ações Internacionais', percent: 25, barColor: 'bg-pink-400', color: 'text-pink-600' },
-                    { name: 'Fundos Imobiliários (FIIs)', percent: 10, barColor: 'bg-emerald-400', color: 'text-emerald-600' },
+                    { name: 'Fundos Imobiliários (FIIs)', percent: 10, barColor: 'bg-emerald-400', color: 'text-primary-600' },
                     { name: 'Cripto / Ativos Alternativos', percent: 20, barColor: 'bg-purple-400', color: 'text-purple-600' }
                 ],
                 tips: [

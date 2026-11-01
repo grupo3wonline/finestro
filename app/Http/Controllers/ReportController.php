@@ -2,157 +2,124 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\Services\TransactionServiceInterface;
+use App\Http\Requests\ReportRequest;
+use App\Interfaces\Services\ReportServiceInterface;
 use App\Interfaces\Services\WalletServiceInterface;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Mail\FinancialReportMail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
 {
     public function __construct(
-        protected TransactionServiceInterface $transactionService,
+        protected ReportServiceInterface $reports,
         protected WalletServiceInterface $walletService
     ) {}
 
-    public function index(Request $request): View
+    public function index(ReportRequest $request): View
     {
-        $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->toDateString());
-        $walletFilter = $request->get('wallet_id');
-        $typeFilter = $request->get('type');
+        $data = $this->reports->build($request->user(), $request->filters());
+        $data['wallets'] = $this->walletService->getAllWallets();
 
-        $transactions = $this->transactionService->getTransactionsByDateRange($startDate, $endDate);
-
-        // Apply additional filters
-        if ($walletFilter) {
-            $transactions = $transactions->where('wallet_id', $walletFilter);
-        }
-        if ($typeFilter) {
-            $transactions = $transactions->where('type', $typeFilter);
-        }
-
-        $wallets = $this->walletService->getAllWallets();
-
-        $totalIncome = $transactions->where('type', 'income')->sum('amount');
-        $totalExpenses = $transactions->where('type', 'expense')->sum('amount');
-        $balance = $totalIncome - $totalExpenses;
-        $transactionCount = $transactions->count();
-
-        // Group by category
-        $byCategory = $transactions->groupBy(function ($t) {
-            return $t->category ? $t->category->name : 'Sem Categoria';
-        })->map(function ($group) {
-            return [
-                'total' => $group->sum('amount'),
-                'count' => $group->count(),
-                'type' => $group->first()->type,
-            ];
-        })->sortByDesc('total');
-
-        // Group by wallet
-        $byWallet = $transactions->groupBy(function ($t) {
-            return $t->wallet ? $t->wallet->name : 'Sem Carteira';
-        })->map(function ($group) {
-            return [
-                'income' => $group->where('type', 'income')->sum('amount'),
-                'expense' => $group->where('type', 'expense')->sum('amount'),
-                'count' => $group->count(),
-            ];
-        });
-
-        // Daily totals for chart
-        $dailyData = $transactions->groupBy(function ($t) {
-            return $t->date->format('Y-m-d');
-        })->map(function ($group) {
-            return [
-                'income' => $group->where('type', 'income')->sum('amount'),
-                'expense' => $group->where('type', 'expense')->sum('amount'),
-            ];
-        })->sortKeys();
-
-        // Top 5 expenses
-        $topExpenses = $transactions->where('type', 'expense')
-            ->sortByDesc('amount')
-            ->take(5);
-
-        // Monthly comparison (current period vs previous same-length period)
-        $periodDays = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
-        $prevStart = Carbon::parse($startDate)->subDays($periodDays + 1)->toDateString();
-        $prevEnd = Carbon::parse($startDate)->subDay()->toDateString();
-        $prevTransactions = $this->transactionService->getTransactionsByDateRange($prevStart, $prevEnd);
-
-        $prevIncome = $prevTransactions->where('type', 'income')->sum('amount');
-        $prevExpenses = $prevTransactions->where('type', 'expense')->sum('amount');
-
-        $incomeChange = $prevIncome > 0 ? (($totalIncome - $prevIncome) / $prevIncome) * 100 : 0;
-        $expenseChange = $prevExpenses > 0 ? (($totalExpenses - $prevExpenses) / $prevExpenses) * 100 : 0;
-
-        // Expense categories for pie chart
-        $expenseByCategory = $transactions->where('type', 'expense')->groupBy(function ($t) {
-            return $t->category ? $t->category->name : 'Sem Categoria';
-        })->map(fn($group) => $group->sum('amount'))->sortByDesc(fn($v) => $v);
-
-        return view('reports.index', compact(
-            'transactions',
-            'wallets',
-            'totalIncome',
-            'totalExpenses',
-            'balance',
-            'transactionCount',
-            'byCategory',
-            'byWallet',
-            'dailyData',
-            'startDate',
-            'endDate',
-            'walletFilter',
-            'typeFilter',
-            'topExpenses',
-            'incomeChange',
-            'expenseChange',
-            'expenseByCategory'
-        ));
+        return view('reports.index', $data);
     }
 
-    public function export(Request $request)
+    /**
+     * Versão para impressão / "Salvar como PDF" do navegador.
+     *
+     * Origem: exportação em PDF do Financas-master (FPDF) e do
+     * controle-financas (mPDF). Em vez de adicionar uma biblioteca de PDF
+     * (dezenas de MB, fontes, CSS limitado), usamos uma página com CSS de
+     * impressão: o navegador gera um PDF fiel ao layout, sem dependência nova.
+     */
+    public function print(ReportRequest $request): View|RedirectResponse
     {
-        if (!auth()->user()->hasFeature('reports_export')) {
+        if (! $request->user()->hasFeature('reports_export')) {
+            return redirect()->route('reports.index')
+                ->with('error', 'Impressão/PDF de relatórios disponível apenas no plano Profissional.');
+        }
+
+        return view('reports.print', $this->reports->build($request->user(), $request->filters()));
+    }
+
+    /**
+     * Envia o resumo do período para o e-mail do próprio usuário, com CSV anexo.
+     * Origem: email.php do controle-financas. Por segurança, só envia para o
+     * e-mail da conta (um campo livre permitiria usar o Finestro para spam).
+     */
+    public function email(ReportRequest $request): RedirectResponse
+    {
+        if (! $request->user()->hasFeature('reports_export')) {
+            return redirect()->route('reports.index')
+                ->with('error', 'Envio de relatórios por e-mail disponível apenas no plano Profissional.');
+        }
+
+        $user = $request->user();
+        $filters = $request->filters();
+        $report = $this->reports->build($user, $filters);
+
+        // Queued: the payload carries only the scalar summary and the CSV string.
+        Mail::to($user)->queue(new FinancialReportMail(
+            user: $user,
+            report: $this->reports->summaryFor($user, $filters),
+            csv: $this->reports->exportCsv($report['transactions']),
+        ));
+
+        return back()->with('success', 'Relatório enviado para '.$request->user()->email.'.');
+    }
+
+    /**
+     * Gera o relatório em PDF de verdade (server-side, via dompdf) para download.
+     *
+     * Complementa o `print()` (que depende do navegador): útil para anexar em
+     * e-mails, arquivar ou quando o usuário quer um PDF sem passar pelo diálogo
+     * de impressão. Gated pelo mesmo recurso de plano da exportação.
+     */
+    public function pdf(ReportRequest $request): RedirectResponse|Response
+    {
+        if (! $request->user()->hasFeature('reports_export')) {
+            return redirect()->route('reports.index')
+                ->with('error', 'Exportação de relatórios em PDF disponível apenas no plano Profissional.');
+        }
+
+        $report = $this->reports->build($request->user(), $request->filters());
+        $report['userName'] = $request->user()->name;
+
+        $pdf = Pdf::loadView('reports.pdf', $report)
+            ->setPaper('a4', 'portrait');
+
+        $filename = 'finestro_relatorio_'.$report['startDate'].'_'.$report['endDate'].'.pdf';
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Extrato do período em CSV (padrão) ou XLSX (`?format=xlsx`).
+     */
+    public function export(ReportRequest $request): RedirectResponse|Response
+    {
+        if (! $request->user()->hasFeature('reports_export')) {
             return redirect()->route('reports.index')
                 ->with('error', 'Exportação de relatórios disponível apenas no plano Profissional.');
         }
 
-        $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->toDateString());
+        $report = $this->reports->build($request->user(), $request->filters());
+        $isXlsx = $request->input('format', 'csv') === 'xlsx';
 
-        $transactions = $this->transactionService->getTransactionsByDateRange($startDate, $endDate);
+        $content = $isXlsx
+            ? $this->reports->exportXlsx($report['transactions'])
+            : $this->reports->exportCsv($report['transactions']);
 
-        $filename = 'finestro_relatorio_' . date('Y-m-d') . '.csv';
+        $filename = 'finestro_relatorio_'.$report['startDate'].'_'.$report['endDate'].($isXlsx ? '.xlsx' : '.csv');
+        $contentType = $isXlsx
+            ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            : 'text/csv; charset=UTF-8';
 
-        $headers = [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-        ];
-
-        $callback = function () use ($transactions) {
-            $file = fopen('php://output', 'w');
-            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM for UTF-8
-
-            fputcsv($file, ['Data', 'Descrição', 'Tipo', 'Carteira', 'Categoria', 'Valor'], ';');
-
-            foreach ($transactions as $t) {
-                fputcsv($file, [
-                    $t->date->format('d/m/Y'),
-                    $t->description,
-                    $t->type === 'income' ? 'Receita' : 'Despesa',
-                    $t->wallet->name ?? '-',
-                    $t->category->name ?? '-',
-                    number_format($t->amount, 2, ',', '.'),
-                ], ';');
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function () use ($content): void {
+            echo $content;
+        }, $filename, ['Content-Type' => $contentType]);
     }
 }

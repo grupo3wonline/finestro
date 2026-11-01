@@ -19,13 +19,16 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Inter (body) + Fraunces (financial display) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (non-blocking) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+    <!-- SweetAlert2 (deferred; every Swal call runs on DOMContentLoaded or in an event handler) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -35,7 +38,7 @@
     @include('components.layout.analytics')
     @stack('styles')
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="min-h-screen flex flex-col bg-surface-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 transition-colors duration-300">
     @include('components.layout.gtm-noscript')
 
     <!-- Loading Overlay -->
@@ -46,6 +49,9 @@
 
     <!-- Plan Limit Banner -->
     @include('components.layout.plan-banner')
+
+    <!-- Stripe Config Alert (admins only) -->
+    @include('components.layout.stripe-config-alert')
 
     <!-- Breadcrumb -->
     @hasSection('breadcrumb')
@@ -59,6 +65,9 @@
         @yield('content')
     </main>
 
+    <!-- Grupo 3W Online CTA -->
+    <x-cta.agency variant="app" />
+
     <!-- Footer -->
     @include('components.layout.footer')
 
@@ -69,7 +78,7 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Sucesso!',
-                text: '{{ session("success") }}',
+                text: @json(session('success')),
                 timer: 3000,
                 showConfirmButton: false,
                 toast: true,
@@ -86,7 +95,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Erro!',
-                text: '{{ session("error") }}',
+                text: @json(session('error')),
                 timer: 5000,
                 showConfirmButton: true,
                 customClass: { popup: 'rounded-xl' }
