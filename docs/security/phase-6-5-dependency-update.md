@@ -137,7 +137,9 @@ Tests added:
 
 ## CI dependency audit
 
-`.github/workflows/quality.yml` has two new steps that fail the build on regressions:
+> **Status (2026-11-01):** `.github/workflows/quality.yml` was removed from the working tree, so these audits no longer run automatically. Run both commands by hand before releases, or restore the workflow from git history.
+
+`.github/workflows/quality.yml` had two steps that failed the build on regressions:
 
 - After `composer install`: `composer audit --locked --no-interaction --abandoned=report`. It fails on any security advisory in the locked packages. Abandoned packages are reported but do not fail (see the note on `symplify/rule-doc-generator-contracts` above).
 - After `npm ci`: `npm audit --omit=dev --audit-level=high`. It fails on high or critical advisories in production npm dependencies.

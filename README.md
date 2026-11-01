@@ -1,112 +1,191 @@
 # Finestro
 
-Personal finance micro SaaS for freelancers, small business owners and
-professionals. Each user sees only their own wallets, transactions, goals,
-categories and budgets; access is controlled by roles and permissions (ACL).
-The interface is in Brazilian Portuguese; code and docs are in English.
+[English](README.md) | **Português (Brasil)**
+
+Micro SaaS de finanças pessoais para freelancers, pequenos empresários e
+profissionais. Cada usuário vê apenas suas próprias carteiras, transações,
+metas, categorias e orçamentos; o acesso é controlado por papéis e permissões
+(ACL). A interface é em português do Brasil; código e documentação são em
+inglês.
 
 ## Stack
 
-| Layer | Technology |
+| Camada | Tecnologia |
 | --- | --- |
-| Backend | Laravel 13, PHP 8.5 (composer constraint `^8.3`), MySQL 8 |
+| Backend | Laravel 13, PHP 8.5 (restrição do Composer `^8.3`), MySQL 8 |
 | Front end | Blade, Alpine.js, Tailwind CSS 3, Vite 5, Font Awesome, SweetAlert2 |
-| Auth | Laravel Breeze (session), e-mail verification, password reset |
-| ACL | spatie/laravel-permission (`user`, `admin` roles) + policies, per-user query scoping (`BelongsToUser`) |
-| Admin panel | Filament 5 at `/admin` (mandatory MFA) |
-| API | REST v1 at `/api/v1` with Laravel Sanctum personal tokens, OpenAPI docs via L5 Swagger at `/api/documentation` |
-| Data | spatie/laravel-data DTOs, Spatie Media Library (receipts), Spatie Activitylog, Laravel Excel, Scout, queues and cache |
-| Billing | Stripe Checkout and webhooks |
-| Quality | Pest 4 / PHPUnit 12, Pint, PHPStan level 6 + Larastan, Rector |
+| Autenticação | Laravel Breeze (sessão), verificação de e-mail, redefinição de senha |
+| ACL | spatie/laravel-permission (papéis `user`, `admin`) + policies, escopo de consulta por usuário (`BelongsToUser`) |
+| Painel admin | Filament 5 em `/admin` (MFA obrigatório) |
+| API | REST v1 em `/api/v1` com tokens pessoais Laravel Sanctum, docs OpenAPI via L5 Swagger em `/api/documentation` |
+| Dados | DTOs spatie/laravel-data, Spatie Media Library (comprovantes), Spatie Activitylog, Laravel Excel, Scout, filas e cache |
+| Cobrança | Stripe Checkout e webhooks |
+| Qualidade | Pest 4 / PHPUnit 12, Pint, PHPStan nível 6 + Larastan, Rector |
 
-Architecture: `Controller → Service (interface) → Repository (interface) → Model`,
-with FormRequests for validation, DTOs between layers and bindings in
+Arquitetura: `Controller → Service (interface) → Repository (interface) → Model`,
+com FormRequests para validação, DTOs entre camadas e bindings em
 `app/Providers/AppServiceProvider.php`.
 
-## Plans
+## Planos
 
-| Plan | What it includes |
+| Plano | O que inclui |
 | --- | --- |
-| **Básico** (`free`) | 1 wallet, 100 transactions/month, 2 goals, 5 categories, 3 budgets/month, dashboard, financial calculators, profile tests, currency quotes |
-| **Profissional** (`professional`) | Everything unlimited, wallet sharing, simulators, reports with CSV/XLSX/PDF export, AI features, REST API, priority support |
+| **Básico** (`free`) | 1 carteira, 100 transações/mês, 2 metas, 5 categorias, 3 orçamentos/mês, dashboard, calculadoras financeiras, testes de perfil, cotações de moedas |
+| **Profissional** (`professional`) | Tudo ilimitado, compartilhamento de carteiras, simuladores, relatórios com exportação CSV/XLSX/PDF, recursos de IA, API REST, suporte prioritário |
 
-Limits live in `User::getPlanLimitsAttribute()`. Prices are not hard-coded:
-they come from the `STRIPE_*` settings through `PlanPricing`
-(`App\Interfaces\Services\PlanPricingInterface`), and a test fails if a price
-literal appears in a view.
+Os limites ficam em `User::getPlanLimitsAttribute()`. Os preços não são
+fixados no código: vêm das configurações `STRIPE_*` através do `PlanPricing`
+(`App\Interfaces\Services\PlanPricingInterface`), e um teste falha se um
+literal de preço aparecer em uma view.
 
-## Setup
+## Configuração
 
-Requirements: PHP 8.3+ (8.5 used in development) with `gd`, `zip`, `intl`;
+Requisitos: PHP 8.3+ (8.5 usado em desenvolvimento) com `gd`, `zip`, `intl`;
 Composer 2; MySQL 8; Node.js 20+.
 
 ```bash
 composer setup          # composer install, .env, key, migrate, npm install, npm run build
-php artisan db:seed     # optional demo data and roles
+php artisan db:seed     # dados de demonstração e papéis (opcional)
 ```
 
-Edit `.env` before or after `composer setup`:
+Edite o `.env` antes ou depois do `composer setup` (toda variável está
+documentada em `.env.example`):
 
-- `DB_*`, `APP_URL`, `MAIL_*`.
+- `DB_*`, `APP_URL`, `MAIL_*`. Sessões, cache e fila usam por padrão o driver
+  `database`. Em produção sobre HTTPS, defina `SESSION_SECURE_COOKIE=true`.
 - `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`,
-  `STRIPE_PROFESSIONAL_PRICE_ID`, `STRIPE_PROFESSIONAL_PRICE` (use test keys
-  outside production and never commit them).
+  `STRIPE_PROFESSIONAL_PRICE_ID`, `STRIPE_PROFESSIONAL_PRICE` (use chaves de
+  teste fora de produção e nunca as versione). `php artisan stripe:setup`
+  cria o produto e o preço e imprime o id do preço. Uma promoção opcional é
+  configurada com `STRIPE_PROMO_*`.
 - `LEGAL_CONTROLLER_NAME`, `LEGAL_CONTROLLER_CNPJ`, `LEGAL_CONTROLLER_ADDRESS`,
-  `PRIVACY_DPO_EMAIL` (shown in the privacy policy).
-- Optional, consent-gated: `GOOGLE_TAG_MANAGER_ID`, `GOOGLE_ANALYTICS_ID`,
-  `FACEBOOK_PIXEL_ID`.
+  `PRIVACY_DPO_EMAIL` (exibidos na política de privacidade). Incremente
+  `LEGAL_POLICY_VERSION` sempre que os Termos de Uso ou a Política de
+  Privacidade mudarem; todos os usuários serão então solicitados a aceitar
+  novamente.
+- API: `SANCTUM_TOKEN_EXPIRATION`, `API_RATE_LIMIT_PER_MINUTE`,
+  `API_IP_RATE_LIMIT_PER_MINUTE`, `CORS_ALLOWED_ORIGINS`.
+- Outras: `CACHE_USER_TTL`, `ACTIVITYLOG_RETENTION_DAYS`,
+  `PRIVACY_EXPORT_TTL_HOURS`, `SCOUT_DRIVER` (`database` por padrão),
+  `MARKETING_*` (links sociais e CTA do rodapé).
+- Opcionais, condicionadas a consentimento: `GOOGLE_TAG_MANAGER_ID`,
+  `GOOGLE_ANALYTICS_ID`, `FACEBOOK_PIXEL_ID`.
 
-Production also needs the scheduler (recurring transactions, log and export
-purges, token pruning) and a queue worker (e-mails, data exports):
+Conta de demonstração após o seed: usuário `demo`, e-mail
+`demo@finestro.com.br`, senha `password`. Não faça o seed de dados de
+demonstração em produção.
+
+### Criando um administrador
+
+O painel `/admin` admite apenas usuários verificados com a permissão
+`admin.access`. Promova um usuário existente e verificado:
+
+```bash
+php artisan finestro:make-admin user@example.com
+php artisan finestro:admin-mfa-reset user@example.com   # perdeu o autenticador: limpa o MFA, reinscreva no próximo login
+```
+
+## Operação
+
+### Agendador e fila
+
+A produção precisa de uma linha de cron para o agendador e uma forma de
+processar a fila (e-mails, exportações de dados, conversões de imagem):
 
 ```bash
 * * * * * cd /path/to/finestro && php artisan schedule:run >> /dev/null 2>&1
-php artisan queue:work --tries=1
+php artisan queue:work --tries=1          # VPS: mantenha rodando sob Supervisor
 ```
 
-Demo account after seeding: username `demo`, e-mail `demo@finestro.com.br`,
-password `password`.
+Em hospedagem compartilhada sem um worker de longa duração, defina
+`QUEUE_RUN_VIA_SCHEDULER=true`. A mesma linha de cron então também executa
+`queue:work --stop-when-empty --max-time=50` a cada minuto. Deixe em `false`
+quando um worker já estiver rodando.
 
-## Common commands
+Tarefas agendadas (todas diárias, veja `routes/console.php`):
+
+| Comando | Finalidade |
+| --- | --- |
+| `transactions:process-recurring` | Gera as próximas ocorrências de transações recorrentes (`--days-ahead=7`, `--dry-run`) |
+| `activitylog:clean --force` | Remove entradas do log de atividades mais antigas que `ACTIVITYLOG_RETENTION_DAYS` |
+| `sanctum:prune-expired --hours=24` | Exclui tokens de API expirados |
+| `privacy:purge-exports` | Exclui arquivos de exportação de dados pessoais cujo link expirou |
+
+Comandos de manutenção manual: `receipts:import-media` (importa comprovantes
+legados para a Media Library sem apagar os originais, com `--dry-run`
+disponível), `stripe:setup`, `finestro:make-admin`, `finestro:admin-mfa-reset`.
+
+### Deploy
+
+Passos de release para um servidor onde você pode rodar Composer e npm:
 
 ```bash
-composer dev            # server + queue + logs + Vite
-composer quality        # pint --test, phpstan, rector --dry-run, php artisan test
-php artisan test        # Pest suite (SQLite in memory)
-npm run build           # production assets
-php artisan migrate     # additive migrations
-composer format         # fix code style with Pint
+composer install --no-dev --optimize-autoloader
+npm ci && npm run build
+php artisan migrate --force
+php artisan l5-swagger:generate          # spec OpenAPI para /api/documentation
+php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
 
-Load tests use k6 and are run by hand; see [tests/load/README.md](tests/load/README.md).
+O `composer install` também executa `filament:upgrade`, que publica os assets
+do Filament em `public/`. Mantenha a linha de cron do agendador rodando.
 
-## Signing in
+O repositório inclui um workflow do GitHub Actions,
+`.github/workflows/deploy.yml`, que envia o repositório clonado por FTP para
+`finestro/` na conta HostGator a cada push em `main` ou `master` (e em pull
+requests para esses branches). As credenciais vêm dos secrets do repositório
+`FTP_HOST`, `FTP_USER` e `FTP_PASSWORD`. O workflow é deliberadamente apenas
+FTP: não executa nenhuma etapa de Composer, npm ou build. `vendor/` e
+`public/build/` são ignorados pelo git, então a pipeline nunca os toca;
+atualize-os no servidor quando as dependências ou os assets de front-end
+mudarem (passos de release acima).
 
-| Where | Credentials |
+Atualmente não há workflow de CI que rode as verificações de qualidade
+(`.github/workflows/quality.yml` foi removido). Rode `composer quality`
+localmente antes de fazer push.
+
+## Comandos comuns
+
+```bash
+composer dev            # servidor + fila + logs + Vite
+composer quality        # lint (pint --test), analyse (phpstan), refactor (rector --dry-run), test
+composer test           # limpa caches do framework, depois php artisan test (Pest, SQLite em memória)
+composer lint           # apenas verificação de estilo
+composer format         # corrige o estilo do código com Pint
+npm run build           # assets de produção
+php artisan migrate     # migrations aditivas
+php artisan optimize:clear
+```
+
+Os testes de carga usam k6 e são executados manualmente; veja [tests/load/README.md](tests/load/README.md).
+
+## Como entrar
+
+| Onde | Credenciais |
 | --- | --- |
-| App (`/login`) | **username + e-mail + password** of the same account. Every mismatch gets the same generic error; 5 failed attempts per username + e-mail + IP lock the pair for a minute. |
-| Admin panel (`/admin/login`) | E-mail + password, then **mandatory MFA** (TOTP authenticator app), on a separate guard. Requires a verified, non-suspended account with the `admin.access` permission. |
-| API (`/api/v1`) | `Authorization: Bearer <token>` with a Sanctum personal token created in **Configurações > Tokens de API** (Profissional plan). |
+| App (`/login`) | **usuário + e-mail + senha** da mesma conta. Toda divergência recebe o mesmo erro genérico; 5 tentativas falhas por usuário + e-mail + IP bloqueiam o par por um minuto. |
+| Painel admin (`/admin/login`) | E-mail + senha, depois **MFA obrigatório** (app autenticador TOTP), em um guard separado. Exige uma conta verificada, não suspensa, com a permissão `admin.access`. |
+| API (`/api/v1`) | `Authorization: Bearer <token>` com um token pessoal Sanctum criado em **Configurações > Tokens de API** (plano Profissional). |
 
-## Documentation
+## Documentação
 
-| Phase | Document |
+| Fase | Documento |
 | --- | --- |
-| 1 | [ACL audit](docs/security/phase-1-acl-audit.md) |
-| 2 | [Stripe billing](docs/billing/phase-2-stripe.md) |
-| 3 | [Quality tooling](docs/quality/phase-3-tooling.md) |
-| 4 | [Packages and infrastructure](docs/infrastructure/phase-4-packages.md) |
-| 5 | [REST API](docs/api/phase-5-api.md) |
-| 6 | [Filament admin panel](docs/admin/phase-6-filament.md) |
-| 6.5 | [Dependency update](docs/security/phase-6-5-dependency-update.md) |
-| 7 | [Privacy compliance (LGPD, GDPR, CCPA, POPIA)](docs/compliance/phase-7-privacy.md) |
-| 7 | [SEO, GEO, AEO, SEM and performance](docs/seo/phase-7-seo.md) |
-| 7 | [Tests: crawler, flows, security, load](docs/testing/phase-7-tests.md) |
-| 7 | [Orphan cleanup](docs/maintenance/phase-7-cleanup.md) |
+| 1 | [Auditoria de ACL](docs/security/phase-1-acl-audit.md) |
+| 2 | [Cobrança Stripe](docs/billing/phase-2-stripe.md) |
+| 3 | [Ferramentas de qualidade](docs/quality/phase-3-tooling.md) |
+| 4 | [Pacotes e infraestrutura](docs/infrastructure/phase-4-packages.md) |
+| 5 | [API REST](docs/api/phase-5-api.md) |
+| 6 | [Painel admin Filament](docs/admin/phase-6-filament.md) |
+| 6.5 | [Atualização de dependências](docs/security/phase-6-5-dependency-update.md) |
+| 7 | [Conformidade de privacidade (LGPD, GDPR, CCPA, POPIA)](docs/compliance/phase-7-privacy.md) |
+| 7 | [SEO, GEO, AEO, SEM e performance](docs/seo/phase-7-seo.md) |
+| 7 | [Testes: crawler, fluxos, segurança, carga](docs/testing/phase-7-tests.md) |
+| 7 | [Limpeza de órfãos](docs/maintenance/phase-7-cleanup.md) |
 
-Earlier integration notes: [docs/INTEGRACAO-SISTEMAS-LEGADOS.md](docs/INTEGRACAO-SISTEMAS-LEGADOS.md).
+Notas de integração anteriores: [docs/INTEGRACAO-SISTEMAS-LEGADOS.md](docs/INTEGRACAO-SISTEMAS-LEGADOS.md).
 
-## Credits
+## Créditos
 
 Sistema desenvolvido pelo desenvolvedor HOTWYL | WILLFROMBRASIL.
-Developed by [Grupo 3W Online](https://www.3wonline.com.br), custom websites and systems on demand.
+Desenvolvido por [Grupo 3W Online](https://www.3wonline.com.br), sites e sistemas sob demanda.

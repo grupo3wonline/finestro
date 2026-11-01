@@ -106,7 +106,7 @@
         "format": "Fix code style with Laravel Pint.",
         "analyse": "Run PHPStan (level 6 + Larastan) static analysis.",
         "refactor": "Run Rector in dry-run mode; fails if Rector would change any file.",
-        "quality": "Run lint, analyse, refactor and test in sequence (same as CI)."
+        "quality": "Run lint, analyse, refactor and test in sequence."
     },
     "extra": {
         "laravel": {

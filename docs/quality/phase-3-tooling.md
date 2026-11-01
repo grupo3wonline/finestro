@@ -51,11 +51,11 @@ Composer scripts (`composer list` shows the descriptions):
 | `composer analyse` | `phpstan analyse --memory-limit=1G --no-progress` (no process timeout) |
 | `composer refactor` | `rector --dry-run` |
 | `composer test` | `php artisan config:clear` then `php artisan test` (no process timeout) |
-| `composer quality` | `lint`, `analyse`, `refactor`, `test` in sequence; stops at the first failure. CI runs this |
+| `composer quality` | `lint`, `analyse`, `refactor`, `test` in sequence; stops at the first failure. Run it locally before pushing; no CI workflow runs it today (see [CI workflow](#ci-workflow)) |
 
 Run test commands alone. Running two artisan/test commands in parallel against the same environment caused spurious SQLite transaction failures during Phase 3.
 
-The suite currently has 330 tests and 1046 assertions.
+As of 2026-11-01 the suite has 1001 passing tests (4825 assertions) and 15 skipped, in about 100 seconds.
 
 ## Pest and PHPUnit coexistence
 
@@ -111,7 +111,9 @@ Rector runs before Pint; Pint then normalises whatever Rector prints.
 
 ## CI workflow
 
-`.github/workflows/quality.yml` ("Quality") runs on every push and pull request on all branches. A concurrency group per ref cancels older runs of the same ref.
+> **Status (2026-11-01):** `.github/workflows/quality.yml` was deleted from the working tree (not yet committed at the time of writing). The only workflow left is `.github/workflows/deploy.yml`, a plain FTP upload with no tests, quality checks or build step. Run `composer quality` locally. The section below describes the removed workflow and is kept as the recipe to restore it from git history (`git show HEAD:.github/workflows/quality.yml`).
+
+`.github/workflows/quality.yml` ("Quality") ran on every push and pull request on all branches. A concurrency group per ref cancels older runs of the same ref.
 
 The single job on `ubuntu-latest`:
 
@@ -123,7 +125,7 @@ The single job on `ubuntu-latest`:
 6. `npm ci` and `npm run build`.
 7. `composer quality` with `DB_CONNECTION=sqlite`.
 
-The workflow uses no secrets and has read-only repository permissions. Tests use SQLite `:memory:` through `phpunit.xml` and fake Stripe, so CI needs no database service or Stripe key. The existing FTP deploy workflow (`.github/workflows/deploy.yml`) is separate and unchanged.
+The workflow uses no secrets and has read-only repository permissions. Tests use SQLite `:memory:` through `phpunit.xml` and fake Stripe, so CI needs no database service or Stripe key. The FTP deploy workflow (`.github/workflows/deploy.yml`) is separate; see "Deploy" in the README.
 
 ## Notable fixes found by the tools
 
