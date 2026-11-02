@@ -74,7 +74,8 @@ class SecurityHeaders
      *
      * The allowlist covers first-party assets plus the third parties the
      * app loads: Font Awesome (cdnjs), SweetAlert2 (jsdelivr), Google Fonts,
-     * Google Tag Manager / Analytics and the Meta (Facebook) Pixel.
+     * Google Tag Manager / Analytics, the Meta (Facebook) Pixel and the bot
+     * protection widgets (Google reCAPTCHA v3, Cloudflare Turnstile).
      */
     private function buildContentSecurityPolicy(): string
     {
@@ -90,6 +91,10 @@ class SecurityHeaders
             'https://*.google-analytics.com',
             'https://*.analytics.google.com',
             'https://connect.facebook.net',
+            // Bot protection on the guest forms: Google reCAPTCHA v3 and Cloudflare Turnstile.
+            'https://www.google.com/recaptcha/',
+            'https://www.gstatic.com/recaptcha/',
+            'https://challenges.cloudflare.com',
         ];
 
         $styleSrc = [
@@ -123,12 +128,17 @@ class SecurityHeaders
             // Meta Pixel events (/tr); only reached after marketing consent.
             'https://www.facebook.com',
             'https://api.stripe.com',
+            'https://www.google.com/recaptcha/',
+            'https://challenges.cloudflare.com',
         ];
 
         $frameSrc = [
             "'self'",
             'https://www.googletagmanager.com',
             'https://js.stripe.com',
+            'https://www.google.com/recaptcha/',
+            'https://recaptcha.google.com',
+            'https://challenges.cloudflare.com',
         ];
 
         $directives = [

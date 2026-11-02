@@ -47,7 +47,10 @@
     <!-- Header -->
     @include('components.layout.header')
 
-    <!-- Plan Limit Banner -->
+    <!-- Password expiring reminder (last 7 days) -->
+    @include('components.layout.password-banner')
+
+    <!-- Plan Limit / Subscription Renewal Banner -->
     @include('components.layout.plan-banner')
 
     <!-- Stripe Config Alert (admins only) -->

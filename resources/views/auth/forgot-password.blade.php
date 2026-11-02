@@ -24,6 +24,8 @@
             value="{{ old('email') }}" required autofocus placeholder="seu@email.com" />
     </x-ui.field>
 
+    <x-ui.captcha action="forgot_password" />
+
     <x-ui.button type="submit" icon="fa-paper-plane" block class="py-3">Enviar link de recuperação</x-ui.button>
 
     <p class="text-center text-sm text-surface-500 dark:text-surface-400">

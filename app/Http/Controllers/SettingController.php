@@ -33,12 +33,13 @@ class SettingController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', 'different:current_password', Password::defaults()],
         ], [
             'current_password.required' => 'A senha atual é obrigatória.',
             'current_password.current_password' => 'A senha atual está incorreta.',
             'password.required' => 'A nova senha é obrigatória.',
             'password.confirmed' => 'A confirmação da senha não confere.',
+            'password.different' => 'A nova senha deve ser diferente da senha atual.',
         ]);
 
         $user = Auth::user();

@@ -5,6 +5,7 @@ use App\Exceptions\PlanLimitException;
 use App\Http\Middleware\CheckPlanLimit;
 use App\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\EnsureApiAccess;
+use App\Http\Middleware\EnsurePasswordIsNotExpired;
 use App\Http\Middleware\EnsureTermsAccepted;
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\SecurityHeaders;
@@ -52,6 +53,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'ability' => CheckForAnyAbility::class,
             'api.plan' => EnsureApiAccess::class,
             'active' => EnsureAccountIsActive::class,
+            'password.fresh' => EnsurePasswordIsNotExpired::class,
         ]);
 
         // API guests get a 401 JSON envelope, never a redirect to the login page.

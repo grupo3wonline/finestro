@@ -21,6 +21,11 @@ Schedule::command('sanctum:prune-expired --hours=24')->daily();
 // Delete personal data export zips whose download link has expired.
 Schedule::command('privacy:purge-exports')->daily();
 
+// E-mail reminders (once per password / billing period; the services keep
+// track of what was already sent): password expiring and subscription renewal.
+Schedule::command('security:remind-password-expiry')->dailyAt('09:00');
+Schedule::command('billing:remind-renewals')->dailyAt('09:00');
+
 // Shared-hosting fallback (QUEUE_RUN_VIA_SCHEDULER=true): drain the queue from
 // the single schedule:run cron line. --max-time keeps each run under a minute.
 if (config('queue.run_via_scheduler')) {

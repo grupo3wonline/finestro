@@ -27,7 +27,9 @@ class RegistrationTest extends TestCase
             'terms' => '1',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        // The account only becomes active after the e-mail is confirmed, so
+        // sign-up does not open a session.
+        $this->assertGuest();
+        $response->assertRedirect(route('login'));
     }
 }

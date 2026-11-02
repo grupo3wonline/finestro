@@ -35,6 +35,12 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
     public const string SUSPENDED_MESSAGE = 'Sua conta está suspensa. Entre em contato com o suporte para mais informações.';
 
     /**
+     * Shown on the user-app login when the password is right but the e-mail
+     * was never confirmed (the account is not active yet).
+     */
+    public const string UNVERIFIED_MESSAGE = 'Sua conta ainda não foi ativada. Confirme seu e-mail pelo link que enviamos ou peça um novo link abaixo.';
+
+    /**
      * Spatie roles/permissions always live on the `web` guard. Filament calls
      * Auth::shouldUse('admin') inside the panel; without this pin Spatie would
      * look up `admin`-guard roles and throw PermissionDoesNotExist.
@@ -87,8 +93,61 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
             'email_verified_at' => 'datetime',
             'terms_accepted_at' => 'datetime',
             'suspended_at' => 'datetime',
+            'password_changed_at' => 'datetime',
+            'password_expiry_reminded_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Every path that sets a new password (registration, profile, reset link,
+     * forced change, admin tools) restarts the password aging clock.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (User $user): void {
+            if ($user->isDirty('password')) {
+                $user->password_changed_at = now();
+            }
+        });
+    }
+
+    /**
+     * Moment the current password was set (account creation as a fallback).
+     */
+    public function passwordChangedAt(): CarbonInterface
+    {
+        return $this->password_changed_at ?? $this->created_at ?? now();
+    }
+
+    /**
+     * Moment the current password stops being accepted.
+     */
+    public function passwordExpiresAt(): CarbonInterface
+    {
+        return $this->passwordChangedAt()->copy()->addDays((int) config('security.password_max_age_days'));
+    }
+
+    public function isPasswordExpired(): bool
+    {
+        return $this->passwordExpiresAt()->isPast();
+    }
+
+    /**
+     * Whole days left before the password expires (rounded up, never below 0).
+     */
+    public function passwordDaysRemaining(): int
+    {
+        return (int) max(0, ceil(now()->diffInDays($this->passwordExpiresAt(), false)));
+    }
+
+    /**
+     * Not expired yet, but inside the warning window (default: last 7 days).
+     */
+    public function isPasswordExpiringSoon(): bool
+    {
+        return ! $this->isPasswordExpired()
+            && $this->passwordDaysRemaining() <= (int) config('security.password_warning_days');
     }
 
     /**

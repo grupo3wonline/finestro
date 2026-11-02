@@ -17,7 +17,14 @@
     @csrf
 
     @error('login')
-        <x-ui.alert variant="danger">{{ $message }}</x-ui.alert>
+        <x-ui.alert variant="danger">
+            {{ $message }}
+            @if($message === \App\Models\User::UNVERIFIED_MESSAGE)
+                <a href="{{ route('verification.resend.create') }}" class="block mt-2 font-semibold underline">
+                    <i class="fas fa-paper-plane mr-1"></i> Reenviar e-mail de confirmação
+                </a>
+            @endif
+        </x-ui.alert>
     @enderror
 
     <x-ui.tip icon="fa-shield-halved">Por segurança, informe usuário, e-mail e senha da mesma conta.</x-ui.tip>
@@ -64,6 +71,8 @@
             <a href="{{ route('password.request') }}" class="text-sm text-primary-600 hover:underline">Esqueceu a senha?</a>
         @endif
     </div>
+
+    <x-ui.captcha action="login" />
 
     <x-ui.button type="submit" icon="fa-arrow-right-to-bracket" block class="py-3">Entrar</x-ui.button>
 

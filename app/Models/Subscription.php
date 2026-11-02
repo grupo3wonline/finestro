@@ -55,6 +55,7 @@ class Subscription extends Model
             'trial_ends_at' => 'datetime',
             'current_period_start' => 'datetime',
             'current_period_end' => 'datetime',
+            'renewal_reminded_for' => 'datetime',
             'cancel_at_period_end' => 'boolean',
             'canceled_at' => 'datetime',
             'status' => SubscriptionStatus::class,
@@ -200,6 +201,35 @@ class Subscription extends Model
             in_array($this->status, [SubscriptionStatus::INCOMPLETE, SubscriptionStatus::INCOMPLETE_EXPIRED], true) => 'Pagamento ainda não confirmado. Assim que o Stripe aprovar a cobrança, o plano Profissional será ativado.',
             default => 'Esta assinatura já foi encerrada. Assine novamente para voltar ao plano Profissional.',
         };
+    }
+
+    /**
+     * Whole days until the current period ends (rounded up, never below 0),
+     * or null when there is no period end.
+     */
+    public function daysUntilPeriodEnd(): ?int
+    {
+        if (! $this->current_period_end) {
+            return null;
+        }
+
+        return (int) max(0, ceil(now()->diffInDays($this->current_period_end, false)));
+    }
+
+    /**
+     * A paid Professional period is about to end (renew or lapse) inside the
+     * warning window (default: 7 days). Pending payments and already expired
+     * periods have their own banners and are excluded.
+     */
+    public function isRenewalDueSoon(): bool
+    {
+        if (! $this->isProfessional() || ! $this->status?->grantsAccess() || $this->isExpired()) {
+            return false;
+        }
+
+        $days = $this->daysUntilPeriodEnd();
+
+        return $days !== null && $days <= (int) config('security.renewal_warning_days');
     }
 
     /**

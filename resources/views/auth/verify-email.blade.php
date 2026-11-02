@@ -24,6 +24,7 @@
     <form method="POST" action="{{ route('verification.send') }}" data-loading="Reenviando...">
         @csrf
         <x-ui.button type="submit" icon="fa-paper-plane" block class="py-3">Reenviar e-mail de verificação</x-ui.button>
+        <p class="mt-2 text-center text-xs text-surface-500 dark:text-surface-400">Sua conta só é ativada depois da confirmação do e-mail.</p>
     </form>
 
     <form method="POST" action="{{ route('logout') }}" data-no-loading>

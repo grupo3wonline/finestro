@@ -55,7 +55,7 @@ Composer scripts (`composer list` shows the descriptions):
 
 Run test commands alone. Running two artisan/test commands in parallel against the same environment caused spurious SQLite transaction failures during Phase 3.
 
-As of 2026-11-01 the suite has 1001 passing tests (4825 assertions) and 15 skipped, in about 100 seconds.
+As of 2026-11-01 the suite has 1063 passing tests (5129 assertions) and 15 skipped, in about 100 seconds.
 
 ## Pest and PHPUnit coexistence
 

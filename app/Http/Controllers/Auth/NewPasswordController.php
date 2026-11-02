@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\Services\CaptchaServiceInterface;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -29,12 +30,14 @@ class NewPasswordController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CaptchaServiceInterface $captcha): RedirectResponse
     {
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            // Anti-bot: reCAPTCHA v3 e/ou Turnstile (somente se configurados no .env).
+            ...$captcha->rules('reset_password'),
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we

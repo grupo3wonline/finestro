@@ -45,27 +45,26 @@ it('registers, verifies the e-mail, signs out and signs back in with username + 
         'password_confirmation' => 'senha-segura-123',
         'terms' => '1',
         'website' => '', // honeypot stays empty for humans
-    ])->assertRedirect(route('dashboard', absolute: false));
+    ])->assertRedirect(route('login'))->assertSessionHas('status');
 
     $user = User::query()->where('email', 'joana@example.com')->sole();
     expect($user->hasVerifiedEmail())->toBeFalse()
         ->and($user->terms_version)->toBe(config('legal.policy_version'));
 
-    // Unverified accounts are held at the verification notice.
-    $this->get(route('dashboard'))->assertRedirect(route('verification.notice'));
+    // The account is not active yet: no session after sign-up, and the right
+    // credentials are refused until the e-mail is confirmed.
+    $this->assertGuest('web');
+    $this->from('/login')->post('/login', journeyCredentials($user, 'senha-segura-123'))
+        ->assertSessionHasErrors(['login' => User::UNVERIFIED_MESSAGE]);
+    $this->assertGuest('web');
 
+    // The link in the e-mail works from the inbox, without a session.
     $verifyUrl = URL::temporarySignedRoute('verification.verify', now()->addHour(), [
         'id' => $user->id,
         'hash' => sha1($user->email),
     ]);
-    // Back to the page that asked for verification (the intended URL).
-    $this->get($verifyUrl)->assertRedirect(route('dashboard'));
+    $this->get($verifyUrl)->assertRedirect(route('login'))->assertSessionHas('status');
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-
-    // Terms were accepted at sign-up in the current version: no detour.
-    $this->get(route('dashboard'))->assertOk();
-
-    $this->post(route('logout'))->assertRedirect();
     $this->assertGuest('web');
 
     $this->post('/login', journeyCredentials($user, 'senha-segura-123'))

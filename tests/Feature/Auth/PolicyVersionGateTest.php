@@ -214,7 +214,7 @@ it('stores the current policy version on registration', function (): void {
         'password' => 'password',
         'password_confirmation' => 'password',
         'terms' => '1',
-    ])->assertRedirect(route('dashboard', absolute: false));
+    ])->assertRedirect(route('login'));
 
     expect(User::query()->where('email', 'versao@example.com')->value('terms_version'))
         ->toBe(config('legal.policy_version'));

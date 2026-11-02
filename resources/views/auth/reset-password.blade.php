@@ -28,6 +28,8 @@
             required placeholder="Repita a nova senha" />
     </x-ui.field>
 
+    <x-ui.captcha action="reset_password" />
+
     <x-ui.button type="submit" icon="fa-key" block class="py-3">Redefinir senha</x-ui.button>
 </form>
 @endsection

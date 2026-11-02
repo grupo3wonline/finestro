@@ -58,7 +58,7 @@ class RolePermissionTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'terms' => '1',
-        ])->assertRedirect(route('dashboard', absolute: false));
+        ])->assertRedirect(route('login'));
 
         $user = User::where('email', 'nova@example.com')->firstOrFail();
         $this->assertTrue($user->hasRole('user'));

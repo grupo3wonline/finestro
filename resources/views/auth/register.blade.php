@@ -72,6 +72,10 @@
         @error('terms') <p class="input-error mt-1.5"><i class="fas fa-circle-exclamation"></i>{{ $message }}</p> @enderror
     </div>
 
+    <x-ui.tip icon="fa-envelope-circle-check">Vamos enviar um link de confirmação para o seu e-mail. Sua conta só é ativada depois de confirmá-lo.</x-ui.tip>
+
+    <x-ui.captcha action="register" />
+
     <x-ui.button type="submit" icon="fa-user-plus" block class="py-3">Criar conta</x-ui.button>
 
     <p class="text-center text-sm text-surface-500 dark:text-surface-400">

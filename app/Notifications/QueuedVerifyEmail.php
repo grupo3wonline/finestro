@@ -7,6 +7,7 @@ namespace App\Notifications;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 
 /**
  * Breeze e-mail verification, sent through the queue so registration does
@@ -21,4 +22,17 @@ class QueuedVerifyEmail extends VerifyEmail implements ShouldQueue
 
     /** @var list<int> */
     public array $backoff = [60, 300];
+
+    /**
+     * Account activation e-mail (pt-BR strings live in lang/pt_BR.json).
+     *
+     * @param  string  $url
+     */
+    protected function buildMailMessage($url): MailMessage
+    {
+        $hours = (int) round((int) config('auth.verification.expire', 60) / 60);
+
+        return parent::buildMailMessage($url)
+            ->line('Sua conta só é ativada depois dessa confirmação. O link é válido por '.max(1, $hours).' hora(s); depois disso, peça um novo link na tela de login.');
+    }
 }

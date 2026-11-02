@@ -1,7 +1,5 @@
 # Finestro
 
-[English](README.md) | **Português (Brasil)**
-
 Micro SaaS de finanças pessoais para freelancers, pequenos empresários e
 profissionais. Cada usuário vê apenas suas próprias carteiras, transações,
 metas, categorias e orçamentos; o acesso é controlado por papéis e permissões
@@ -20,6 +18,7 @@ inglês.
 | API | REST v1 em `/api/v1` com tokens pessoais Laravel Sanctum, docs OpenAPI via L5 Swagger em `/api/documentation` |
 | Dados | DTOs spatie/laravel-data, Spatie Media Library (comprovantes), Spatie Activitylog, Laravel Excel, Scout, filas e cache |
 | Cobrança | Stripe Checkout e webhooks |
+| Proteção contra robôs | Google reCAPTCHA v3 e Cloudflare Turnstile nos formulários públicos (cada um ativo quando suas chaves estão no `.env`) |
 | Qualidade | Pest 4 / PHPUnit 12, Pint, PHPStan nível 6 + Larastan, Rector |
 
 Arquitetura: `Controller → Service (interface) → Repository (interface) → Model`,
@@ -53,6 +52,20 @@ documentada em `.env.example`):
 
 - `DB_*`, `APP_URL`, `MAIL_*`. Sessões, cache e fila usam por padrão o driver
   `database`. Em produção sobre HTTPS, defina `SESSION_SECURE_COOKIE=true`.
+- E-mail (SMTP da HostGator): crie uma caixa de e-mail no cPanel e use o mesmo
+  endereço em `MAIL_USERNAME` e `MAIL_FROM_ADDRESS`, com
+  `MAIL_HOST=mail.<seu domínio>`, `MAIL_PORT=465` e `MAIL_SCHEME=smtps` (ou
+  porta 587 com `MAIL_SCHEME` vazio). Ativação de conta, recuperação de senha
+  e lembretes vão para a fila, então ela precisa ser processada (veja
+  [Agendador e fila](#agendador-e-fila)).
+- Proteção contra robôs: `RECAPTCHA_SITE_KEY` / `RECAPTCHA_SECRET_KEY` (Google
+  reCAPTCHA v3, com `RECAPTCHA_MIN_SCORE`) e `TURNSTILE_SITE_KEY` /
+  `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile). Um provedor só fica ativo
+  quando as duas chaves dele estão preenchidas; com os dois ativos, o
+  formulário precisa passar nos dois.
+- Segurança da conta: `PASSWORD_MAX_AGE_DAYS` (90), `PASSWORD_WARNING_DAYS` (7),
+  `RENEWAL_WARNING_DAYS` (7) e `AUTH_VERIFICATION_EXPIRE` (validade do link de
+  ativação, em minutos; 1440).
 - `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`,
   `STRIPE_PROFESSIONAL_PRICE_ID`, `STRIPE_PROFESSIONAL_PRICE` (use chaves de
   teste fora de produção e nunca as versione). `php artisan stripe:setup`
@@ -102,7 +115,7 @@ Em hospedagem compartilhada sem um worker de longa duração, defina
 `queue:work --stop-when-empty --max-time=50` a cada minuto. Deixe em `false`
 quando um worker já estiver rodando.
 
-Tarefas agendadas (todas diárias, veja `routes/console.php`):
+Tarefas agendadas (todas diárias, veja `routes/console.php`; os dois lembretes rodam às 09:00):
 
 | Comando | Finalidade |
 | --- | --- |
@@ -110,6 +123,8 @@ Tarefas agendadas (todas diárias, veja `routes/console.php`):
 | `activitylog:clean --force` | Remove entradas do log de atividades mais antigas que `ACTIVITYLOG_RETENTION_DAYS` |
 | `sanctum:prune-expired --hours=24` | Exclui tokens de API expirados |
 | `privacy:purge-exports` | Exclui arquivos de exportação de dados pessoais cujo link expirou |
+| `security:remind-password-expiry` | Envia e-mail a quem tem a senha expirando em até 7 dias, uma vez por senha |
+| `billing:remind-renewals` | Envia e-mail a assinantes Profissional cujo plano renova (ou termina) em até 7 dias, uma vez por período |
 
 Comandos de manutenção manual: `receipts:import-media` (importa comprovantes
 legados para a Media Library sem apagar os originais, com `--dry-run`
@@ -163,7 +178,7 @@ Os testes de carga usam k6 e são executados manualmente; veja [tests/load/READM
 
 | Onde | Credenciais |
 | --- | --- |
-| App (`/login`) | **usuário + e-mail + senha** da mesma conta. Toda divergência recebe o mesmo erro genérico; 5 tentativas falhas por usuário + e-mail + IP bloqueiam o par por um minuto. |
+| App (`/login`) | **usuário + e-mail + senha** da mesma conta. Toda divergência recebe o mesmo erro genérico; 5 tentativas falhas por usuário + e-mail + IP bloqueiam o par por um minuto. A conta só fica **ativa depois da confirmação do e-mail** (o cadastro não abre sessão; contas não confirmadas não entram e podem pedir novo link em `/reenviar-confirmacao`). A senha expira a cada **90 dias**: um aviso aparece nos últimos 7 dias e, com a senha vencida, o usuário é levado a uma tela de troca obrigatória. |
 | Painel admin (`/admin/login`) | E-mail + senha, depois **MFA obrigatório** (app autenticador TOTP), em um guard separado. Exige uma conta verificada, não suspensa, com a permissão `admin.access`. |
 | API (`/api/v1`) | `Authorization: Bearer <token>` com um token pessoal Sanctum criado em **Configurações > Tokens de API** (plano Profissional). |
 
@@ -182,6 +197,7 @@ Os testes de carga usam k6 e são executados manualmente; veja [tests/load/READM
 | 7 | [SEO, GEO, AEO, SEM e performance](docs/seo/phase-7-seo.md) |
 | 7 | [Testes: crawler, fluxos, segurança, carga](docs/testing/phase-7-tests.md) |
 | 7 | [Limpeza de órfãos](docs/maintenance/phase-7-cleanup.md) |
+| 8 | [Proteção contra robôs, ativação por e-mail, validade de senha e lembretes](docs/security/phase-8-auth-hardening.md) |
 
 Notas de integração anteriores: [docs/INTEGRACAO-SISTEMAS-LEGADOS.md](docs/INTEGRACAO-SISTEMAS-LEGADOS.md).
 

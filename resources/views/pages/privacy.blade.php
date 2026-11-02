@@ -81,7 +81,7 @@
 
                 <h2 id="dados-coletados" class="{{ $h2 }}">3. Dados que tratamos</h2>
                 <ul class="list-disc pl-6 space-y-2">
-                    <li><strong>Conta:</strong> nome, nome de usuário, e-mail, senha (guardada apenas como hash, nunca em texto), data de verificação do e-mail e versão/data de aceite dos Termos e desta Política.</li>
+                    <li><strong>Conta:</strong> nome, nome de usuário, e-mail, senha (guardada apenas como hash, nunca em texto), data de verificação do e-mail, data da última troca de senha (a senha precisa ser renovada a cada {{ config('security.password_max_age_days') }} dias) e versão/data de aceite dos Termos e desta Política.</li>
                     <li><strong>Registros financeiros que você cadastra:</strong> carteiras, transações (descrição, valor, data, situação, forma de pagamento, observações), categorias, metas, orçamentos e transações recorrentes.</li>
                     <li><strong>Comprovantes:</strong> arquivos que você anexa às transações (imagens ou PDF).</li>
                     <li><strong>Pagamentos (plano Profissional):</strong> identificadores de cliente e de assinatura no Stripe, plano, situação, período e histórico de cobranças. <em>Não recebemos nem guardamos dados do cartão</em>: eles são digitados diretamente no Stripe.</li>
@@ -118,7 +118,14 @@
                 <p>Seus registros financeiros são visíveis apenas para você e para quem você convidar a uma carteira compartilhada. Compartilhamos dados somente com operadores que nos ajudam a prestar o serviço:</p>
                 <ul class="list-disc pl-6 space-y-1">
                     <li><strong>Stripe</strong>: processamento de pagamentos do plano Profissional.</li>
-                    <li><strong>Provedor de e-mail</strong>: envio das mensagens da conta.</li>
+                    <li><strong>Provedor de e-mail</strong>: envio das mensagens da conta (confirmação de cadastro, recuperação de senha e avisos de senha e de assinatura).</li>
+                    @if(filled(config('captcha.recaptcha.site_key')) || filled(config('captcha.turnstile.site_key')))
+                        <li>
+                            <strong>Proteção contra robôs</strong>
+                            ({{ collect([filled(config('captcha.recaptcha.site_key')) ? 'Google reCAPTCHA' : null, filled(config('captcha.turnstile.site_key')) ? 'Cloudflare Turnstile' : null])->filter()->implode(' e ') }}):
+                            nos formulários de cadastro, entrada e recuperação de senha, o provedor recebe seu endereço IP e dados técnicos do navegador para distinguir pessoas de robôs. É necessário para a segurança do serviço (legítimo interesse).
+                        </li>
+                    @endif
                     <li><strong>Provedores de IA</strong> (Groq, Google Gemini ou OpenRouter): apenas quando você configura sua chave e pede uma análise.</li>
                     <li><strong>Hospedagem</strong>: servidores onde o sistema e o banco de dados funcionam.</li>
                     <li><strong>Google e Meta</strong>: somente se você permitir cookies de análise ou de marketing.</li>

@@ -23,11 +23,13 @@ use App\Interfaces\Repositories\TransactionRepositoryInterface;
 use App\Interfaces\Repositories\WalletRepositoryInterface;
 use App\Interfaces\Services\AccountActivityServiceInterface;
 use App\Interfaces\Services\AccountDeletionServiceInterface;
+use App\Interfaces\Services\AccountReminderServiceInterface;
 use App\Interfaces\Services\AdminMetricsServiceInterface;
 use App\Interfaces\Services\AdminUserServiceInterface;
 use App\Interfaces\Services\AiServiceInterface;
 use App\Interfaces\Services\ApiTokenServiceInterface;
 use App\Interfaces\Services\BudgetServiceInterface;
+use App\Interfaces\Services\CaptchaServiceInterface;
 use App\Interfaces\Services\CategoryServiceInterface;
 use App\Interfaces\Services\ConsentServiceInterface;
 use App\Interfaces\Services\CreditCardInvoiceServiceInterface;
@@ -68,11 +70,13 @@ use App\Repositories\TransactionRepository;
 use App\Repositories\WalletRepository;
 use App\Services\AccountActivityService;
 use App\Services\AccountDeletionService;
+use App\Services\AccountReminderService;
 use App\Services\AdminMetricsService;
 use App\Services\AdminUserService;
 use App\Services\AiService;
 use App\Services\ApiTokenService;
 use App\Services\BudgetService;
+use App\Services\CaptchaService;
 use App\Services\CategoryService;
 use App\Services\ConsentService;
 use App\Services\CreditCardInvoiceService;
@@ -155,6 +159,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ConsentServiceInterface::class, ConsentService::class);
         $this->app->bind(DataExportServiceInterface::class, DataExportService::class);
         $this->app->bind(StructuredDataServiceInterface::class, StructuredDataService::class);
+        $this->app->bind(CaptchaServiceInterface::class, CaptchaService::class);
+        $this->app->bind(AccountReminderServiceInterface::class, AccountReminderService::class);
     }
 
     /**

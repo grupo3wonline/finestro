@@ -52,11 +52,16 @@
     </div>
 
     <!-- Change Password -->
-    <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800">
+    <div id="alterar-senha" class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800">
         <div class="p-6 border-b border-surface-100 dark:border-surface-800">
             <h2 class="text-lg font-semibold text-surface-900 dark:text-white">
                 <i class="fas fa-lock text-yellow-500 mr-2"></i> Alterar Senha
             </h2>
+            <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">
+                Por segurança, a senha precisa ser trocada a cada {{ config('security.password_max_age_days') }} dias.
+                A sua é válida até <strong>{{ $user->passwordExpiresAt()->format('d/m/Y') }}</strong>
+                ({{ $user->passwordDaysRemaining() === 1 ? '1 dia restante' : $user->passwordDaysRemaining().' dias restantes' }}).
+            </p>
         </div>
         <form action="{{ route('settings.password') }}" method="POST" class="p-6 space-y-4">
             @csrf

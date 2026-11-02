@@ -124,4 +124,20 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | E-mail Confirmation Link Lifetime
+    |--------------------------------------------------------------------------
+    |
+    | Minutes the signed link of the account activation e-mail stays valid.
+    | A new account cannot sign in before confirming, so the default is 24
+    | hours instead of Laravel's 60 minutes. A new link can always be
+    | requested at /reenviar-confirmacao.
+    |
+    */
+
+    'verification' => [
+        'expire' => (int) env('AUTH_VERIFICATION_EXPIRE', 1440),
+    ],
+
 ];

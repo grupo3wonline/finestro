@@ -70,13 +70,13 @@ Route::post('/stripe/webhook', [SubscriptionController::class, 'webhook'])
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'verified'])->group(function (): void {
+Route::middleware(['auth', 'verified', 'password.fresh'])->group(function (): void {
     // Terms Acceptance (must be accessible without terms.accepted middleware)
     Route::get('/aceitar-termos', [TermsAcceptanceController::class, 'show'])->name('terms.accept');
     Route::post('/aceitar-termos', [TermsAcceptanceController::class, 'store'])->name('terms.store');
 });
 
-Route::middleware(['auth', 'verified', 'terms.accepted'])->group(function (): void {
+Route::middleware(['auth', 'verified', 'password.fresh', 'terms.accepted'])->group(function (): void {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

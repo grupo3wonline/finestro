@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\Services\CaptchaServiceInterface;
 use App\Models\User;
 use App\Models\WalletMember;
 use App\Rules\Honeypot;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CaptchaServiceInterface $captcha): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -53,6 +53,8 @@ class RegisteredUserController extends Controller
             'terms' => ['required', 'accepted'],
             // Anti-spam: campo isca (deve ficar vazio) + time-trap assinado.
             'website' => ['nullable', new Honeypot('website')],
+            // Anti-bot: reCAPTCHA v3 e/ou Turnstile (somente se configurados no .env).
+            ...$captcha->rules('register'),
         ], [
             'terms.required' => 'Você deve aceitar os Termos de Uso para criar sua conta.',
             'terms.accepted' => 'Você deve aceitar os Termos de Uso para criar sua conta.',
@@ -70,12 +72,16 @@ class RegisteredUserController extends Controller
         // Every new account gets the default ACL role.
         $user->assignRole('user');
 
-        // Wallet invitations are claimed only after email verification,
-        // handled by the ClaimWalletInvitations listener on the Verified event.
+        // Sends the confirmation e-mail (queued). Wallet invitations are claimed
+        // only after verification, by the ClaimWalletInvitations listener on the
+        // Verified event.
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        // The account is only active after the e-mail is confirmed, so there is
+        // no session yet: the user signs in after clicking the link.
+        return redirect()->route('login')->with(
+            'status',
+            'Conta criada! Enviamos um link de confirmação para '.$user->email.'. Sua conta só será ativada depois que você confirmar o e-mail (veja também a caixa de spam).'
+        );
     }
 }

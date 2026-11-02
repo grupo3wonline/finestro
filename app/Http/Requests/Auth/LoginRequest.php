@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Interfaces\Services\CaptchaServiceInterface;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\SessionGuard;
@@ -36,6 +37,8 @@ class LoginRequest extends FormRequest
             'username' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string'],
+            // Anti-bot: reCAPTCHA v3 e/ou Turnstile (somente se configurados no .env).
+            ...app(CaptchaServiceInterface::class)->rules('login'),
         ];
     }
 
@@ -69,19 +72,30 @@ class LoginRequest extends FormRequest
         /** @var SessionGuard $guard */
         $guard = Auth::guard('web');
 
-        if (! $guard->attemptWhen($this->credentials(), fn (User $user): bool => ! $user->isSuspended(), $this->boolean('remember'))) {
+        // An account is only active once its e-mail is confirmed, and a
+        // suspended account never signs in.
+        $canSignIn = fn (User $user): bool => ! $user->isSuspended() && $user->hasVerifiedEmail();
+
+        if (! $guard->attemptWhen($this->credentials(), $canSignIn, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
-            // The suspension notice is shown only with the right password,
-            // so it never reveals whether an account exists.
+            // The suspension / pending-confirmation notices are shown only with
+            // the right password, so they never reveal whether an account exists.
             $lastAttempted = $guard->getLastAttempted();
 
             if ($lastAttempted instanceof User
-                && $lastAttempted->isSuspended()
                 && $guard->getProvider()->validateCredentials($lastAttempted, ['password' => (string) $this->string('password')])) {
-                throw ValidationException::withMessages([
-                    'login' => User::SUSPENDED_MESSAGE,
-                ]);
+                if ($lastAttempted->isSuspended()) {
+                    throw ValidationException::withMessages([
+                        'login' => User::SUSPENDED_MESSAGE,
+                    ]);
+                }
+
+                if (! $lastAttempted->hasVerifiedEmail()) {
+                    throw ValidationException::withMessages([
+                        'login' => User::UNVERIFIED_MESSAGE,
+                    ]);
+                }
             }
 
             throw ValidationException::withMessages([
