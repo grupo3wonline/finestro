@@ -142,9 +142,52 @@ export function debounce(fn, wait = 300) {
     };
 }
 
+/**
+ * Search-as-you-type for GET filter forms.
+ *
+ * An input with `data-debounce-submit="<ms>"` submits its form once the user
+ * stops typing (default 600 ms), so one request goes out per pause instead of
+ * one per keystroke. It does nothing when:
+ *   - the text did not change since the last submit;
+ *   - the term has a single character (too noisy; clearing the field is fine);
+ *   - the form is already submitting (e.g. the user pressed Enter);
+ *   - an IME composition is in progress.
+ * After the page reloads with the result, the caret is put back at the end of
+ * the field so typing can continue.
+ */
+function bindAutoSearch(input) {
+    const form = input.form;
+    if (!form) return;
+
+    const wait = Number(input.dataset.debounceSubmit) || 600;
+    const refocusKey = `finestro:refocus:${window.location.pathname}`;
+    let last = input.value.trim();
+
+    if (window.sessionStorage.getItem(refocusKey) === input.name) {
+        window.sessionStorage.removeItem(refocusKey);
+        input.focus();
+        const end = input.value.length;
+        input.setSelectionRange?.(end, end);
+    }
+
+    const submitLater = debounce(() => {
+        const value = input.value.trim();
+        if (value === last || value.length === 1 || form.hasAttribute(BUSY)) return;
+
+        last = value;
+        window.sessionStorage.setItem(refocusKey, input.name);
+        form.requestSubmit?.() ?? form.submit();
+    }, wait);
+
+    input.addEventListener('input', (event) => {
+        if (!event.isComposing) submitLater();
+    });
+}
+
 export function bootForms() {
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('form').forEach(bindForm);
+        document.querySelectorAll('input[data-debounce-submit]').forEach(bindAutoSearch);
     });
 
     // Restore forms when the page is served from the bfcache (back/forward).

@@ -49,7 +49,7 @@
 
         <div>
             <label for="wallet_id" class="{{ $label }}">Carteira <span class="text-red-500">*</span></label>
-            <select name="wallet_id" id="wallet_id" required class="{{ $input }}">
+            <select autocomplete="off" name="wallet_id" id="wallet_id" required class="{{ $input }}">
                 <option value="">Selecione</option>
                 @foreach($wallets as $wallet)
                     <option value="{{ $wallet->id }}" @selected(old('wallet_id', $isEdit ? $transaction->wallet_id : ($defaults['wallet_id'] ?? null)) == $wallet->id)>
@@ -76,7 +76,7 @@
                 Categoria
                 <a href="{{ route('categories.index') }}" class="ml-1 text-xs text-primary-600 hover:underline font-normal">gerenciar</a>
             </label>
-            <select name="category_id" id="category_id" x-model="categoryId" class="{{ $input }}">
+            <select autocomplete="off" name="category_id" id="category_id" x-model="categoryId" class="{{ $input }}">
                 <option value="">Sem categoria</option>
                 <template x-for="category in filteredCategories" :key="category.id">
                     <option :value="category.id" x-text="category.name" :selected="category.id === categoryId"></option>
@@ -114,7 +114,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label for="status" class="{{ $label }}">Situação</label>
-                <select name="status" id="status" x-model="status" class="{{ $input }}">
+                <select autocomplete="off" name="status" id="status" x-model="status" class="{{ $input }}">
                     <option value="paid" x-text="type === 'income' ? 'Recebido' : 'Pago'">Pago</option>
                     <option value="pending" x-text="type === 'income' ? 'A receber' : 'A pagar'">A pagar</option>
                 </select>
@@ -130,7 +130,7 @@
 
             <div>
                 <label for="payment_method" class="{{ $label }}">Forma de pagamento</label>
-                <select name="payment_method" id="payment_method" class="{{ $input }}">
+                <select autocomplete="off" name="payment_method" id="payment_method" class="{{ $input }}">
                     <option value="">Não informada</option>
                     @foreach($paymentMethods as $value => $name)
                         <option value="{{ $value }}" @selected(old('payment_method', $isEdit ? $transaction->payment_method : '') === $value)>{{ $name }}</option>
@@ -175,7 +175,7 @@
         <div x-show="recurring" x-cloak>
             <label for="recurring_frequency" class="{{ $label }}">Frequência</label>
             @php $freq = old('recurring_frequency', $isEdit ? ($transaction->recurring_frequency ?? 'monthly') : 'monthly'); @endphp
-            <select name="recurring_frequency" id="recurring_frequency" class="{{ $input }}">
+            <select autocomplete="off" name="recurring_frequency" id="recurring_frequency" class="{{ $input }}">
                 <option value="monthly" @selected($freq === 'monthly')>Mensal</option>
                 <option value="weekly" @selected($freq === 'weekly')>Semanal</option>
                 <option value="daily" @selected($freq === 'daily')>Diária</option>
@@ -193,7 +193,7 @@
     {{-- Observações + Comprovante --}}
     <div>
         <label for="notes" class="{{ $label }}">Observações</label>
-        <textarea name="notes" id="notes" rows="2" maxlength="1000" class="{{ $input }}"
+        <textarea autocomplete="off" name="notes" id="notes" rows="2" maxlength="1000" class="{{ $input }}"
             placeholder="Notas adicionais (opcional)...">{{ old('notes', $isEdit ? $transaction->notes : '') }}</textarea>
         @error('notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
     </div>

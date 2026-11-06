@@ -28,7 +28,7 @@
 
                     @auth
                         <a href="{{ route('dashboard') }}" class="ml-2 inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white text-sm font-medium rounded-lg transition shadow-sm" data-loading="Carregando...">
-                            <i class="fas fa-tachometer-alt mr-1.5"></i> Dashboard
+                            <i class="fas fa-tachometer-alt mr-1.5"></i> Painel
                         </a>
                     @else
                         <a href="{{ route('login') }}" class="ml-2 px-3 py-2 text-sm font-medium text-surface-700 dark:text-surface-300 hover:text-primary-600 transition">Entrar</a>

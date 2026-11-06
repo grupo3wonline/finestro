@@ -110,4 +110,4 @@ The four existing tests that expected registration to open a session were update
 | `tests/Feature/Security/PasswordAgingTest.php` | Clock start and restart (including reset link); days-left table around the 7-day window and day 90; lock-out and forced change screen; different-password rule; banner; settings page; reminder once per password and again after a change; schedule at 09:00 |
 | `tests/Feature/Billing/RenewalReminderTest.php` | Banner inside/outside the window and the cancellation variant; past-due and expired keep their banners; free users; reminder once per period and again for the next; excluded users; e-mail texts without a price |
 
-The full suite passes (1063 tests, 15 skipped) and `composer quality` exits 0.
+The full suite passes (1074 tests, 15 skipped, after phase 10) and `composer quality` exits 0.

@@ -3,15 +3,10 @@
 @section('title', 'Nova Transação')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('transactions.index') }}" class="text-surface-500 hover:text-primary-600">Transações</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Nova Transação</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Transações', 'url' => route('transactions.index')],
+    ['label' => 'Nova Transação'],
+]" />
 @endsection
 
 @section('content')
@@ -35,7 +30,7 @@
                 </a>
             </div>
         @else
-            <form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
+            <form autocomplete="off" action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
                 @csrf
 
                 @include('transactions.partials.form', ['transaction' => null])

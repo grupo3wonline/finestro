@@ -2,7 +2,7 @@
 {{-- Pass ['reload' => true] to offer "Tentar novamente" instead of "Voltar". --}}
 <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
     @auth
-        <x-ui.button :href="route('dashboard')" icon="fa-tachometer-alt">Ir para o Dashboard</x-ui.button>
+        <x-ui.button :href="route('dashboard')" icon="fa-tachometer-alt">Ir para o painel</x-ui.button>
         <x-ui.button :href="route('home')" variant="outline" icon="fa-home">Página inicial</x-ui.button>
     @else
         <x-ui.button :href="route('home')" icon="fa-home">Página inicial</x-ui.button>

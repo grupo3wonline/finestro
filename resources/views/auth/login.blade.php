@@ -13,7 +13,7 @@
     <x-ui.alert variant="success" class="mb-4">{{ session('status') }}</x-ui.alert>
 @endif
 
-<form method="POST" action="{{ route('login') }}" class="space-y-4" data-loading="Entrando...">
+<form autocomplete="off" method="POST" action="{{ route('login') }}" class="space-y-4" data-loading="Entrando...">
     @csrf
 
     @error('login')

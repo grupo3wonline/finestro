@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Painel')
 
 @section('breadcrumb')
-    <x-ui.breadcrumb :items="[['label' => 'Dashboard']]" />
+    <x-ui.breadcrumb :items="[['label' => 'Painel']]" />
 @endsection
 
 @section('content')

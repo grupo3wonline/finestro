@@ -35,12 +35,12 @@
         </div>
 
         {{-- Busca --}}
-        <form method="GET" action="{{ route('faq') }}" class="mb-8" role="search">
+        <form autocomplete="off" method="GET" action="{{ route('faq') }}" class="mb-8" role="search">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-surface-400">
                     <i class="fas fa-magnifying-glass"></i>
                 </span>
-                <input type="search" name="q" value="{{ $term }}" autocomplete="off"
+                <input type="search" name="q" value="{{ $term }}" autocomplete="off" data-debounce-submit="700"
                     placeholder="Buscar por uma dúvida (ex.: parcelar, fatura, exportar...)"
                     class="w-full pl-11 pr-28 py-3 rounded-xl border border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-950 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition">
                 <button type="submit"

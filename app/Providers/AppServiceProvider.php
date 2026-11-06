@@ -186,6 +186,14 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', fn (Request $request): Limit => Limit::perMinute((int) config('api.rate_limit_per_minute'))
             ->by('api:'.$request->user()?->getAuthIdentifier()));
 
+        // Web app writes (POST/PUT/PATCH/DELETE) of a signed-in user: a floor for
+        // every form so a script or a stuck client cannot hammer the database.
+        // Reads are never counted. Routes with their own stricter throttle keep it.
+        RateLimiter::for('app-writes', fn (Request $request): Limit => $request->isMethodSafe()
+            ? Limit::none()
+            : Limit::perMinute((int) config('security.write_rate_limit_per_minute'))
+                ->by('app-writes:'.($request->user()?->getAuthIdentifier() ?? $request->ip())));
+
         // Per-IP quota applied before authentication (ThrottleApiByIp).
         RateLimiter::for('api-ip', fn (Request $request): Limit => Limit::perMinute((int) config('api.ip_rate_limit_per_minute'))
             ->by('api-ip:'.$request->ip()));

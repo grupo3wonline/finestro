@@ -22,7 +22,7 @@
             <p class="text-surface-600 dark:text-surface-400 text-sm">Defina um teto de gastos para o mês — geral ou por categoria — e acompanhe o consumo em tempo real.</p>
         </div>
         <div class="flex flex-wrap gap-2">
-            <form action="{{ route('budgets.copy-previous', ['month' => $month, 'year' => $year]) }}" method="POST">
+            <form autocomplete="off" action="{{ route('budgets.copy-previous', ['month' => $month, 'year' => $year]) }}" method="POST">
                 @csrf
                 <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-lg transition" title="Copia os orçamentos do mês anterior que ainda não existem neste mês">
                     <i class="fas fa-copy mr-2"></i> Copiar do mês anterior
@@ -49,13 +49,13 @@
 
     {{-- Novo orçamento --}}
     <div x-show="showForm" x-cloak class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-5">
-        <form action="{{ route('budgets.store') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <form autocomplete="off" action="{{ route('budgets.store') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             @csrf
             <input type="hidden" name="month" value="{{ $month }}">
             <input type="hidden" name="year" value="{{ $year }}">
             <div class="lg:col-span-2">
                 <label for="category_id" class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Aplicar a</label>
-                <select name="category_id" id="category_id" class="{{ $input }}">
+                <select autocomplete="off" name="category_id" id="category_id" class="{{ $input }}">
                     @unless($hasGeneral)
                         <option value="">Todas as despesas (orçamento geral)</option>
                     @endunless
@@ -130,7 +130,7 @@
                     </div>
                     <div class="flex items-center gap-1">
                         <button type="button" @click="editing = editing === '{{ $budget->id }}' ? null : '{{ $budget->id }}'" class="p-1.5 rounded hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-500" title="Editar"><i class="fas fa-edit text-sm"></i></button>
-                        <form action="{{ route('budgets.destroy', $budget) }}" method="POST" onsubmit="return confirm('Remover este orçamento?')">
+                        <form autocomplete="off" action="{{ route('budgets.destroy', $budget) }}" method="POST" data-confirm="Remover este orçamento?">
                             @csrf @method('DELETE')
                             <button type="submit" class="p-1.5 rounded hover:bg-surface-100 dark:hover:bg-surface-800 text-red-500" title="Remover"><i class="fas fa-trash text-sm"></i></button>
                         </form>
@@ -154,7 +154,7 @@
                     </p>
                 </div>
 
-                <form x-show="editing === '{{ $budget->id }}'" x-cloak action="{{ route('budgets.update', $budget) }}" method="POST" class="mt-4 pt-4 border-t border-surface-100 dark:border-surface-800 grid grid-cols-2 gap-3 items-end">
+                <form autocomplete="off" x-show="editing === '{{ $budget->id }}'" x-cloak action="{{ route('budgets.update', $budget) }}" method="POST" class="mt-4 pt-4 border-t border-surface-100 dark:border-surface-800 grid grid-cols-2 gap-3 items-end">
                     @csrf @method('PUT')
                     <div>
                         <label class="block text-xs font-medium text-surface-500 mb-1">Teto (R$)</label>
@@ -178,7 +178,7 @@
                 <i class="fas fa-scale-balanced text-5xl text-surface-300 dark:text-surface-600 mb-4"></i>
                 <h3 class="text-lg font-medium text-surface-900 dark:text-white mb-2">Nenhum orçamento para {{ mb_strtolower($navigation['label']) }}</h3>
                 <p class="text-surface-500 dark:text-surface-400 text-sm max-w-md mx-auto mb-4">
-                    Exemplo: teto de R$ 1.200 para Alimentação. Quando os gastos chegarem a 80%, o Finestro avisa no dashboard.
+                    Exemplo: teto de R$ 1.200 para Alimentação. Quando os gastos chegarem a 80%, o Finestro avisa no painel.
                 </p>
                 @if($canAddMore)
                     <button type="button" @click="showForm = true" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition">

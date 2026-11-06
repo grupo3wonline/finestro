@@ -3,15 +3,10 @@
 @section('title', 'Editar Carteira')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('wallets.index') }}" class="text-surface-500 hover:text-primary-600">Carteiras</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Editar</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Carteiras', 'url' => route('wallets.index')],
+    ['label' => 'Editar'],
+]" />
 @endsection
 
 @section('content')
@@ -23,7 +18,7 @@
             </h1>
         </div>
 
-        <form action="{{ route('wallets.update', $wallet) }}" method="POST" class="p-6 space-y-6">
+        <form autocomplete="off" action="{{ route('wallets.update', $wallet) }}" method="POST" class="p-6 space-y-6">
             @csrf @method('PUT')
 
             <div>
@@ -34,7 +29,7 @@
 
             <div>
                 <label for="type" class="input-label">Tipo <span class="text-red-500">*</span></label>
-                <select name="type" id="type" required class="input">
+                <select autocomplete="off" name="type" id="type" required class="input">
                     <option value="checking" {{ $wallet->type == 'checking' ? 'selected' : '' }}>Conta Corrente</option>
                     <option value="savings" {{ $wallet->type == 'savings' ? 'selected' : '' }}>Poupança</option>
                     <option value="credit" {{ $wallet->type == 'credit' ? 'selected' : '' }}>Cartão de Crédito</option>
@@ -127,7 +122,7 @@
                 </div>
                 <div>
                     <label for="icon" class="input-label">Ícone</label>
-                    <select name="icon" id="icon" class="input">
+                    <select autocomplete="off" name="icon" id="icon" class="input">
                         <option value="fa-wallet" {{ $wallet->icon == 'fa-wallet' ? 'selected' : '' }}>💳 Carteira</option>
                         <option value="fa-university" {{ $wallet->icon == 'fa-university' ? 'selected' : '' }}>🏦 Banco</option>
                         <option value="fa-credit-card" {{ $wallet->icon == 'fa-credit-card' ? 'selected' : '' }}>💳 Cartão</option>

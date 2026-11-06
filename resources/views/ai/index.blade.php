@@ -3,13 +3,7 @@
 @section('title', 'Inteligência Artificial')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Inteligência Artificial</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[['label' => 'Inteligência Artificial']]" />
 @endsection
 
 @section('content')
@@ -141,7 +135,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Horizonte de tempo *</label>
-                    <select x-model="planningForm.horizon" class="w-full px-4 py-2.5 border border-surface-200 dark:border-surface-600 rounded-xl bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
+                    <select autocomplete="off" x-model="planningForm.horizon" class="w-full px-4 py-2.5 border border-surface-200 dark:border-surface-600 rounded-xl bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
                         <option value="">Selecione...</option>
                         <option value="short">Curto prazo (até 1 ano)</option>
                         <option value="medium">Médio prazo (1 a 5 anos)</option>
@@ -150,7 +144,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Prioridade principal *</label>
-                    <select x-model="planningForm.priority" class="w-full px-4 py-2.5 border border-surface-200 dark:border-surface-600 rounded-xl bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
+                    <select autocomplete="off" x-model="planningForm.priority" class="w-full px-4 py-2.5 border border-surface-200 dark:border-surface-600 rounded-xl bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500">
                         <option value="">Selecione...</option>
                         <option value="security">Segurança financeira (reserva de emergência)</option>
                         <option value="growth">Crescimento patrimonial (investimentos)</option>

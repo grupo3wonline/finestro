@@ -32,7 +32,7 @@ return [
                 '100 transações/mês',
                 '2 metas financeiras',
                 '5 categorias personalizáveis',
-                'Dashboard com resumo mensal',
+                'Painel com resumo mensal',
                 'Calculadoras financeiras gratuitas',
                 'Cotação de moedas em tempo real',
                 'Teste de perfil financeiro',

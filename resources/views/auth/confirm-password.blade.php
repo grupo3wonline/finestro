@@ -14,7 +14,7 @@
     </p>
 </div>
 
-<form method="POST" action="{{ route('password.confirm') }}" class="space-y-4" data-loading="Confirmando...">
+<form autocomplete="off" method="POST" action="{{ route('password.confirm') }}" class="space-y-4" data-loading="Confirmando...">
     @csrf
 
     <x-ui.field label="Senha" for="password" error="password">

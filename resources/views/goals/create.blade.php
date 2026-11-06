@@ -3,15 +3,10 @@
 @section('title', 'Nova Meta')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('goals.index') }}" class="text-surface-500 hover:text-primary-600">Metas</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Nova Meta</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Metas', 'url' => route('goals.index')],
+    ['label' => 'Nova Meta'],
+]" />
 @endsection
 
 @section('content')
@@ -24,7 +19,7 @@
             <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Defina um objetivo financeiro com valor alvo e prazo. Exemplo: Reserva de emergência, Viagem, Carro novo.</p>
         </div>
 
-        <form action="{{ route('goals.store') }}" method="POST" class="p-6 space-y-6">
+        <form autocomplete="off" action="{{ route('goals.store') }}" method="POST" class="p-6 space-y-6">
             @csrf
 
             <div>
@@ -68,7 +63,7 @@
                 </div>
                 <div>
                     <label for="icon" class="input-label">Ícone</label>
-                    <select name="icon" id="icon" class="input">
+                    <select autocomplete="off" name="icon" id="icon" class="input">
                         <option value="fa-bullseye">🎯 Alvo</option>
                         <option value="fa-piggy-bank">🐷 Poupança</option>
                         <option value="fa-plane">✈️ Viagem</option>

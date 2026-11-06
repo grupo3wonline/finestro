@@ -24,7 +24,6 @@
     "require-dev": {
         "driftingly/rector-laravel": "^2.7",
         "fakerphp/faker": "^1.23",
-        "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "larastan/larastan": "^3.13",

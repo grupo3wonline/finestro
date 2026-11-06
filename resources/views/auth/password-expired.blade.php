@@ -15,7 +15,7 @@
     </p>
 </div>
 
-<form method="POST" action="{{ route('password.expired.update') }}" class="space-y-4" data-loading="Salvando...">
+<form autocomplete="off" method="POST" action="{{ route('password.expired.update') }}" class="space-y-4" data-loading="Salvando...">
     @csrf
     @method('PUT')
 
@@ -38,7 +38,7 @@
     <x-ui.button type="submit" icon="fa-floppy-disk" block class="py-3">Salvar nova senha</x-ui.button>
 </form>
 
-<form method="POST" action="{{ route('logout') }}" class="mt-3" data-no-loading>
+<form autocomplete="off" method="POST" action="{{ route('logout') }}" class="mt-3" data-no-loading>
     @csrf
     <button type="submit" class="w-full py-2 text-sm text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white transition">
         <i class="fas fa-sign-out-alt mr-1"></i> Sair

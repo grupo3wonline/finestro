@@ -37,7 +37,7 @@
     </div>
 
     <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <x-ui.button :href="route('dashboard')" variant="primary" icon="fa-tachometer-alt" loading="Carregando...">Ir para o Dashboard</x-ui.button>
+        <x-ui.button :href="route('dashboard')" variant="primary" icon="fa-tachometer-alt" loading="Carregando...">Ir para o painel</x-ui.button>
         <x-ui.button :href="route('subscription.index')" variant="outline" icon="fa-receipt" loading="Carregando...">Ver Financeiro</x-ui.button>
     </div>
 </div>

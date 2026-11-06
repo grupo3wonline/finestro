@@ -100,7 +100,7 @@
             @if($isPro)
                 <x-ui.button :href="route('subscription.index')" variant="primary" block icon="fa-receipt">Gerenciar no Financeiro</x-ui.button>
             @else
-                <form action="{{ route('subscription.checkout') }}" method="POST">
+                <form autocomplete="off" action="{{ route('subscription.checkout') }}" method="POST">
                     @csrf
                     <x-ui.button type="submit" variant="primary" size="lg" block icon="fa-crown" loading="Redirecionando para o pagamento...">
                         Assinar Profissional — {{ $pricing->formattedCurrent() }}/mês
@@ -123,7 +123,7 @@
                 Quanto antes seus lançamentos estiverem organizados, mais completos ficam os relatórios e as análises do mês.
                 Assine em minutos e use todos os recursos desde o primeiro dia.
             </p>
-            <form action="{{ route('subscription.checkout') }}" method="POST" class="inline-block">
+            <form autocomplete="off" action="{{ route('subscription.checkout') }}" method="POST" class="inline-block">
                 @csrf
                 <x-ui.button type="submit" variant="accent" icon="fa-rocket" loading="Redirecionando para o pagamento...">
                     Quero o Profissional

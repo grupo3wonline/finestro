@@ -3,13 +3,7 @@
 @section('title', 'Configurações')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Configurações</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[['label' => 'Configurações']]" />
 @endsection
 
 @section('content')
@@ -63,7 +57,7 @@
                 ({{ $user->passwordDaysRemaining() === 1 ? '1 dia restante' : $user->passwordDaysRemaining().' dias restantes' }}).
             </p>
         </div>
-        <form action="{{ route('settings.password') }}" method="POST" class="p-6 space-y-4">
+        <form autocomplete="off" action="{{ route('settings.password') }}" method="POST" class="p-6 space-y-4">
             @csrf
             @method('PUT')
 

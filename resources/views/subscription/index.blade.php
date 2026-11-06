@@ -145,7 +145,7 @@
                         Você mantém o plano Profissional até <strong>{{ $periodEnd ?? 'o fim do período atual' }}</strong>. Depois disso, sua conta volta ao plano Básico e nenhuma nova cobrança é feita.
                     </p>
                 </div>
-                <form action="{{ route('subscription.resume') }}" method="POST" class="shrink-0">
+                <form autocomplete="off" action="{{ route('subscription.resume') }}" method="POST" class="shrink-0">
                     @csrf
                     <x-ui.button type="submit" variant="primary" icon="fa-rotate-left" title="Desfaz o cancelamento e mantém a renovação automática">
                         Manter meu plano Profissional
@@ -161,7 +161,7 @@
                         Se cancelar, o acesso Profissional continua até essa data.
                     </p>
                 </div>
-                <form action="{{ route('subscription.cancel') }}" method="POST" class="shrink-0"
+                <form autocomplete="off" action="{{ route('subscription.cancel') }}" method="POST" class="shrink-0"
                     data-confirm="Seu plano Profissional continua ativo até {{ $periodEnd ?? 'o fim do período atual' }}. Depois disso sua conta volta ao plano Básico. Deseja agendar o cancelamento?">
                     @csrf
                     <x-ui.button type="submit" variant="outline" icon="fa-calendar-xmark" class="text-red-600 dark:text-red-400" title="Agenda o cancelamento para o fim do período pago">
@@ -177,7 +177,7 @@
                         O Stripe continua tentando cobrar a fatura em aberto. Se não quiser continuar, cancele agora: como não há período pago a manter, o cancelamento é imediato e sua conta segue no plano Básico.
                     </p>
                 </div>
-                <form action="{{ route('subscription.cancel') }}" method="POST" class="shrink-0"
+                <form autocomplete="off" action="{{ route('subscription.cancel') }}" method="POST" class="shrink-0"
                     data-confirm="A assinatura será cancelada imediatamente e o Stripe deixará de tentar a cobrança pendente. Sua conta continua no plano Básico. Deseja cancelar?">
                     @csrf
                     <x-ui.button type="submit" variant="outline" icon="fa-ban" class="text-red-600 dark:text-red-400" title="Cancela agora e interrompe novas tentativas de cobrança">
@@ -194,7 +194,7 @@
                     </p>
                     <x-billing.promo-countdown class="mt-3" />
                 </div>
-                <form action="{{ route('subscription.checkout') }}" method="POST" class="shrink-0">
+                <form autocomplete="off" action="{{ route('subscription.checkout') }}" method="POST" class="shrink-0">
                     @csrf
                     <x-ui.button type="submit" variant="primary" icon="fa-crown" loading="Redirecionando para o pagamento...">
                         Assinar Profissional — {{ $pricing->formattedCurrent() }}/mês

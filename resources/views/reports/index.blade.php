@@ -42,7 +42,7 @@
                     class="inline-flex items-center px-4 py-2 bg-surface-700 hover:bg-surface-800 text-white text-sm font-medium rounded-lg transition shadow-sm">
                     <i class="fas fa-print mr-2"></i> Imprimir
                 </a>
-                <form action="{{ route('reports.email') }}" method="POST">
+                <form autocomplete="off" action="{{ route('reports.email') }}" method="POST">
                     @csrf
                     @foreach($reportQuery as $key => $value)
                         <input type="hidden" name="{{ $key }}" value="{{ $value }}">
@@ -64,7 +64,7 @@
 
     {{-- 2. Advanced Filters --}}
     <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-4">
-        <form method="GET" action="{{ route('reports.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
+        <form autocomplete="off" method="GET" action="{{ route('reports.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
             <div>
                 <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Data Início</label>
                 <input type="date" name="start_date" value="{{ $startDate }}" autocomplete="off"

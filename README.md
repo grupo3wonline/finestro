@@ -12,7 +12,7 @@ inglês.
 | --- | --- |
 | Backend | Laravel 12, PHP 8.5 (restrição do Composer `^8.3`; o lock exige PHP 8.4+), MySQL 8 |
 | Front end | Blade, Alpine.js, Tailwind CSS 3, Vite 5, Font Awesome, SweetAlert2 |
-| Autenticação | Laravel Breeze (sessão), verificação de e-mail, redefinição de senha |
+| Autenticação | Sessão do Laravel (controllers de origem Breeze, pacote removido), verificação de e-mail, redefinição de senha |
 | ACL | spatie/laravel-permission (papéis `user`, `admin`) + policies, escopo de consulta por usuário (`BelongsToUser`) |
 | Painel admin | Filament 5 em `/admin` (MFA obrigatório) |
 | API | REST v1 em `/api/v1` com tokens pessoais Laravel Sanctum, docs OpenAPI via L5 Swagger em `/api/documentation` |
@@ -63,6 +63,7 @@ documentada em `.env.example`):
   `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile). Um provedor só fica ativo
   quando as duas chaves dele estão preenchidas; com os dois ativos, o
   formulário precisa passar nos dois.
+- Limite de escritas: `WRITE_RATE_LIMIT_PER_MINUTE` (60 requisições POST/PUT/PATCH/DELETE por minuto por usuário logado; leituras não contam).
 - Segurança da conta: `PASSWORD_MAX_AGE_DAYS` (90), `PASSWORD_WARNING_DAYS` (7),
   `RENEWAL_WARNING_DAYS` (7) e `AUTH_VERIFICATION_EXPIRE` (validade do link de
   ativação, em minutos; 1440).
@@ -199,6 +200,7 @@ Os testes de carga usam k6 e são executados manualmente; veja [tests/load/READM
 | 7 | [Limpeza de órfãos](docs/maintenance/phase-7-cleanup.md) |
 | 8 | [Proteção contra robôs, ativação por e-mail, validade de senha e lembretes](docs/security/phase-8-auth-hardening.md) |
 | 9 | [Migração do Laravel 13 para o Laravel 12](docs/maintenance/laravel-12-downgrade.md) |
+| 10 | [Auditoria e refatoração (convenções de interface, limites, limpeza)](docs/maintenance/audit-2026-11.md) |
 
 Notas de integração anteriores: [docs/INTEGRACAO-SISTEMAS-LEGADOS.md](docs/INTEGRACAO-SISTEMAS-LEGADOS.md).
 

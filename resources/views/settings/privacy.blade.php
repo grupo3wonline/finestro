@@ -42,7 +42,7 @@
             Senhas, tokens e chaves de IA nunca entram no arquivo.
         </p>
 
-        <form action="{{ route('settings.privacy.export') }}" method="POST" class="mt-4" data-loading="Preparando sua exportação...">
+        <form autocomplete="off" action="{{ route('settings.privacy.export') }}" method="POST" class="mt-4" data-loading="Preparando sua exportação...">
             @csrf
             <x-ui.button type="submit" variant="primary" size="sm" icon="fa-download" :disabled="$hasPendingExport"
                 title="Gera um novo arquivo com seus dados">
@@ -112,7 +112,7 @@
             </x-ui.alert>
         @endif
 
-        <form action="{{ route('consent.store') }}" method="POST" class="space-y-3">
+        <form autocomplete="off" action="{{ route('consent.store') }}" method="POST" class="space-y-3">
             @csrf
             <input type="hidden" name="source" value="settings">
 
@@ -213,7 +213,7 @@
             Antes de excluir, use "Exportar meus dados" acima para guardar uma cópia. Depois da exclusão não é possível entrar na conta para baixá-la.
         </x-ui.tip>
 
-        <form action="{{ route('settings.account.delete') }}" method="POST" class="mt-4 space-y-3"
+        <form autocomplete="off" action="{{ route('settings.account.delete') }}" method="POST" class="mt-4 space-y-3"
             data-confirm="Excluir sua conta agora? Seu acesso termina imediatamente e a assinatura (se houver) é cancelada.">
             @csrf
             @method('DELETE')

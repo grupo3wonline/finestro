@@ -21,13 +21,13 @@
 @endif
 
 <div class="space-y-3">
-    <form method="POST" action="{{ route('verification.send') }}" data-loading="Reenviando...">
+    <form autocomplete="off" method="POST" action="{{ route('verification.send') }}" data-loading="Reenviando...">
         @csrf
         <x-ui.button type="submit" icon="fa-paper-plane" block class="py-3">Reenviar e-mail de verificação</x-ui.button>
         <p class="mt-2 text-center text-xs text-surface-500 dark:text-surface-400">Sua conta só é ativada depois da confirmação do e-mail.</p>
     </form>
 
-    <form method="POST" action="{{ route('logout') }}" data-no-loading>
+    <form autocomplete="off" method="POST" action="{{ route('logout') }}" data-no-loading>
         @csrf
         <button type="submit" class="w-full py-2 text-sm text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white transition">
             <i class="fas fa-sign-out-alt mr-1"></i> Sair

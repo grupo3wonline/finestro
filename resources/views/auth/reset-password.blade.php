@@ -9,7 +9,7 @@
     <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Crie uma nova senha para sua conta.</p>
 </div>
 
-<form method="POST" action="{{ route('password.store') }}" class="space-y-4" data-loading="Redefinindo...">
+<form autocomplete="off" method="POST" action="{{ route('password.store') }}" class="space-y-4" data-loading="Redefinindo...">
     @csrf
     <input type="hidden" name="token" value="{{ $request->route('token') }}">
 

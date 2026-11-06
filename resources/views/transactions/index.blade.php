@@ -3,13 +3,7 @@
 @section('title', 'Transações')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Transações</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[['label' => 'Transações']]" />
 @endsection
 
 @php
@@ -100,14 +94,14 @@
 
     {{-- Filtros --}}
     <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-4" x-data="{ more: {{ $hasFilters ? 'true' : 'false' }} }">
-        <form method="GET" action="{{ route('transactions.index') }}" class="space-y-3">
+        <form autocomplete="off" method="GET" action="{{ route('transactions.index') }}" class="space-y-3">
             <input type="hidden" name="month" value="{{ $month }}">
             <input type="hidden" name="year" value="{{ $year }}">
 
             <div class="flex flex-col sm:flex-row gap-3">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 text-sm z-10"></i>
-                    <input type="search" name="search" value="{{ request('search') }}" maxlength="100" placeholder="Buscar na descrição ou observações..."
+                    <input type="search" name="search" value="{{ request('search') }}" maxlength="100" data-debounce-submit="600" placeholder="Buscar na descrição ou observações..."
                         class="{{ $select }} pl-9" autocomplete="off">
                 </div>
                 <button type="button" @click="more = !more" class="btn-ghost whitespace-nowrap">
@@ -124,7 +118,7 @@
             <div x-show="more" x-cloak class="grid grid-cols-2 lg:grid-cols-5 gap-3">
                 <div>
                     <label class="block text-xs font-medium text-surface-500 dark:text-surface-400 mb-1">Tipo</label>
-                    <select name="type" class="{{ $select }}">
+                    <select autocomplete="off" name="type" class="{{ $select }}">
                         <option value="">Todos</option>
                         <option value="income" @selected(request('type') === 'income')>Receitas</option>
                         <option value="expense" @selected(request('type') === 'expense')>Despesas</option>
@@ -132,7 +126,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-surface-500 dark:text-surface-400 mb-1">Situação</label>
-                    <select name="status" class="{{ $select }}">
+                    <select autocomplete="off" name="status" class="{{ $select }}">
                         <option value="">Todas</option>
                         <option value="paid" @selected(request('status') === 'paid')>Pagas/recebidas</option>
                         <option value="pending" @selected(request('status') === 'pending')>Pendentes</option>
@@ -141,7 +135,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-surface-500 dark:text-surface-400 mb-1">Carteira</label>
-                    <select name="wallet_id" class="{{ $select }}">
+                    <select autocomplete="off" name="wallet_id" class="{{ $select }}">
                         <option value="">Todas</option>
                         @foreach($wallets as $wallet)
                             <option value="{{ $wallet->id }}" @selected(request('wallet_id') === $wallet->id)>{{ $wallet->name }}</option>
@@ -150,7 +144,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-surface-500 dark:text-surface-400 mb-1">Categoria</label>
-                    <select name="category_id" class="{{ $select }}">
+                    <select autocomplete="off" name="category_id" class="{{ $select }}">
                         <option value="">Todas</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" @selected(request('category_id') === $category->id)>{{ $category->name }}</option>
@@ -159,7 +153,7 @@
                 </div>
                 <div class="col-span-2 lg:col-span-1">
                     <label class="block text-xs font-medium text-surface-500 dark:text-surface-400 mb-1">Forma de pagamento</label>
-                    <select name="payment_method" class="{{ $select }}">
+                    <select autocomplete="off" name="payment_method" class="{{ $select }}">
                         <option value="">Todas</option>
                         @foreach($paymentMethods as $value => $name)
                             <option value="{{ $value }}" @selected(request('payment_method') === $value)>{{ $name }}</option>
@@ -227,7 +221,7 @@
                                 <a href="{{ route('transactions.edit', $transaction) }}" class="p-1.5 rounded hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-500" title="Editar">
                                     <i class="fas fa-edit text-sm"></i>
                                 </a>
-                                <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" class="inline" onsubmit="return confirm('Mover esta transação para a lixeira?')">
+                                <form autocomplete="off" action="{{ route('transactions.destroy', $transaction) }}" method="POST" class="inline" data-confirm="Mover esta transação para a lixeira?">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-1.5 rounded hover:bg-surface-100 dark:hover:bg-surface-800 text-red-500" title="Excluir">
                                         <i class="fas fa-trash text-sm"></i>

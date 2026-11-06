@@ -3,17 +3,11 @@
 @section('title', 'Fatura - ' . $wallet->name)
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('wallets.index') }}" class="text-surface-500 hover:text-primary-600">Carteiras</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('wallets.show', $wallet) }}" class="text-surface-500 hover:text-primary-600">{{ $wallet->name }}</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Fatura</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Carteiras', 'url' => route('wallets.index')],
+    ['label' => $wallet->name, 'url' => route('wallets.show', $wallet)],
+    ['label' => 'Fatura'],
+]" />
 @endsection
 
 @php
@@ -90,12 +84,12 @@
                     <button type="button" @click="open = !open" class="btn-primary">
                         <i class="fas fa-money-check-dollar mr-2"></i> Registrar pagamento da fatura
                     </button>
-                    <form x-show="open" x-cloak action="{{ route('wallets.invoice.pay', $wallet) }}" method="POST" class="mt-4 grid sm:grid-cols-4 gap-3 items-end">
+                    <form autocomplete="off" x-show="open" x-cloak action="{{ route('wallets.invoice.pay', $wallet) }}" method="POST" class="mt-4 grid sm:grid-cols-4 gap-3 items-end">
                         @csrf
                         <input type="hidden" name="ref" value="{{ $invoice['reference'] }}">
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-medium text-surface-500 mb-1">Pagar com</label>
-                            <select name="source_wallet_id" required class="input">
+                            <select autocomplete="off" name="source_wallet_id" required class="input">
                                 @foreach($sourceWallets as $source)
                                     <option value="{{ $source->id }}">{{ $source->name }} (saldo {{ $brl($source->balance) }})</option>
                                 @endforeach

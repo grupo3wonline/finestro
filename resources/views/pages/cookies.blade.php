@@ -89,7 +89,7 @@
                 @if($gpc)
                     <x-ui.alert variant="info">Detectamos o sinal Global Privacy Control do seu navegador: cookies de marketing ficam desativados.</x-ui.alert>
                 @endif
-                <form action="{{ route('consent.store') }}" method="POST" class="flex flex-wrap items-center gap-2">
+                <form autocomplete="off" action="{{ route('consent.store') }}" method="POST" class="flex flex-wrap items-center gap-2">
                     @csrf
                     <input type="hidden" name="analytics" value="{{ $currentConsent->analytics ? 1 : 0 }}">
                     <input type="hidden" name="marketing" value="0">

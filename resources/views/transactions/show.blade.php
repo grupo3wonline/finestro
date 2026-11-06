@@ -3,15 +3,10 @@
 @section('title', 'Detalhes da Transação')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('transactions.index', ['month' => $transaction->date->month, 'year' => $transaction->date->year]) }}" class="text-surface-500 hover:text-primary-600">Transações</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Detalhes</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Transações', 'url' => route('transactions.index', ['month' => $transaction->date->month, 'year' => $transaction->date->year])],
+    ['label' => 'Detalhes'],
+]" />
 @endsection
 
 @php
@@ -125,7 +120,7 @@
                 </button>
                 <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('transactions.index') }}" class="btn-ghost">Voltar</a>
 
-                <form x-show="confirmDelete" x-cloak action="{{ route('transactions.destroy', $transaction) }}" method="POST"
+                <form autocomplete="off" x-show="confirmDelete" x-cloak action="{{ route('transactions.destroy', $transaction) }}" method="POST"
                     class="w-full mt-2 p-4 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50/60 dark:bg-red-900/10 space-y-3">
                     @csrf @method('DELETE')
                     <label for="reason" class="block text-sm font-medium text-surface-700 dark:text-surface-300">Motivo da exclusão <span class="text-xs font-normal text-surface-500">(opcional — fica registrado no histórico)</span></label>

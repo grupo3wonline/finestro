@@ -1,8 +1,8 @@
-<form id="send-verification" method="post" action="{{ route('verification.send') }}">
+<form autocomplete="off" id="send-verification" method="post" action="{{ route('verification.send') }}">
     @csrf
 </form>
 
-<form method="post" action="{{ route('profile.update') }}" class="space-y-4">
+<form autocomplete="off" method="post" action="{{ route('profile.update') }}" class="space-y-4">
     @csrf
     @method('patch')
 

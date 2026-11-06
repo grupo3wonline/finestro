@@ -3,15 +3,10 @@
 @section('title', 'Editar Categoria')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('categories.index') }}" class="text-surface-500 hover:text-primary-600">Categorias</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Editar</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Categorias', 'url' => route('categories.index')],
+    ['label' => 'Editar'],
+]" />
 @endsection
 
 @section('content')
@@ -24,7 +19,7 @@
             <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Atualize as informações da categoria.</p>
         </div>
 
-        <form action="{{ route('categories.update', $category) }}" method="POST" class="p-6 space-y-6">
+        <form autocomplete="off" action="{{ route('categories.update', $category) }}" method="POST" class="p-6 space-y-6">
             @csrf
             @method('PUT')
 
@@ -41,7 +36,7 @@
                 <label for="type" class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Tipo <span class="text-red-500">*</span>
                 </label>
-                <select name="type" id="type" required
+                <select autocomplete="off" name="type" id="type" required
                     class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition">
                     <option value="expense" {{ old('type', $category->type) == 'expense' ? 'selected' : '' }}>Despesa</option>
                     <option value="income" {{ old('type', $category->type) == 'income' ? 'selected' : '' }}>Receita</option>
@@ -57,7 +52,7 @@
                 </div>
                 <div>
                     <label for="icon" class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Ícone</label>
-                    <select name="icon" id="icon"
+                    <select autocomplete="off" name="icon" id="icon"
                         class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition">
                         <option value="fa-tag" {{ old('icon', $category->icon) == 'fa-tag' ? 'selected' : '' }}>🏷️ Tag</option>
                         <option value="fa-utensils" {{ old('icon', $category->icon) == 'fa-utensils' ? 'selected' : '' }}>🍽️ Alimentação</option>

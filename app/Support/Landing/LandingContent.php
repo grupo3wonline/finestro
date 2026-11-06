@@ -29,7 +29,7 @@ final class LandingContent
             ],
             [
                 'question' => 'Qual a diferença entre o plano Básico e o Profissional?',
-                'answer' => 'O Básico inclui 1 carteira, 100 transações por mês, 2 metas, 5 categorias, 3 orçamentos por mês, dashboard, calculadoras, testes de perfil e cotação de moedas. O Profissional libera tudo sem limite e adiciona simuladores, relatórios exportáveis, inteligência artificial, compartilhamento de carteiras e acesso à API.',
+                'answer' => 'O Básico inclui 1 carteira, 100 transações por mês, 2 metas, 5 categorias, 3 orçamentos por mês, painel, calculadoras, testes de perfil e cotação de moedas. O Profissional libera tudo sem limite e adiciona simuladores, relatórios exportáveis, inteligência artificial, compartilhamento de carteiras e acesso à API.',
             ],
             [
                 'question' => 'Meus dados estão seguros?',

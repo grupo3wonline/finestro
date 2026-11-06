@@ -53,7 +53,7 @@
                 <a href="{{ route('goals.edit', $goal) }}" class="flex-1 text-center px-3 py-1.5 text-xs font-medium text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition">
                     <i class="fas fa-edit mr-1"></i> Editar
                 </a>
-                <form action="{{ route('goals.destroy', $goal) }}" method="POST" class="flex-1" onsubmit="return confirm('Excluir esta meta?')">
+                <form autocomplete="off" action="{{ route('goals.destroy', $goal) }}" method="POST" class="flex-1" data-confirm="Excluir esta meta?">
                     @csrf @method('DELETE')
                     <button type="submit" class="w-full px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition">
                         <i class="fas fa-trash mr-1"></i> Excluir

@@ -3,15 +3,10 @@
 @section('title', $wallet->name)
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('wallets.index') }}" class="text-surface-500 hover:text-primary-600">Carteiras</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">{{ $wallet->name }}</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Carteiras', 'url' => route('wallets.index')],
+    ['label' => $wallet->name],
+]" />
 @endsection
 
 @section('content')
@@ -130,7 +125,7 @@
 
         {{-- Formulário de convite --}}
         @if($canShare)
-        <form method="POST" action="{{ route('wallets.share', $wallet) }}"
+        <form autocomplete="off" method="POST" action="{{ route('wallets.share', $wallet) }}"
             x-show="showInvite" x-cloak x-transition.origin.top class="mb-6">
             @csrf
             <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3 sm:items-end">
@@ -187,7 +182,7 @@
                     @else
                         <x-ui.badge variant="warning" icon="fa-clock">Pendente</x-ui.badge>
                     @endif
-                    <form method="POST" action="{{ route('wallets.share.destroy', $member) }}"
+                    <form autocomplete="off" method="POST" action="{{ route('wallets.share.destroy', $member) }}"
                         data-confirm="Remover o acesso de {{ $memberName }} a esta carteira? A pessoa pode ser convidada novamente depois.">
                         @csrf @method('DELETE')
                         <button type="submit"

@@ -150,7 +150,7 @@
                     <i class="fas fa-chart-pie text-white text-xl" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-lg font-bold text-surface-900 dark:text-white mb-2">Relatórios Visuais</h3>
-                <p class="text-surface-600 dark:text-surface-400 leading-relaxed">Gráficos e dashboards intuitivos para visualizar sua saúde financeira de forma clara e objetiva.</p>
+                <p class="text-surface-600 dark:text-surface-400 leading-relaxed">Gráficos e painéis intuitivos para visualizar sua saúde financeira de forma clara e objetiva.</p>
             </div>
             <div class="group bg-surface-50 dark:bg-surface-800 rounded-2xl p-7 border border-surface-100 dark:border-surface-700 hover:border-red-200 dark:hover:border-red-800 hover:shadow-soft transition-all duration-300 hover:-translate-y-1">
                 <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform duration-300">
@@ -446,7 +446,7 @@
         <div class="mt-12 bg-surface-50 dark:bg-surface-800 rounded-2xl p-8 border border-surface-200 dark:border-surface-700 text-center">
             <h3 class="text-xl font-bold text-surface-900 dark:text-white mb-3">Comece grátis, evolua quando quiser</h3>
             <p class="text-surface-600 dark:text-surface-400 mb-4 max-w-2xl mx-auto">
-                O plano gratuito inclui carteiras, {{ $free['transactions_per_month'] }} transações/mês, {{ $free['goals'] }} metas, {{ $free['categories'] }} categorias, dashboard, 7 calculadoras, testes de perfil e cotação de moedas. Faça upgrade para o <strong>Plano Profissional</strong> e desbloqueie tudo ilimitado + IA + simuladores + relatórios.
+                O plano gratuito inclui carteiras, {{ $free['transactions_per_month'] }} transações/mês, {{ $free['goals'] }} metas, {{ $free['categories'] }} categorias, painel, 7 calculadoras, testes de perfil e cotação de moedas. Faça upgrade para o <strong>Plano Profissional</strong> e desbloqueie tudo ilimitado + IA + simuladores + relatórios.
             </p>
             <div class="inline-flex items-center gap-2 text-sm text-surface-500 dark:text-surface-400">
                 <i class="fas fa-info-circle text-primary-500" aria-hidden="true"></i> Sem compromisso. Cancele a qualquer momento.
@@ -601,7 +601,7 @@
         </ol>
         <div class="mt-12 max-w-3xl mx-auto">
             <x-ui.tip icon="fa-lightbulb">
-                <strong>Exemplo de uso:</strong> crie uma carteira "Conta corrente", lance o salário como receita e as contas do mês como despesas. No dashboard você vê na hora quanto sobra e pode criar uma meta, como "Reserva de emergência", para guardar esse valor.
+                <strong>Exemplo de uso:</strong> crie uma carteira "Conta corrente", lance o salário como receita e as contas do mês como despesas. No painel você vê na hora quanto sobra e pode criar uma meta, como "Reserva de emergência", para guardar esse valor.
             </x-ui.tip>
         </div>
         <div class="mt-10 text-center">
@@ -668,7 +668,7 @@
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> {{ $free['goals'] }} metas financeiras</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> {{ $free['categories'] }} categorias</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> {{ $free['budgets_per_month'] }} orçamentos/mês <x-ui.help-hint text="Limites de gasto por categoria para acompanhar no mês." /></li>
-                    <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Dashboard com resumo</li>
+                    <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Painel com resumo</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> 7 Calculadoras financeiras</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Testes de perfil financeiro e investidor</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Cotação de moedas em tempo real</li>
@@ -712,7 +712,7 @@
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> 7 Calculadoras financeiras</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Testes de perfil financeiro e investidor</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Cotação de moedas em tempo real</li>
-                    <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Dashboard completo</li>
+                    <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Painel completo</li>
                     <li class="flex items-start gap-2 text-sm text-surface-600 dark:text-surface-400"><i class="fas fa-check text-secondary-500 mt-0.5" aria-hidden="true"></i> Suporte prioritário</li>
                 </ul>
                 <a href="{{ $signupUrl }}" data-loading="Carregando..." class="block w-full text-center px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition shadow-lg">

@@ -3,15 +3,10 @@
 @section('title', 'Nova Carteira')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('wallets.index') }}" class="text-surface-500 hover:text-primary-600">Carteiras</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Nova Carteira</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Carteiras', 'url' => route('wallets.index')],
+    ['label' => 'Nova Carteira'],
+]" />
 @endsection
 
 @section('content')
@@ -24,7 +19,7 @@
             <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Crie uma nova carteira para organizar suas finanças. Exemplo: Conta Corrente, Poupança, Cartão de Crédito.</p>
         </div>
 
-        <form action="{{ route('wallets.store') }}" method="POST" class="p-6 space-y-6">
+        <form autocomplete="off" action="{{ route('wallets.store') }}" method="POST" class="p-6 space-y-6">
             @csrf
 
             <div>
@@ -36,7 +31,7 @@
 
             <div>
                 <label for="type" class="input-label">Tipo <span class="text-red-500">*</span></label>
-                <select name="type" id="type" required class="input">
+                <select autocomplete="off" name="type" id="type" required class="input">
                     <option value="">Selecione o tipo</option>
                     <option value="checking" {{ old('type') == 'checking' ? 'selected' : '' }}>Conta Corrente</option>
                     <option value="savings" {{ old('type') == 'savings' ? 'selected' : '' }}>Poupança</option>
@@ -136,7 +131,7 @@
                 </div>
                 <div>
                     <label for="icon" class="input-label">Ícone</label>
-                    <select name="icon" id="icon" class="input">
+                    <select autocomplete="off" name="icon" id="icon" class="input">
                         <option value="fa-wallet">💳 Carteira</option>
                         <option value="fa-university">🏦 Banco</option>
                         <option value="fa-credit-card">💳 Cartão</option>

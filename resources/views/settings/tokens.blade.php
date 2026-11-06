@@ -129,7 +129,7 @@
                                     <span><i class="fas fa-hourglass-end mr-1"></i>{{ $token->expires_at ? 'Expira em '.$token->expires_at->timezone(config('app.timezone'))->format('d/m/Y') : 'Sem expiração' }}</span>
                                 </div>
                             </div>
-                            <form action="{{ route('settings.tokens.destroy', $token->id) }}" method="POST" class="shrink-0"
+                            <form autocomplete="off" action="{{ route('settings.tokens.destroy', $token->id) }}" method="POST" class="shrink-0"
                                 data-confirm="Revogar o token &quot;{{ $token->name }}&quot;? Aplicações que usam este token perderão o acesso imediatamente.">
                                 @csrf
                                 @method('DELETE')

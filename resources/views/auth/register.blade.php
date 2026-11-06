@@ -9,7 +9,7 @@
     <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Preencha os dados abaixo. Leva menos de 2 minutos.</p>
 </div>
 
-<form method="POST" action="{{ route('register') }}" class="space-y-4" data-loading="Criando conta...">
+<form autocomplete="off" method="POST" action="{{ route('register') }}" class="space-y-4" data-loading="Criando conta...">
     @csrf
     <x-ui.honeypot />
 
@@ -66,7 +66,7 @@
             <input type="checkbox" name="terms" id="terms" value="1" {{ old('terms') ? 'checked' : '' }}
                 class="mt-0.5 rounded border-surface-300 dark:border-surface-600 text-primary-600 focus:ring-primary-500">
             <span class="text-sm text-surface-600 dark:text-surface-400">
-                Li e aceito os <a href="{{ route('terms') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Termos de Uso</a> e a <a href="{{ route('privacy') }}" target="_blank" class="text-primary-600 hover:underline font-medium">Política de Privacidade</a>. <span class="text-red-500">*</span>
+                Li e aceito os <a href="{{ route('terms') }}" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline font-medium">Termos de Uso</a> e a <a href="{{ route('privacy') }}" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline font-medium">Política de Privacidade</a>. <span class="text-red-500">*</span>
             </span>
         </label>
         @error('terms') <p class="input-error mt-1.5"><i class="fas fa-circle-exclamation"></i>{{ $message }}</p> @enderror

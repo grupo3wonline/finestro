@@ -3,15 +3,10 @@
 @section('title', 'Lixeira de Transações')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('transactions.index') }}" class="text-surface-500 hover:text-primary-600">Transações</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Lixeira</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Transações', 'url' => route('transactions.index')],
+    ['label' => 'Lixeira'],
+]" />
 @endsection
 
 @section('content')
@@ -50,7 +45,7 @@
                                     {{ $transaction->isIncome() ? '+' : '-' }} R$ {{ number_format((float) $transaction->amount, 2, ',', '.') }}
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                    <form action="{{ route('transactions.restore', $transaction->id) }}" method="POST" class="inline">
+                                    <form autocomplete="off" action="{{ route('transactions.restore', $transaction->id) }}" method="POST" class="inline">
                                         @csrf @method('PATCH')
                                         <button type="submit" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-primary-700 dark:text-primary-300 border border-primary-300 dark:border-primary-700 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition">
                                             <i class="fas fa-trash-arrow-up mr-1"></i> Restaurar

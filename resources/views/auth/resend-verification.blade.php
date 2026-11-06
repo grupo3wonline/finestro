@@ -18,7 +18,7 @@
     <x-ui.alert variant="success" class="mb-4">{{ session('status') }}</x-ui.alert>
 @endif
 
-<form method="POST" action="{{ route('verification.resend.store') }}" class="space-y-4" data-loading="Enviando...">
+<form autocomplete="off" method="POST" action="{{ route('verification.resend.store') }}" class="space-y-4" data-loading="Enviando...">
     @csrf
 
     <x-ui.field label="E-mail do cadastro" for="email" error="email">

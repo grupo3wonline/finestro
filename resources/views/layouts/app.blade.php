@@ -12,7 +12,7 @@
     </script>
     @include('components.layout.seo-head')
 
-    <title>{{ config('app.name') }} - @yield('title', 'Dashboard')</title>
+    <title>{{ config('app.name') }} - @yield('title', 'Painel')</title>
 
     <!-- Preconnect -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>

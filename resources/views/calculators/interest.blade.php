@@ -3,15 +3,10 @@
 @section('title', 'Calculadora de Juros Compostos')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('calculators.index') }}" class="text-surface-500 hover:text-primary-600">Calculadoras</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Juros Compostos</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'Calculadoras', 'url' => route('calculators.index')],
+    ['label' => 'Juros Compostos'],
+]" />
 @endsection
 
 @section('content')
@@ -45,7 +40,7 @@
                     <input type="number" x-model.number="rate" min="0" max="100" step="0.01" autocomplete="off"
                         class="flex-1 px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                         placeholder="Ex: 1.0">
-                    <select x-model="rateType" class="px-3 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
+                    <select autocomplete="off" x-model="rateType" class="px-3 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
                         <option value="monthly">ao mês</option>
                         <option value="yearly">ao ano</option>
                     </select>
@@ -61,7 +56,7 @@
                     <input type="number" x-model.number="period" min="1" max="600" autocomplete="off"
                         class="flex-1 px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
                         placeholder="Ex: 12">
-                    <select x-model="periodType" class="px-3 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
+                    <select autocomplete="off" x-model="periodType" class="px-3 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition">
                         <option value="months">meses</option>
                         <option value="years">anos</option>
                     </select>

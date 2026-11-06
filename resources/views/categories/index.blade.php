@@ -10,7 +10,7 @@
 <div class="space-y-6">
     <x-ui.page-header title="Categorias" subtitle="Organize suas transações por categorias personalizadas." icon="fa-tags">
         <x-slot:actions>
-            <form action="{{ route('categories.import-suggested') }}" method="POST">
+            <form autocomplete="off" action="{{ route('categories.import-suggested') }}" method="POST">
                 @csrf
                 <x-ui.button type="submit" variant="outline" icon="fa-wand-magic-sparkles"
                     title="Adiciona categorias prontas (Alimentação, Moradia, Saúde, Salário...) que você ainda não tem">
@@ -45,7 +45,7 @@
                     <a href="{{ route('categories.edit', $category) }}" class="p-1.5 rounded hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-500" title="Editar">
                         <i class="fas fa-edit text-sm"></i>
                     </a>
-                    <form action="{{ route('categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Excluir esta categoria?')">
+                    <form autocomplete="off" action="{{ route('categories.destroy', $category) }}" method="POST" class="inline" data-confirm="Excluir esta categoria?">
                         @csrf @method('DELETE')
                         <button type="submit" class="p-1.5 rounded hover:bg-surface-100 dark:hover:bg-surface-800 text-red-500" title="Excluir">
                             <i class="fas fa-trash text-sm"></i>

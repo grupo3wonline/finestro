@@ -47,17 +47,17 @@
     <div class="pt-3 border-t border-surface-200 dark:border-surface-700">
         <p>Leia os documentos completos:</p>
         <div class="flex gap-4 mt-1">
-            <a href="{{ route('terms') }}" target="_blank" class="text-primary-600 hover:underline font-medium text-xs">
+            <a href="{{ route('terms') }}" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline font-medium text-xs">
                 <i class="fas fa-external-link-alt mr-1"></i> Termos de Uso
             </a>
-            <a href="{{ route('privacy') }}" target="_blank" class="text-primary-600 hover:underline font-medium text-xs">
+            <a href="{{ route('privacy') }}" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline font-medium text-xs">
                 <i class="fas fa-external-link-alt mr-1"></i> Política de Privacidade
             </a>
         </div>
     </div>
 </div>
 
-<form method="POST" action="{{ route('terms.store') }}" class="space-y-4">
+<form autocomplete="off" method="POST" action="{{ route('terms.store') }}" class="space-y-4">
     @csrf
 
     <div class="flex items-start gap-2">
@@ -79,7 +79,7 @@
     </a>
 </p>
 
-<form method="POST" action="{{ route('logout') }}" class="text-center mt-4" data-no-loading>
+<form autocomplete="off" method="POST" action="{{ route('logout') }}" class="text-center mt-4" data-no-loading>
     @csrf
     <button type="submit" class="text-sm text-surface-500 hover:text-surface-700 dark:hover:text-surface-300 transition">
         <i class="fas fa-sign-out-alt mr-1"></i> Sair da conta

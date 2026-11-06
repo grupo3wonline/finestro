@@ -3,15 +3,10 @@
 @section('title', 'Configurar IA')
 
 @section('breadcrumb')
-<nav class="text-sm" aria-label="Breadcrumb">
-    <ol class="flex items-center space-x-2">
-        <li><a href="{{ route('dashboard') }}" class="text-surface-500 hover:text-primary-600"><i class="fas fa-home"></i></a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li><a href="{{ route('ai.index') }}" class="text-surface-500 hover:text-primary-600">IA</a></li>
-        <li><i class="fas fa-chevron-right text-surface-400 text-xs"></i></li>
-        <li class="text-surface-700 dark:text-surface-300 font-medium">Configurações</li>
-    </ol>
-</nav>
+<x-ui.breadcrumb :items="[
+    ['label' => 'IA', 'url' => route('ai.index')],
+    ['label' => 'Configurações'],
+]" />
 @endsection
 
 @section('content')
@@ -36,7 +31,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('ai.credentials.save') }}" method="POST" data-loading="Salvando credenciais..." class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-6">
+    <form autocomplete="off" action="{{ route('ai.credentials.save') }}" method="POST" data-loading="Salvando credenciais..." class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-6">
         @csrf
 
         <!-- Preferred Provider -->

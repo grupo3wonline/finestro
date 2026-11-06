@@ -17,7 +17,7 @@
                 Digite sua senha para confirmar a exclusão permanente da sua conta e todos os dados associados.
             </p>
 
-            <form method="post" action="{{ route('profile.destroy') }}" class="space-y-4">
+            <form autocomplete="off" method="post" action="{{ route('profile.destroy') }}" class="space-y-4">
                 @csrf
                 @method('delete')
 

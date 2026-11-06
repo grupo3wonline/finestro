@@ -36,11 +36,11 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <form method="POST" action="{{ route('wallets.share.accept', $invitation) }}">
+                    <form autocomplete="off" method="POST" action="{{ route('wallets.share.accept', $invitation) }}">
                         @csrf @method('PATCH')
                         <x-ui.button type="submit" variant="success" size="sm" icon="fa-check" loading="Aceitando...">Aceitar</x-ui.button>
                     </form>
-                    <form method="POST" action="{{ route('wallets.share.destroy', $invitation) }}"
+                    <form autocomplete="off" method="POST" action="{{ route('wallets.share.destroy', $invitation) }}"
                         data-confirm="Recusar o convite para a carteira {{ $invitation->wallet->name }}?">
                         @csrf @method('DELETE')
                         <x-ui.button type="submit" variant="outline" size="sm" icon="fa-xmark">Recusar</x-ui.button>
@@ -67,7 +67,7 @@
                     <div x-show="open" x-cloak @click.away="open = false" x-transition.origin.top.right class="absolute top-full right-0 mt-1 bg-white dark:bg-surface-800 rounded-xl shadow-lg border border-surface-200 dark:border-surface-700 py-1 z-10 w-36">
                         <a href="{{ route('wallets.show', $wallet) }}" class="block px-4 py-2 text-sm hover:bg-surface-100 dark:hover:bg-surface-700"><i class="fas fa-eye mr-2 text-surface-400"></i>Ver</a>
                         <a href="{{ route('wallets.edit', $wallet) }}" class="block px-4 py-2 text-sm hover:bg-surface-100 dark:hover:bg-surface-700"><i class="fas fa-edit mr-2 text-surface-400"></i>Editar</a>
-                        <form action="{{ route('wallets.destroy', $wallet) }}" method="POST" data-confirm="Tem certeza que deseja excluir esta carteira? Esta ação não pode ser desfeita.">
+                        <form autocomplete="off" action="{{ route('wallets.destroy', $wallet) }}" method="POST" data-confirm="Tem certeza que deseja excluir esta carteira? Esta ação não pode ser desfeita.">
                             @csrf @method('DELETE')
                             <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10"><i class="fas fa-trash mr-2"></i>Excluir</button>
                         </form>

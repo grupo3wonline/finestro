@@ -164,7 +164,7 @@ class PageController extends Controller
             '',
             '## Planos',
             '',
-            '- Básico: grátis, sem cartão de crédito e sem prazo para acabar. Inclui '.$free['wallets'].' carteira, '.$free['transactions_per_month'].' transações por mês, '.$free['goals'].' metas, '.$free['categories'].' categorias, '.$free['budgets_per_month'].' orçamentos por mês, dashboard, 7 calculadoras financeiras, testes de perfil e cotação de moedas.',
+            '- Básico: grátis, sem cartão de crédito e sem prazo para acabar. Inclui '.$free['wallets'].' carteira, '.$free['transactions_per_month'].' transações por mês, '.$free['goals'].' metas, '.$free['categories'].' categorias, '.$free['budgets_per_month'].' orçamentos por mês, painel, 7 calculadoras financeiras, testes de perfil e cotação de moedas.',
             '- '.$pricing->planName().': '.$pricing->formattedCurrent().'/mês. Tudo ilimitado, mais compartilhamento de carteiras, simuladores financeiros, relatórios com gráficos e exportação CSV/PDF, recursos de IA, acesso à API REST e suporte prioritário. Cancelamento a qualquer momento, sem multa.',
             '',
             '## Funcionalidades',
