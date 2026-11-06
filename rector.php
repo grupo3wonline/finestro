@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\Config\RectorConfig;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
+use RectorLaravel\Rector\ClassMethod\ScopeNamedClassMethodToScopeAttributedClassMethodRector;
 use RectorLaravel\Set\LaravelSetList;
 
 /*
@@ -29,11 +30,13 @@ return RectorConfig::configure()
         // (container setters, model hydration, test doubles extending the class).
         ReadOnlyPropertyRector::class,
         ReadOnlyClassRector::class,
+        // Keep the classic scopeXxx() methods instead of the #[Scope] attribute: the
+        // rewrite touches every model for no functional gain.
+        ScopeNamedClassMethodToScopeAttributedClassMethodRector::class,
     ])
     // No arguments: the PHP level is derived from composer.json ("php": "^8.3").
-    // composer.lock already requires PHP >= 8.4 (Symfony 8 components); staying at
-    // the ^8.3 level is a deliberately conservative choice so Rector does not rewrite
-    // working code into 8.4/8.5-only syntax. Raising the level is a separate decision.
+    // Staying at the ^8.3 level is a deliberately conservative choice so Rector does not
+    // rewrite working code into 8.4/8.5-only syntax. Raising the level is a separate decision.
     ->withPhpSets()
     // Conservative prepared sets: remove dead code, simplify expressions, add types
     // that Rector can prove from the code itself.
@@ -42,9 +45,10 @@ return RectorConfig::configure()
         codeQuality: true,
         typeDeclarations: true,
     )
-    // Laravel 13 rules without converting $fillable/$casts/etc. into PHP attributes.
+    // Laravel 12 upgrade rules. Do not use the LARAVEL_130 sets while the app runs on 12:
+    // they rewrite code to Laravel 13 APIs.
     ->withSets([
-        LaravelSetList::LARAVEL_130_WITHOUT_ATTRIBUTES,
+        LaravelSetList::LARAVEL_120,
     ])
     // Import fully qualified class names, but leave global short names (e.g. \Exception)
     // alone, and drop imports that are no longer used.

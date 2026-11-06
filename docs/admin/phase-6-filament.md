@@ -1,6 +1,6 @@
 # Phase 6 — Filament admin panel
 
-> Laravel 13.9.0 · PHP 8.5.6 · Filament v5.11.0 · Livewire v4.4.8
+> Laravel 13.9.0 (now 12.71, see docs/maintenance/laravel-12-downgrade.md) · PHP 8.5.6 · Filament v5.11.0 · Livewire v4.4.8
 
 Finestro has an internal admin panel at `/admin`, built with FilamentPHP. It manages accounts, subscriptions and payments and shows the activity log. It never shows the financial content of a user (wallets, transactions, goals, budgets, categories, receipts, AI data).
 

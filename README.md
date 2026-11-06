@@ -10,7 +10,7 @@ inglês.
 
 | Camada | Tecnologia |
 | --- | --- |
-| Backend | Laravel 13, PHP 8.5 (restrição do Composer `^8.3`), MySQL 8 |
+| Backend | Laravel 12, PHP 8.5 (restrição do Composer `^8.3`; o lock exige PHP 8.4+), MySQL 8 |
 | Front end | Blade, Alpine.js, Tailwind CSS 3, Vite 5, Font Awesome, SweetAlert2 |
 | Autenticação | Laravel Breeze (sessão), verificação de e-mail, redefinição de senha |
 | ACL | spatie/laravel-permission (papéis `user`, `admin`) + policies, escopo de consulta por usuário (`BelongsToUser`) |
@@ -198,6 +198,7 @@ Os testes de carga usam k6 e são executados manualmente; veja [tests/load/READM
 | 7 | [Testes: crawler, fluxos, segurança, carga](docs/testing/phase-7-tests.md) |
 | 7 | [Limpeza de órfãos](docs/maintenance/phase-7-cleanup.md) |
 | 8 | [Proteção contra robôs, ativação por e-mail, validade de senha e lembretes](docs/security/phase-8-auth-hardening.md) |
+| 9 | [Migração do Laravel 13 para o Laravel 12](docs/maintenance/laravel-12-downgrade.md) |
 
 Notas de integração anteriores: [docs/INTEGRACAO-SISTEMAS-LEGADOS.md](docs/INTEGRACAO-SISTEMAS-LEGADOS.md).
 

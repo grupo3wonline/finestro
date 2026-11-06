@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Notifications\QueuedResetPassword;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
@@ -34,12 +34,12 @@ beforeEach(function (): void {
 
 /**
  * Re-enables CSRF verification, which Laravel skips while running tests.
- * Laravel 13's web group uses PreventRequestForgery (the parent of the
- * legacy ValidateCsrfToken), so that is the class bound here.
+ * Laravel 12's web group uses ValidateCsrfToken, so that is the class bound
+ * here (Laravel 13 renamed it PreventRequestForgery).
  */
 function enforceCsrf(): void
 {
-    app()->bind(PreventRequestForgery::class, fn (Application $app): PreventRequestForgery => new class($app, $app['encrypter']) extends PreventRequestForgery
+    app()->bind(ValidateCsrfToken::class, fn (Application $app): ValidateCsrfToken => new class($app, $app['encrypter']) extends ValidateCsrfToken
     {
         protected function runningUnitTests(): bool
         {

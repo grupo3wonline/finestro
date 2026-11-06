@@ -1,6 +1,6 @@
 # Phase 1 — ACL and per-user data isolation audit
 
-> Audited: Phase 1 branch, 2026-09 · Laravel 13 · PHP 8.3+ · `spatie/laravel-permission` 8.3.2
+> Audited: Phase 1 branch, 2026-09 · Laravel 13 at the time (now 12) · PHP 8.3+ · `spatie/laravel-permission` 8.3.2
 
 Scope: every authenticated route of Finestro (`php artisan route:list --except-vendor`, routes with the `auth` middleware), the controller action behind it, and the service/repository methods it uses to read or write user-owned data (wallets, transactions, goals, budgets, categories, bills, reports/exports, receipts, AI credentials and analyses, subscription/payment history, settings/profile).
 

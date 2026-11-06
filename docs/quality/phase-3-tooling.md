@@ -96,9 +96,9 @@ Configuration: `rector.php`.
 
 - Paths: `app`, `config`, `database`, `routes`. Tests, Blade views, vendor and storage are not listed, so Rector never touches them.
 - `database/migrations` is skipped. Migrations are records of changes that have already run; they must not be rewritten.
-- `withPhpSets()` without arguments derives the PHP level from composer.json (`^8.3`). The `php85` set is not used, even though development runs on PHP 8.5. composer.lock already requires PHP >= 8.4 (Symfony 8 components), so the app cannot run on 8.3 anyway; staying at the composer.json `^8.3` level is a deliberately conservative choice so Rector does not rewrite working code into 8.4/8.5-only syntax. Raising the level is a separate decision.
+- `withPhpSets()` without arguments derives the PHP level from composer.json (`^8.3`). The `php85` set is not used, even though development runs on PHP 8.5. composer.lock requires PHP >= 8.4 (spatie/laravel-activitylog 5.x and Symfony 8 components), so the app cannot run on 8.3 anyway; staying at the composer.json `^8.3` level is a deliberately conservative choice so Rector does not rewrite working code into 8.4/8.5-only syntax. Raising the level is a separate decision.
 - Prepared sets: `deadCode`, `codeQuality`, `typeDeclarations`. These are conservative: they remove dead code, simplify expressions and add types Rector can prove from the code.
-- `LaravelSetList::LARAVEL_130_WITHOUT_ATTRIBUTES`: Laravel 13 upgrade rules without converting `$fillable`, `$casts` and similar properties into PHP attributes, which would rewrite every model for no functional gain.
+- `LaravelSetList::LARAVEL_120`: Laravel 12 upgrade rules (the app moved from Laravel 13 to 12, see [docs/maintenance/laravel-12-downgrade.md](../maintenance/laravel-12-downgrade.md)). `ScopeNamedClassMethodToScopeAttributedClassMethodRector` is skipped so the `scopeXxx()` methods are not rewritten to the `#[Scope]` attribute.
 - `withImportNames(importShortClasses: false, removeUnusedImports: true)`: imports fully qualified names and removes unused imports, but leaves global classes such as `\Exception` alone.
 
 Skipped rules:
