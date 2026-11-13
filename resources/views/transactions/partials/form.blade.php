@@ -69,6 +69,7 @@
                 value="{{ old('description', $isEdit ? $transaction->description : '') }}"
                 class="{{ $input }}" placeholder="Ex.: Supermercado, Salário, Aluguel...">
             @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="input-hint">Descreva a transação brevemente. Ex: Conta de luz, Salário, Uber</p>
         </div>
 
         <div>
@@ -83,6 +84,7 @@
                 </template>
             </select>
             @error('category_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="input-hint">Escolha uma categoria para facilitar os relatórios</p>
         </div>
     </div>
 
@@ -96,6 +98,7 @@
             <input type="number" name="amount" id="amount" step="0.01" min="0.01" required autocomplete="off"
                 x-model="amount" class="{{ $input }}" placeholder="0,00">
             @error('amount') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="input-hint">Valor em reais. Use ponto ou vírgula como separador decimal</p>
         </div>
 
         <div>

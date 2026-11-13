@@ -20,14 +20,14 @@
 
     <div class="grid lg:grid-cols-2 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
+        <div class="nm-card p-6 space-y-5">
             <div>
                 <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Salário Bruto (R$)
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Salário bruto mensal registrado em carteira"></i>
                 </label>
                 <input type="number" x-model.number="grossSalary" min="0" step="100" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 5000">
             </div>
 
@@ -37,7 +37,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Quantos meses trabalhou neste ano (1 a 12)"></i>
                 </label>
                 <input type="number" x-model.number="monthsWorked" min="1" max="12" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 12">
             </div>
 
@@ -47,7 +47,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Dependentes para dedução do IRRF (R$ 189,59 cada)"></i>
                 </label>
                 <input type="number" x-model.number="dependents" min="0" max="20" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 0">
             </div>
 

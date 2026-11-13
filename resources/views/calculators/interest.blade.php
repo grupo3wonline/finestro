@@ -20,14 +20,14 @@
 
     <div class="grid lg:grid-cols-2 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
+        <div class="nm-card p-6 space-y-5">
             <div>
                 <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Capital Inicial (R$)
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Valor que será aplicado inicialmente"></i>
                 </label>
                 <input type="number" x-model.number="capital" min="0" step="100" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 10000">
             </div>
 

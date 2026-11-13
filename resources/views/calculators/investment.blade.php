@@ -20,14 +20,14 @@
 
     <div class="grid lg:grid-cols-2 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
+        <div class="nm-card p-6 space-y-5">
             <div>
                 <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Valor Inicial (R$)
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Quanto você já tem para investir hoje"></i>
                 </label>
                 <input type="number" x-model.number="initialAmount" min="0" step="100" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 1000">
             </div>
 
@@ -37,7 +37,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Valor que você vai investir todo mês"></i>
                 </label>
                 <input type="number" x-model.number="monthlyDeposit" min="0" step="50" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 500">
             </div>
 
@@ -47,7 +47,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Rentabilidade mensal esperada do investimento"></i>
                 </label>
                 <input type="number" x-model.number="monthlyRate" min="0" max="10" step="0.01" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 1.0">
             </div>
 
@@ -57,7 +57,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Por quantos meses pretende investir"></i>
                 </label>
                 <input type="number" x-model.number="months" min="1" max="600" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 60">
             </div>
 

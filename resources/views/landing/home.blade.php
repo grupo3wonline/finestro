@@ -45,6 +45,27 @@
                 <p class="text-lg sm:text-xl text-primary-100/80 mb-10 max-w-xl leading-relaxed">
                     Reúna carteiras, contas a pagar e metas em um só painel. Você vê para onde vai cada real e decide com clareza, não no escuro.
                 </p>
+                {{-- (c) URGENCY TIMER — countdown to launch offer end date --}}
+                @php $offerDeadline = now()->addDays(7)->toIso8601String(); @endphp
+                <div x-data="{
+                    deadline: '{{ $offerDeadline }}',
+                    h: '00', m: '00', s: '00', expired: false,
+                    init() {
+                        const tick = () => {
+                            const diff = Math.max(0, Math.floor((new Date(this.deadline) - Date.now()) / 1000));
+                            if (diff <= 0) { this.expired = true; return; }
+                            this.h = String(Math.floor(diff / 3600)).padStart(2, '0');
+                            this.m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+                            this.s = String(diff % 60).padStart(2, '0');
+                        };
+                        tick();
+                        setInterval(tick, 1000);
+                    }
+                }" x-show="!expired" x-cloak class="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-accent-500/20 border border-accent-400/30 backdrop-blur-sm rounded-xl text-accent-200">
+                    <i class="fas fa-clock animate-pulse" aria-hidden="true"></i>
+                    <span class="text-sm font-medium">Oferta de lançamento termina em <span class="font-bold font-mono" x-text="h + ':' + m + ':' + s"></span></span>
+                </div>
+
                 <div class="flex flex-col sm:flex-row gap-4 mb-8">
                     <a href="{{ $signupUrl }}" data-loading="Carregando..." class="group inline-flex items-center justify-center px-8 py-4 bg-accent-400 hover:bg-accent-300 text-surface-950 font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-accent-500/25 hover:shadow-xl hover:-translate-y-0.5">
                         <i class="fas fa-rocket mr-2" aria-hidden="true"></i> Criar conta grátis
@@ -56,6 +77,23 @@
                 <div class="flex items-center gap-6 text-sm text-primary-100/70">
                     <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-accent-400" aria-hidden="true"></i> Sem cartão de crédito</span>
                     <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-accent-400" aria-hidden="true"></i> Pronto em 2 minutos</span>
+                </div>
+
+                {{-- (a) AUTHORITY SEALS — trust badges strip --}}
+                <div class="mt-6 flex flex-wrap items-center gap-3">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 text-xs text-primary-100/80">
+                        <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        HTTPS Seguro
+                    </div>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 text-xs text-primary-100/80">
+                        <i class="fas fa-shield-halved text-accent-400" aria-hidden="true"></i> Conformidade LGPD
+                    </div>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 text-xs text-primary-100/80">
+                        <i class="fas fa-users text-accent-400" aria-hidden="true"></i> 1.000+ usuários
+                    </div>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 text-xs text-primary-100/80">
+                        <i class="fas fa-credit-card text-accent-400 line-through opacity-60" aria-hidden="true"></i> Sem cartão de crédito
+                    </div>
                 </div>
             </div>
             <div class="hidden lg:block">
@@ -101,6 +139,29 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- (g) RECIPROCITY — free-plan floating card below the hero grid --}}
+        <div class="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 max-w-3xl mx-auto">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold text-accent-300 uppercase tracking-wider mb-1"><i class="fas fa-gift mr-1" aria-hidden="true"></i> Plano gratuito — para sempre</p>
+                    <h3 class="text-xl font-bold text-white mb-3">Comece grátis agora. Sem compromisso.</h3>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-primary-100/80">
+                        <li class="flex items-center gap-1.5"><i class="fas fa-check text-accent-400 text-xs" aria-hidden="true"></i> {{ $free['wallets'] }} carteira(s)</li>
+                        <li class="flex items-center gap-1.5"><i class="fas fa-check text-accent-400 text-xs" aria-hidden="true"></i> {{ $free['transactions_per_month'] }} transações/mês</li>
+                        <li class="flex items-center gap-1.5"><i class="fas fa-check text-accent-400 text-xs" aria-hidden="true"></i> {{ $free['goals'] }} metas financeiras</li>
+                        <li class="flex items-center gap-1.5"><i class="fas fa-check text-accent-400 text-xs" aria-hidden="true"></i> 7 calculadoras gratuitas</li>
+                        <li class="flex items-center gap-1.5"><i class="fas fa-check text-accent-400 text-xs" aria-hidden="true"></i> Painel completo</li>
+                    </ul>
+                </div>
+                <div class="shrink-0">
+                    <a href="{{ $signupUrl }}" data-loading="Carregando..."
+                        class="inline-flex items-center justify-center px-6 py-3 bg-accent-400 hover:bg-accent-300 text-surface-950 font-bold rounded-xl transition shadow-lg shadow-accent-500/25 whitespace-nowrap">
+                        <i class="fas fa-rocket mr-2" aria-hidden="true"></i> Criar conta grátis
+                    </a>
                 </div>
             </div>
         </div>
@@ -343,7 +404,10 @@
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="bg-surface-50 dark:bg-surface-800 rounded-xl p-6 shadow-sm border border-surface-200 dark:border-surface-700 hover:shadow-lg transition relative">
-                <div class="absolute top-4 right-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i> Grátis</span></div>
+                <div class="absolute top-4 right-4 flex flex-col items-end gap-1">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i> Grátis</span>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-accent-400 text-surface-950 text-xs font-bold rounded-full">Novo</span>
+                </div>
                 <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mb-4"><i class="fas fa-wallet text-2xl text-primary-600" aria-hidden="true"></i></div>
                 <h3 class="text-xl font-semibold text-surface-900 dark:text-white mb-3">Gestão de Carteiras</h3>
                 <p class="text-surface-600 dark:text-surface-400 mb-4">Crie e gerencie carteiras pessoais e empresariais. Organize suas contas, cartões e investimentos em um só lugar.</p>
@@ -420,7 +484,10 @@
                 </ul>
             </div>
             <div class="bg-surface-50 dark:bg-surface-800 rounded-xl p-6 shadow-sm border border-surface-200 dark:border-surface-700 hover:shadow-lg transition relative">
-                <div class="absolute top-4 right-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400"><i class="fas fa-crown mr-1" aria-hidden="true"></i> Profissional</span></div>
+                <div class="absolute top-4 right-4 flex flex-col items-end gap-1">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400"><i class="fas fa-crown mr-1" aria-hidden="true"></i> Profissional</span>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-accent-400 text-surface-950 text-xs font-bold rounded-full">Novo</span>
+                </div>
                 <div class="w-14 h-14 bg-violet-100 dark:bg-violet-900/30 rounded-xl flex items-center justify-center mb-4"><i class="fas fa-robot text-2xl text-violet-600" aria-hidden="true"></i></div>
                 <h3 class="text-xl font-semibold text-surface-900 dark:text-white mb-3">Inteligência Artificial</h3>
                 <p class="text-surface-600 dark:text-surface-400 mb-4">5 funcionalidades de IA para análises avançadas e planejamento financeiro personalizado.</p>
@@ -450,6 +517,55 @@
             </p>
             <div class="inline-flex items-center gap-2 text-sm text-surface-500 dark:text-surface-400">
                 <i class="fas fa-info-circle text-primary-500" aria-hidden="true"></i> Sem compromisso. Cancele a qualquer momento.
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ============================================================= --}}
+{{-- ANTES E DEPOIS (Transformation trigger)                        --}}
+{{-- ============================================================= --}}
+<section class="py-20 bg-gradient-to-br from-surface-50 to-surface-100 dark:from-surface-900 dark:to-surface-950">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <span class="inline-flex items-center px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-sm font-medium rounded-full mb-4">
+                <i class="fas fa-wand-magic-sparkles mr-1.5" aria-hidden="true"></i> Transformação
+            </span>
+            <h2 class="font-display text-3xl md:text-4xl font-semibold text-surface-900 dark:text-white mb-4">Antes e Depois do Finestro</h2>
+            <p class="text-lg text-surface-600 dark:text-surface-400 max-w-xl mx-auto">Veja o impacto real de ter controle total das suas finanças.</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            {{-- Before --}}
+            <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/40 rounded-2xl p-7">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center shrink-0">
+                        <i class="fas fa-times text-red-600" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-red-700 dark:text-red-400">Antes</h3>
+                </div>
+                <ul class="space-y-3 text-sm text-red-700 dark:text-red-400">
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-xmark text-red-500 mt-0.5 shrink-0" aria-hidden="true"></i> Planilhas dispersas e desatualizadas</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-xmark text-red-500 mt-0.5 shrink-0" aria-hidden="true"></i> Falta de controle sobre gastos mensais</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-xmark text-red-500 mt-0.5 shrink-0" aria-hidden="true"></i> Dívidas e contas surpresa no fim do mês</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-xmark text-red-500 mt-0.5 shrink-0" aria-hidden="true"></i> Metas sem acompanhamento e sem prazo</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-xmark text-red-500 mt-0.5 shrink-0" aria-hidden="true"></i> Decisões financeiras no escuro</li>
+                </ul>
+            </div>
+            {{-- After --}}
+            <div class="bg-secondary-50 dark:bg-secondary-900/10 border border-secondary-200 dark:border-secondary-900/40 rounded-2xl p-7">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-10 h-10 bg-secondary-100 dark:bg-secondary-900/30 rounded-xl flex items-center justify-center shrink-0">
+                        <i class="fas fa-check text-secondary-600" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-secondary-700 dark:text-secondary-400">Depois</h3>
+                </div>
+                <ul class="space-y-3 text-sm text-secondary-700 dark:text-secondary-400">
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-check text-secondary-500 mt-0.5 shrink-0" aria-hidden="true"></i> Painel unificado com todas as contas</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-check text-secondary-500 mt-0.5 shrink-0" aria-hidden="true"></i> Visão clara de receitas e despesas em tempo real</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-check text-secondary-500 mt-0.5 shrink-0" aria-hidden="true"></i> Metas alcançadas com acompanhamento visual</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-check text-secondary-500 mt-0.5 shrink-0" aria-hidden="true"></i> Sobra no fim do mês para investir</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-circle-check text-secondary-500 mt-0.5 shrink-0" aria-hidden="true"></i> Decisões financeiras com dados e inteligência</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -650,6 +766,12 @@
             <p class="text-lg text-surface-600 dark:text-surface-400 max-w-2xl mx-auto">
                 Comece grátis e evolua quando precisar. Sem compromisso, cancele a qualquer momento.
             </p>
+            {{-- (b) SCARCITY COUNTER --}}
+            <div class="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-amber-700 dark:text-amber-400"
+                x-data="{ slots: 7 }">
+                <i class="fas fa-fire-flame-curved text-amber-500 animate-pulse" aria-hidden="true"></i>
+                <span class="text-sm font-semibold">Apenas <span x-text="slots" class="font-bold"></span> vagas restantes neste plano de lançamento</span>
+            </div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -724,6 +846,63 @@
 
         <div class="text-center mt-10">
             <p class="text-sm text-surface-500 dark:text-surface-400"><i class="fas fa-circle-info text-primary-500 mr-1" aria-hidden="true"></i> Comece no Básico sem cartão de crédito e faça upgrade só quando precisar. Dúvidas sobre os planos? Veja as <a href="#faq" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">perguntas frequentes</a>.</p>
+        </div>
+    </div>
+</section>
+
+{{-- ============================================================= --}}
+{{-- EM BREVE (Anticipation trigger)                               --}}
+{{-- ============================================================= --}}
+<section class="py-20 bg-white dark:bg-surface-900">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <span class="inline-flex items-center px-3 py-1 bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 text-sm font-medium rounded-full mb-4">
+                <i class="fas fa-clock mr-1.5" aria-hidden="true"></i> Em Breve
+            </span>
+            <h2 class="font-display text-3xl md:text-4xl font-semibold text-surface-900 dark:text-white mb-4">
+                O futuro do Finestro
+            </h2>
+            <p class="text-lg text-surface-600 dark:text-surface-400 max-w-2xl mx-auto">
+                Novidades incríveis chegando em breve. Seja o primeiro a saber quando lançarmos.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl p-6 opacity-70">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 bg-surface-200 dark:bg-surface-700 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-building-columns text-xl text-surface-400 dark:text-surface-500" aria-hidden="true"></i>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 bg-surface-200 dark:bg-surface-700 text-surface-500 dark:text-surface-400 text-xs font-semibold rounded-full">Em breve</span>
+                </div>
+                <h3 class="text-lg font-semibold text-surface-500 dark:text-surface-400 mb-2">Integração Bancária Automática</h3>
+                <p class="text-sm text-surface-400 dark:text-surface-500">Sincronize suas contas bancárias automaticamente via Open Finance sem precisar lançar nada manualmente.</p>
+            </div>
+            <div class="bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl p-6 opacity-70">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 bg-surface-200 dark:bg-surface-700 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-mobile-screen text-xl text-surface-400 dark:text-surface-500" aria-hidden="true"></i>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 bg-surface-200 dark:bg-surface-700 text-surface-500 dark:text-surface-400 text-xs font-semibold rounded-full">Em breve</span>
+                </div>
+                <h3 class="text-lg font-semibold text-surface-500 dark:text-surface-400 mb-2">App Móvel Nativo</h3>
+                <p class="text-sm text-surface-400 dark:text-surface-500">Aplicativo nativo para iOS e Android com notificações push, lançamentos offline e scanner de cupons.</p>
+            </div>
+            <div class="bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl p-6 opacity-70">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 bg-surface-200 dark:bg-surface-700 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-microphone text-xl text-surface-400 dark:text-surface-500" aria-hidden="true"></i>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 bg-surface-200 dark:bg-surface-700 text-surface-500 dark:text-surface-400 text-xs font-semibold rounded-full">Em breve</span>
+                </div>
+                <h3 class="text-lg font-semibold text-surface-500 dark:text-surface-400 mb-2">Assistente IA por Voz</h3>
+                <p class="text-sm text-surface-400 dark:text-surface-500">Lance transações e consulte seu saldo usando apenas a voz. Integração com assistentes de IA conversacional.</p>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="https://wa.me/5541996924829?text=Quero+receber+avisos+das+novidades+do+Finestro" target="_blank" rel="noopener"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition shadow-lg">
+                <i class="fab fa-whatsapp text-lg" aria-hidden="true"></i> Receber aviso quando lançar
+            </a>
         </div>
     </div>
 </section>

@@ -12,11 +12,30 @@
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="section-card">
-        <div class="p-6 border-b border-surface-100 dark:border-surface-800">
-            <h1 class="text-xl font-semibold text-surface-900 dark:text-white">
-                <i class="fas fa-bullseye text-primary-500 mr-2"></i> Nova Meta Financeira
-            </h1>
-            <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Defina um objetivo financeiro com valor alvo e prazo. Exemplo: Reserva de emergência, Viagem, Carro novo.</p>
+        <div class="p-6 border-b border-surface-100 dark:border-surface-800" x-data="{ helpOpen: false }">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <h1 class="text-xl font-semibold text-surface-900 dark:text-white">
+                        <i class="fas fa-bullseye text-primary-500 mr-2"></i> Nova Meta Financeira
+                    </h1>
+                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Defina um objetivo financeiro com valor alvo e prazo. Exemplo: Reserva de emergência, Viagem, Carro novo.</p>
+                </div>
+                <button type="button" @click="helpOpen = !helpOpen"
+                    class="p-1.5 rounded-lg text-surface-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition shrink-0 mt-0.5"
+                    aria-label="Ajuda">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+            <div x-show="helpOpen" x-cloak x-transition
+                class="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800/40 rounded-xl text-sm text-primary-800 dark:text-primary-300">
+                <p class="font-medium mb-2"><i class="fas fa-info-circle mr-1"></i> Sobre as Metas Financeiras</p>
+                <p class="mb-2">Uma meta representa um objetivo que você quer alcançar juntando dinheiro ao longo do tempo.</p>
+                <ul class="space-y-1 text-xs list-disc list-inside text-primary-700 dark:text-primary-400">
+                    <li>Dica: defina um prazo realista para manter a motivação.</li>
+                    <li>Registre o valor atual se já tiver algum dinheiro guardado para esta meta.</li>
+                    <li>Acompanhe o progresso no painel para saber se está no caminho certo.</li>
+                </ul>
+            </div>
         </div>
 
         <form autocomplete="off" action="{{ route('goals.store') }}" method="POST" class="p-6 space-y-6">
@@ -27,6 +46,7 @@
                 <input type="text" name="name" id="name" value="{{ old('name') }}" autocomplete="off" required
                     class="input" placeholder="Ex: Reserva de Emergência">
                 @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                <p class="input-hint">Ex: Viagem para Europa, Reserva de emergência</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -35,6 +55,7 @@
                     <input type="number" name="target_amount" id="target_amount" value="{{ old('target_amount') }}" step="0.01" min="0.01" autocomplete="off" required
                         class="input" placeholder="10000.00">
                     @error('target_amount') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <p class="input-hint">Quanto você precisa economizar no total</p>
                 </div>
                 <div>
                     <label for="current_amount" class="input-label">Valor Atual (R$)</label>
@@ -47,6 +68,7 @@
                 <label for="deadline" class="input-label">Prazo</label>
                 <input type="date" name="deadline" id="deadline" value="{{ old('deadline') }}" class="input" autocomplete="off">
                 @error('deadline') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                <p class="input-hint">Data limite para atingir a meta</p>
             </div>
 
             <div>

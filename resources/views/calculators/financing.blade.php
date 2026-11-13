@@ -20,14 +20,14 @@
 
     <div class="grid lg:grid-cols-3 gap-6">
         <!-- Form -->
-        <div class="bg-white dark:bg-surface-900 rounded-2xl shadow-card border border-surface-100 dark:border-surface-800 p-6 space-y-5">
+        <div class="nm-card p-6 space-y-5">
             <div>
                 <label class="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
                     Valor do Bem (R$)
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Valor total do imóvel ou bem financiado"></i>
                 </label>
                 <input type="number" x-model.number="propertyValue" min="0" step="1000" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 400000">
             </div>
 
@@ -37,7 +37,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Valor que será pago como entrada"></i>
                 </label>
                 <input type="number" x-model.number="downPayment" min="0" step="1000" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 80000">
             </div>
 
@@ -47,7 +47,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Taxa mensal cobrada pela instituição financeira"></i>
                 </label>
                 <input type="number" x-model.number="monthlyRate" min="0" max="5" step="0.01" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 0.75">
             </div>
 
@@ -57,7 +57,7 @@
                     <i class="fas fa-question-circle text-surface-400 ml-1" title="Número de parcelas do financiamento"></i>
                 </label>
                 <input type="number" x-model.number="months" min="1" max="420" autocomplete="off"
-                    class="w-full px-4 py-2 border border-surface-200 dark:border-surface-600 rounded-lg bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition"
+                    class="nm-input w-full px-4 py-2 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none"
                     placeholder="Ex: 360">
             </div>
 

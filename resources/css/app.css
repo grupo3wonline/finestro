@@ -248,6 +248,22 @@
     .skeleton {
         @apply bg-surface-200/70 dark:bg-surface-800 rounded-lg animate-pulse;
     }
+
+    /* Neumorphism ---------------------------------------------------- */
+    /* Soft-raised inset input for calculator/simulator forms. */
+    .nm-input {
+        @apply rounded-xl border-0 bg-surface-100 dark:bg-surface-800
+        shadow-[inset_2px_2px_5px_rgba(0,0,0,0.08),inset_-2px_-2px_5px_rgba(255,255,255,0.7)]
+        dark:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)]
+        focus:ring-2 focus:ring-primary-500/30 transition-all;
+    }
+
+    /* Soft-raised card for calculator/simulator panels. */
+    .nm-card {
+        @apply rounded-2xl bg-surface-50 dark:bg-surface-800
+        shadow-[6px_6px_12px_rgba(0,0,0,0.07),-6px_-6px_12px_rgba(255,255,255,0.8)]
+        dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(255,255,255,0.03)];
+    }
 }
 
 /* ===== Utility Layer ===== */

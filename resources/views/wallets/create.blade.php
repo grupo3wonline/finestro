@@ -12,11 +12,30 @@
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="section-card">
-        <div class="p-6 border-b border-surface-100 dark:border-surface-800">
-            <h1 class="text-xl font-semibold text-surface-900 dark:text-white">
-                <i class="fas fa-wallet text-primary-500 mr-2"></i> Nova Carteira
-            </h1>
-            <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Crie uma nova carteira para organizar suas finanças. Exemplo: Conta Corrente, Poupança, Cartão de Crédito.</p>
+        <div class="p-6 border-b border-surface-100 dark:border-surface-800" x-data="{ helpOpen: false }">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <h1 class="text-xl font-semibold text-surface-900 dark:text-white">
+                        <i class="fas fa-wallet text-primary-500 mr-2"></i> Nova Carteira
+                    </h1>
+                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Crie uma nova carteira para organizar suas finanças. Exemplo: Conta Corrente, Poupança, Cartão de Crédito.</p>
+                </div>
+                <button type="button" @click="helpOpen = !helpOpen"
+                    class="p-1.5 rounded-lg text-surface-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition shrink-0 mt-0.5"
+                    aria-label="Ajuda">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+            <div x-show="helpOpen" x-cloak x-transition
+                class="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800/40 rounded-xl text-sm text-primary-800 dark:text-primary-300">
+                <p class="font-medium mb-2"><i class="fas fa-info-circle mr-1"></i> Sobre as Carteiras</p>
+                <p class="mb-2">Uma carteira representa uma conta bancária, cartão de crédito, dinheiro em espécie ou qualquer fonte de recursos financeiros.</p>
+                <ul class="space-y-1 text-xs list-disc list-inside text-primary-700 dark:text-primary-400">
+                    <li>Dica: crie uma carteira para cada conta real que você usa.</li>
+                    <li>Para cartão de crédito, o saldo pode ser negativo (valor da fatura).</li>
+                    <li>Carteiras empresariais podem ser compartilhadas com outros usuários.</li>
+                </ul>
+            </div>
         </div>
 
         <form autocomplete="off" action="{{ route('wallets.store') }}" method="POST" class="p-6 space-y-6">
@@ -27,19 +46,23 @@
                 <input type="text" name="name" id="name" value="{{ old('name') }}" autocomplete="off" required
                     class="input" placeholder="Ex: Conta Corrente Nubank">
                 @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                <p class="input-hint">Ex: Nubank, Itaú, Cartão Visa</p>
             </div>
 
             <div>
                 <label for="type" class="input-label">Tipo <span class="text-red-500">*</span></label>
-                <select autocomplete="off" name="type" id="type" required class="input">
-                    <option value="">Selecione o tipo</option>
-                    <option value="checking" {{ old('type') == 'checking' ? 'selected' : '' }}>Conta Corrente</option>
-                    <option value="savings" {{ old('type') == 'savings' ? 'selected' : '' }}>Poupança</option>
-                    <option value="credit" {{ old('type') == 'credit' ? 'selected' : '' }}>Cartão de Crédito</option>
-                    <option value="investment" {{ old('type') == 'investment' ? 'selected' : '' }}>Investimento</option>
-                    <option value="cash" {{ old('type') == 'cash' ? 'selected' : '' }}>Dinheiro</option>
-                </select>
+                <x-ui.tooltip text="Conta corrente, poupança, dinheiro em espécie ou cartão de crédito" position="top">
+                    <select autocomplete="off" name="type" id="type" required class="input">
+                        <option value="">Selecione o tipo</option>
+                        <option value="checking" {{ old('type') == 'checking' ? 'selected' : '' }}>Conta Corrente</option>
+                        <option value="savings" {{ old('type') == 'savings' ? 'selected' : '' }}>Poupança</option>
+                        <option value="credit" {{ old('type') == 'credit' ? 'selected' : '' }}>Cartão de Crédito</option>
+                        <option value="investment" {{ old('type') == 'investment' ? 'selected' : '' }}>Investimento</option>
+                        <option value="cash" {{ old('type') == 'cash' ? 'selected' : '' }}>Dinheiro</option>
+                    </select>
+                </x-ui.tooltip>
                 @error('type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                <p class="input-hint">Conta corrente, poupança, dinheiro em espécie ou cartão de crédito</p>
             </div>
 
             <div>
@@ -68,9 +91,12 @@
 
             <div>
                 <label for="balance" class="input-label">Saldo Inicial</label>
-                <input type="number" name="balance" id="balance" value="{{ old('balance', '0.00') }}" step="0.01" min="0" autocomplete="off"
-                    class="input" placeholder="0,00">
+                <x-ui.tooltip text="Saldo atual na data de hoje. Pode ser negativo para cartão de crédito." position="top">
+                    <input type="number" name="balance" id="balance" value="{{ old('balance', '0.00') }}" step="0.01" autocomplete="off"
+                        class="input" placeholder="0,00">
+                </x-ui.tooltip>
                 @error('balance') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                <p class="input-hint">Saldo atual na data de hoje. Pode ser negativo para cartão de crédito.</p>
             </div>
 
             <!-- Business Fields (shown when ownership = business) -->
@@ -111,13 +137,17 @@
                         </div>
                         <div>
                             <label for="closing_day" class="input-label">Dia Fechamento</label>
-                            <input type="number" name="closing_day" id="closing_day" value="{{ old('closing_day') }}" min="1" max="31" autocomplete="off"
-                                class="input" placeholder="25">
+                            <x-ui.tooltip text="Dia do mês em que a fatura fecha (ex: 25)" position="top">
+                                <input type="number" name="closing_day" id="closing_day" value="{{ old('closing_day') }}" min="1" max="31" autocomplete="off"
+                                    class="input" placeholder="25">
+                            </x-ui.tooltip>
                         </div>
                         <div>
                             <label for="due_day" class="input-label">Dia Vencimento</label>
-                            <input type="number" name="due_day" id="due_day" value="{{ old('due_day') }}" min="1" max="31" autocomplete="off"
-                                class="input" placeholder="10">
+                            <x-ui.tooltip text="Dia do mês em que a fatura vence (ex: 10)" position="top">
+                                <input type="number" name="due_day" id="due_day" value="{{ old('due_day') }}" min="1" max="31" autocomplete="off"
+                                    class="input" placeholder="10">
+                            </x-ui.tooltip>
                         </div>
                     </div>
                 </div>

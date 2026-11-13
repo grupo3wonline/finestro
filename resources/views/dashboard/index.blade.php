@@ -26,7 +26,7 @@
     </div>
 
     <!-- Hero: total balance is the page's centrepiece -->
-    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white shadow-float">
+    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-900/80 via-primary-800/80 to-primary-950/80 backdrop-blur-2xl border border-white/10 text-white shadow-float">
         {{-- soft radial highlight, not a decorative gradient wash --}}
         <div class="pointer-events-none absolute -top-24 -right-16 w-72 h-72 rounded-full bg-primary-400/20 blur-3xl"></div>
         <div class="pointer-events-none absolute -bottom-32 -left-10 w-80 h-80 rounded-full bg-secondary-500/10 blur-3xl"></div>
@@ -56,7 +56,7 @@
 
     <!-- Supporting stats: income / expenses / projected -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white dark:bg-surface-900 rounded-2xl p-5 shadow-card border border-surface-100 dark:border-surface-800">
+        <div class="backdrop-blur-sm bg-white/80 dark:bg-surface-900/60 border border-white/20 dark:border-surface-700/40 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-surface-500 dark:text-surface-300">Receitas do mês</span>
                 <span class="w-9 h-9 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
@@ -67,7 +67,7 @@
             <p class="text-xs text-surface-400 dark:text-surface-500 mt-1">Entradas confirmadas</p>
         </div>
 
-        <div class="bg-white dark:bg-surface-900 rounded-2xl p-5 shadow-card border border-surface-100 dark:border-surface-800">
+        <div class="backdrop-blur-sm bg-white/80 dark:bg-surface-900/60 border border-white/20 dark:border-surface-700/40 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-surface-500 dark:text-surface-300">Despesas do mês</span>
                 <span class="w-9 h-9 bg-red-50 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
@@ -78,7 +78,7 @@
             <p class="text-xs text-surface-400 dark:text-surface-500 mt-1">Saídas confirmadas</p>
         </div>
 
-        <div class="bg-white dark:bg-surface-900 rounded-2xl p-5 shadow-card border border-surface-100 dark:border-surface-800">
+        <div class="backdrop-blur-sm bg-white/80 dark:bg-surface-900/60 border border-white/20 dark:border-surface-700/40 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-surface-500 dark:text-surface-300">Balanço previsto</span>
                 <span class="w-9 h-9 bg-accent-50 dark:bg-accent-900/30 rounded-xl flex items-center justify-center">
