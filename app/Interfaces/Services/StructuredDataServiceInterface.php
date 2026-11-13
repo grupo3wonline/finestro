@@ -48,4 +48,13 @@ interface StructuredDataServiceInterface
      * @return array<string, mixed>
      */
     public function breadcrumbList(array $items): array;
+
+    /**
+     * Convenience wrapper that builds a BreadcrumbList automatically prepending
+     * the 'Início' root item. Items use 'name' and 'url' keys.
+     *
+     * @param  list<array{name: string, url: string}>  $items  Items after the root (Início)
+     * @return array<string, mixed>
+     */
+    public function breadcrumbs(array $items): array;
 }

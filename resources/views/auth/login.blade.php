@@ -15,6 +15,7 @@
 
 <form autocomplete="off" method="POST" action="{{ route('login') }}" class="space-y-4" data-loading="Entrando...">
     @csrf
+    <x-ui.honeypot />
 
     @error('login')
         <x-ui.alert variant="danger">

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\DTOs\WalletDTO;
+use App\Http\Requests\PayInvoiceRequest;
 use App\Http\Requests\StoreWalletRequest;
 use App\Http\Requests\UpdateWalletRequest;
 use App\Interfaces\Services\CreditCardInvoiceServiceInterface;
@@ -12,7 +15,6 @@ use App\Interfaces\Services\WalletSharingServiceInterface;
 use App\Models\Wallet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class WalletController extends Controller
@@ -159,26 +161,13 @@ class WalletController extends Controller
         return view('wallets.invoice', ['wallet' => $wallet, 'invoice' => $invoice, 'sourceWallets' => $sourceWallets]);
     }
 
-    public function payInvoice(Request $request, string $id): RedirectResponse
+    public function payInvoice(PayInvoiceRequest $request, string $id): RedirectResponse
     {
         $wallet = $this->walletService->getWalletById($id) ?? abort(404);
         $this->authorize('payInvoice', $wallet);
         abort_unless($wallet->isCreditCard(), 404);
 
-        $data = $request->validate([
-            'source_wallet_id' => [
-                'required', 'uuid',
-                Rule::exists('wallets', 'id')->where('user_id', $request->user()->id)->whereNull('deleted_at'),
-                Rule::notIn([$wallet->id]),
-            ],
-            'amount' => ['required', 'numeric', 'min:0.01', 'max:9999999999999'],
-            'date' => ['required', 'date', 'before_or_equal:today'],
-            'ref' => ['required', 'regex:/^\d{4}-\d{2}$/'],
-        ], [
-            'source_wallet_id.required' => 'Selecione a conta de onde sai o pagamento.',
-            'source_wallet_id.exists' => 'Conta de origem inválida.',
-            'date.before_or_equal' => 'A data de pagamento não pode ser futura.',
-        ]);
+        $data = $request->validated();
 
         $this->invoiceService->payInvoice($wallet, $data['source_wallet_id'], (float) $data['amount'], $data['date'], $data['ref']);
 

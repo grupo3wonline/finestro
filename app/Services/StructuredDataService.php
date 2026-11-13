@@ -166,6 +166,37 @@ class StructuredDataService implements StructuredDataServiceInterface
         ];
     }
 
+    public function breadcrumbs(array $items): array
+    {
+        // Always prepend the root 'Início' item.
+        $allItems = array_merge(
+            [['name' => 'Início', 'url' => route('home')]],
+            $items,
+        );
+
+        $elements = [];
+
+        foreach ($allItems as $index => $item) {
+            $element = [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $item['name'],
+            ];
+
+            if (! empty($item['url'])) {
+                $element['item'] = $item['url'];
+            }
+
+            $elements[] = $element;
+        }
+
+        return [
+            '@context' => self::CONTEXT,
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $elements,
+        ];
+    }
+
     /**
      * @return array<string, string>
      */

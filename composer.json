@@ -69,7 +69,7 @@
         "format": "pint",
         "analyse": [
             "Composer\\Config::disableProcessTimeout",
-            "phpstan analyse --memory-limit=1G --no-progress"
+            "@php scripts/phpstan.php analyse --memory-limit=1G --no-progress"
         ],
         "refactor": "rector --dry-run",
         "quality": [

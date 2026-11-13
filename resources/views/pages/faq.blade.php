@@ -16,7 +16,6 @@
         <x-seo.json-ld :data="app(\App\Interfaces\Services\StructuredDataServiceInterface::class)->faqPage($faqJsonLdItems)" />
     @endpush
 @endif
-
 @section('content')
 <section class="py-16 bg-surface-50 dark:bg-surface-900">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

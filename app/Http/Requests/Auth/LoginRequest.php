@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Auth;
 
 use App\Interfaces\Services\CaptchaServiceInterface;
 use App\Models\User;
+use App\Rules\Honeypot;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -37,6 +40,8 @@ class LoginRequest extends FormRequest
             'username' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string'],
+            // Anti-spam honeypot: decoy field must stay empty + time-trap check.
+            'website' => ['nullable', new Honeypot('website')],
             // Anti-bot: reCAPTCHA v3 e/ou Turnstile (somente se configurados no .env).
             ...app(CaptchaServiceInterface::class)->rules('login'),
         ];

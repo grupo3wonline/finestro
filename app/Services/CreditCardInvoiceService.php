@@ -38,7 +38,7 @@ class CreditCardInvoiceService implements CreditCardInvoiceServiceInterface
         $current = $card->invoiceCycleFor(Carbon::today());
 
         $cycle = $reference && preg_match('/^\d{4}-\d{2}$/', $reference)
-            ? $card->invoiceCycleFor(Carbon::createFromFormat('Y-m-d', "{$reference}-01")->day(min($card->closing_day, 28)))
+            ? $card->invoiceCycleFor(Carbon::parse("{$reference}-01")->day(min($card->closing_day, 28)))
             : $current;
 
         $transactions = $this->transactionRepository->getByWalletBetween(
@@ -80,7 +80,7 @@ class CreditCardInvoiceService implements CreditCardInvoiceServiceInterface
 
     public function payInvoice(Wallet $card, string $sourceWalletId, float $amount, string $date, string $reference): void
     {
-        $label = ucfirst(Carbon::createFromFormat('Y-m-d', "{$reference}-01")->locale('pt_BR')->translatedFormat('F/Y'));
+        $label = ucfirst(Carbon::parse("{$reference}-01")->locale('pt_BR')->translatedFormat('F/Y'));
 
         DB::transaction(function () use ($card, $sourceWalletId, $amount, $date, $label): void {
             // 1) Sai dinheiro da conta de origem...
