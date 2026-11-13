@@ -37,6 +37,62 @@ fixados no código: vêm das configurações `STRIPE_*` através do `PlanPricing
 (`App\Interfaces\Services\PlanPricingInterface`), e um teste falha se um
 literal de preço aparecer em uma view.
 
+## Phase 11 — UI Refactor & Audit (2025-07-11)
+
+This phase applied UI/UX improvements, security hardening, test coverage expansion, and
+maintenance cleanup. See [docs/maintenance/phase-11-ui-refactor.md](docs/maintenance/phase-11-ui-refactor.md)
+for the full change log.
+
+### UI/UX Changes
+
+- **Persuasion triggers on the landing page**: authority seal strip (HTTPS/LGPD/user count),
+  scarcity counter (Alpine.js `x-data`), urgency countdown timer, Before/After transformation
+  section, 'Novo' badges on AI Insights and Shared Wallets cards, 'Em Breve' feature teaser
+  section, and reciprocity free-plan callout floating card.
+- **Dashboard glassmorphism**: hero balance card uses `backdrop-blur-2xl` + `bg-gradient-to-br
+  from-primary-900/80` glass layer; stat cards use `backdrop-blur-sm bg-white/80 dark:bg-surface-900/60`.
+- **Neumorphism on calculators**: `.nm-input` and `.nm-card` CSS utility classes added to
+  `resources/css/app.css`; applied to all 7 calculator views and simulator views.
+- **Tooltip component**: `resources/views/components/ui/tooltip.blade.php` — anonymous Blade
+  component with `$text` and `$position` props; used on wallet create/edit form fields.
+- **Contextual help popovers**: `?` Alpine.js popover buttons in wallet, transaction, and goal
+  create forms with descriptive pt-BR hints.
+- **Field hints**: descriptive `hint=` attributes on wallet, goal, and transaction fields.
+
+### Security Hardening
+
+- `declare(strict_types=1)` added to 9 Auth controllers + 5 feature controllers
+  (`WalletController`, `GoalController`, `SimulatorController`, `CalculatorController`,
+  `PageController`).
+- `app/Http/Requests/PayInvoiceRequest.php` extracted from inline validation in
+  `WalletController::payInvoice()`.
+- Honeypot field added to the login form (`<x-ui.honeypot />` + `LoginRequest` honeypot rule).
+- `BreadcrumbList` JSON-LD via `@push('jsonld')` added to the 4 public legal/FAQ pages
+  (privacy, terms, cookies, faq).
+
+### Test Coverage Added
+
+| Test file | Covers | Tests |
+|---|---|---|
+| `tests/Feature/WalletCrudTest.php` | Wallet CRUD, invoice pay validation, free plan limits | 6 |
+| `tests/Feature/GoalCrudTest.php` | Goal CRUD, cross-user isolation | 4 |
+| `tests/Feature/CategoryBudgetCrudTest.php` | Category/budget CRUD, copy previous month, free plan limits | 6 |
+| `tests/Feature/ReportExportTest.php` | CSV/PDF export gating, email throttle | 4 |
+| `tests/Feature/ApiV1Test.php` | REST API CRUD, auth, cross-user isolation | 5 |
+| `tests/Feature/Security/CsrfProtectionTest.php` | CSRF 419 on missing token | 1 |
+| `tests/Feature/Security/RateLimitTest.php` | Login rate limit (429 after 5 attempts) | 1 |
+| `tests/Feature/Security/HoneypotTest.php` | Honeypot rejection on register and login | 2 |
+| `tests/Feature/Security/XssInjectionTest.php` | XSS escaping, SQL injection safety | 2 |
+| `tests/Feature/CalculatorSmokeTest.php` | All 7 calculator + 6 simulator pages return 200 | 2 |
+| `tests/Unit/Services/TransactionServiceTest.php` | Summary totals, installment penny distribution | 2 |
+| `tests/Unit/Services/BudgetServiceTest.php` | Over-threshold alerts, copy previous month | 2 |
+| `tests/Unit/Services/GoalServiceTest.php` | Progress percent, completed status | 2 |
+| `tests/Unit/Helpers/UtmTest.php` | UTM param allow-list, unknown param exclusion | 2 |
+
+Total after phase: **1113 tests** (1098 pass, 15 skip, 0 fail).
+
+---
+
 ## Configuração
 
 Requisitos: PHP 8.3+ (8.5 usado em desenvolvimento) com `gd`, `zip`, `intl`;
@@ -201,6 +257,7 @@ Os testes de carga usam k6 e são executados manualmente; veja [tests/load/READM
 | 8 | [Proteção contra robôs, ativação por e-mail, validade de senha e lembretes](docs/security/phase-8-auth-hardening.md) |
 | 9 | [Migração do Laravel 13 para o Laravel 12](docs/maintenance/laravel-12-downgrade.md) |
 | 10 | [Auditoria e refatoração (convenções de interface, limites, limpeza)](docs/maintenance/audit-2026-11.md) |
+| 11 | [Refatoração de UI, auditoria e cobertura de testes](docs/maintenance/phase-11-ui-refactor.md) |
 
 Notas de integração anteriores: [docs/INTEGRACAO-SISTEMAS-LEGADOS.md](docs/INTEGRACAO-SISTEMAS-LEGADOS.md).
 
